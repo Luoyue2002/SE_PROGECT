@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7ff26284-aa2f-4689-8e30-388ba5320fff" name="变更" comment="Init BackEnd" />
+    <list default="true" id="7ff26284-aa2f-4689-8e30-388ba5320fff" name="变更" comment="Init FrontEnd">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,7 +37,7 @@
       <option name="presentableId" value="Default" />
       <updated>1678528973534</updated>
       <workItem from="1678528976553" duration="54000" />
-      <workItem from="1678529143274" duration="743000" />
+      <workItem from="1678529143274" duration="2852000" />
     </task>
     <task id="LOCAL-00001" summary="Init BackEnd">
       <created>1678529250936</created>
@@ -44,7 +46,21 @@
       <option name="project" value="LOCAL" />
       <updated>1678529250936</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Init FrontEnd">
+      <created>1678531052484</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1678531052484</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Init FrontEnd">
+      <created>1678531107785</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1678531107785</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -63,6 +79,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Init BackEnd" />
-    <option name="LAST_COMMIT_MESSAGE" value="Init BackEnd" />
+    <MESSAGE value="Init FrontEnd" />
+    <option name="LAST_COMMIT_MESSAGE" value="Init FrontEnd" />
   </component>
 </project>
