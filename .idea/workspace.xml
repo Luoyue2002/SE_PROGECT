@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7ff26284-aa2f-4689-8e30-388ba5320fff" name="变更" comment="" />
+    <list default="true" id="7ff26284-aa2f-4689-8e30-388ba5320fff" name="变更" comment="Init BackEnd" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -9,6 +9,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2Mrc7CuvKJrrwsy5g4C177FMCX5" />
   <component name="ProjectViewState">
@@ -19,7 +22,8 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false"
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/SE_PROGECT/BackEnd"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
@@ -31,7 +35,16 @@
       <option name="presentableId" value="Default" />
       <updated>1678528973534</updated>
       <workItem from="1678528976553" duration="54000" />
+      <workItem from="1678529143274" duration="743000" />
     </task>
+    <task id="LOCAL-00001" summary="Init BackEnd">
+      <created>1678529250936</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1678529250936</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -47,5 +60,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Init BackEnd" />
+    <option name="LAST_COMMIT_MESSAGE" value="Init BackEnd" />
   </component>
 </project>
