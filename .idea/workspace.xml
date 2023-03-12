@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7ff26284-aa2f-4689-8e30-388ba5320fff" name="变更" comment="Init FrontEnd">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +38,7 @@
       <option name="presentableId" value="Default" />
       <updated>1678528973534</updated>
       <workItem from="1678528976553" duration="54000" />
-      <workItem from="1678529143274" duration="2852000" />
+      <workItem from="1678529143274" duration="3511000" />
     </task>
     <task id="LOCAL-00001" summary="Init BackEnd">
       <created>1678529250936</created>
