@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ce97fabc-ccdc-4284-979f-3fdf0ebb8888" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="F:\tool\IDEA\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2MYNGS385PN4MVKDshjD1cRivp7" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/vue-projects/qiushi&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;sshConsole&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\vue-projects\vue2\src\views" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="qiushi" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="qiushi" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="serve" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="serve" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SshConsoleOptionsProvider">
+    <option name="myEncoding" value="UTF-8" />
+    <option name="myConnectionType" value="SSH_CONFIG" />
+    <option name="myConnectionId" value="pqian@10.214.242.226:17621:8081 password" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ce97fabc-ccdc-4284-979f-3fdf0ebb8888" name="Default Changelist" comment="" />
+      <created>1677940459227</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1677940459227</updated>
+      <workItem from="1677940460338" duration="522000" />
+      <workItem from="1677943826780" duration="1267000" />
+      <workItem from="1677948138811" duration="173000" />
+      <workItem from="1677989155718" duration="12064000" />
+      <workItem from="1678008315966" duration="3235000" />
+      <workItem from="1678091318688" duration="2501000" />
+      <workItem from="1678169393569" duration="2052000" />
+      <workItem from="1678628199496" duration="11000" />
+      <workItem from="1678628267148" duration="4712000" />
+      <workItem from="1678684858177" duration="3325000" />
+      <workItem from="1678766920518" duration="34000" />
+      <workItem from="1678771320496" duration="4667000" />
+      <workItem from="1678781604780" duration="4295000" />
+      <workItem from="1678792705064" duration="3534000" />
+      <workItem from="1678797359985" duration="2769000" />
+      <workItem from="1678845675019" duration="1841000" />
+      <workItem from="1679401095045" duration="751000" />
+      <workItem from="1679472906899" duration="3279000" />
+      <workItem from="1679481421233" duration="65000" />
+      <workItem from="1679623962073" duration="2835000" />
+      <workItem from="1679641964653" duration="1609000" />
+      <workItem from="1680230245771" duration="3315000" />
+      <workItem from="1680236451624" duration="1685000" />
+      <workItem from="1680250352462" duration="89000" />
+      <workItem from="1680700915748" duration="1229000" />
+      <workItem from="1680749877989" duration="1189000" />
+      <workItem from="1680763376663" duration="2011000" />
+      <workItem from="1680788203849" duration="4615000" />
+      <workItem from="1680829957740" duration="491000" />
+      <workItem from="1680831029750" duration="4826000" />
+      <workItem from="1680874019221" duration="1207000" />
+      <workItem from="1681264610433" duration="63000" />
+      <workItem from="1681266187836" duration="2098000" />
+      <workItem from="1681287283301" duration="4414000" />
+      <workItem from="1681439383424" duration="10000" />
+      <workItem from="1681999622142" duration="58000" />
+      <workItem from="1684062210325" duration="3733000" />
+      <workItem from="1684214855970" duration="7478000" />
+      <workItem from="1684234360152" duration="657000" />
+      <workItem from="1684237306488" duration="1392000" />
+      <workItem from="1684240678120" duration="2953000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="includedJSSourcePackages">
+      <set>
+        <option value="element-ui" />
+      </set>
+    </option>
+  </component>
+</project>
