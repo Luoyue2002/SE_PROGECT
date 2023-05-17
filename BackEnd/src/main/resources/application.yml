@@ -12,11 +12,12 @@ spring:
 
 
   datasource:
-    url: jdbc:mysql://localhost:3306/bs?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/sedb?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
     username: root
     password: 12345678
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    type: com.alibaba.druid.pool.DruidDataSource
+
 
 
 #此配置解决swagger Failed to start bean 'documentationPluginsBootstrapper'的问题
@@ -44,6 +45,7 @@ mybatis-plus:
 # Mybatis返回Map类型,单数据库字段值为空时,不显示字段问题配置,true:显示值为空的字段
   configuration:
     call-setters-on-nulls: true
+    map-underscore-to-camel-case: false
   global-config:
     db-config:
       id-type: auto
