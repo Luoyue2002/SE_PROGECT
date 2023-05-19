@@ -19,10 +19,33 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/regist.vue')
   },
   {
-   path: '/userinfo',
-   name: 'userinfo',
-   component: () => import('../views/userinfo.vue')
+    path: '/userinfo',
+    name: 'userinfo',
+    component: () => import('../views/userinfo.vue')
+
+  },
+  {
+    path: '/shop',
+    name: 'demo',
+    component: () => import('../views/shop.vue')
+
+  },
+  {
+    path: '/commodity2',
+    name: 'comodity',
+    component: () => import('../views/commodity2.vue')
+  },
+  {
+    path: '/publishCommodity',
+    name: 'publishCommodity',
+    component: () => import('../views/publishCommodity.vue')
+  },
+  {
+    path: '/pay',
+    name: 'pay',
+    component: () => import('../views/pay.vue')
   }
+
 ]
 
 const router = new VueRouter({
