@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 
 @CrossOrigin // 跨域配置
 @RestController // 表明是Controller层
-@RequestMapping("/demo") // url 指定
+@RequestMapping("/chat") // url 指定
 public class ChatController {
     @Resource
     private ChatServiceInterface chatServiceInterface;

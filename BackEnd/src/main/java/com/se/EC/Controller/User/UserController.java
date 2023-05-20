@@ -16,7 +16,7 @@ public class UserController {
     private UserServiceInterface userServiceInterface;
 
     @RequestMapping("/findlist")
-    public ApiResult<List<User>> findlist(@RequestParam(value = "userid") int userid) {
+    public <T> ApiResult<T> findlist(@RequestParam(value = "userid") int userid) {
         return userServiceInterface.findList(userid);
     }
 
