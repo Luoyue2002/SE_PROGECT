@@ -1,11 +1,10 @@
 package com.se.EC.Controller.Review;
 
 import com.se.EC.Service.Review.ReviewServiceInterface;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
 
 @CrossOrigin // 跨域配置
 @RestController // 表明是Controller层

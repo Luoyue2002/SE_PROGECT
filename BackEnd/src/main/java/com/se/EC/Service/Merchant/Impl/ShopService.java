@@ -7,8 +7,7 @@ import com.se.EC.Mapper.MerchantMapper;
 import com.se.EC.Service.Merchant.MerchantServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 @Service

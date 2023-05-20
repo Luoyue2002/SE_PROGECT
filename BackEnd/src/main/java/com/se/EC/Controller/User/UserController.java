@@ -3,10 +3,8 @@ package com.se.EC.Controller.User;
 import com.se.EC.Entity.User;
 import com.se.EC.Service.User.UserServiceInterface;
 import com.se.EC.Utils.ApiResult;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 @CrossOrigin // 跨域配置
 @RestController // 表明是Controller层

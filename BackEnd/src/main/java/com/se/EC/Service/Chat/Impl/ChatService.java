@@ -8,8 +8,7 @@ import com.se.EC.Mapper.UserMapper;
 import com.se.EC.Service.Chat.ChatServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 
 @Service

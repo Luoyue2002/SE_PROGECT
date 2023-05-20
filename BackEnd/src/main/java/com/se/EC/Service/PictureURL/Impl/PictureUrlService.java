@@ -7,8 +7,7 @@ import com.se.EC.Mapper.PictureUrlMapper;
 import com.se.EC.Service.PictureURL.PictureUrlServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 @Service

@@ -7,8 +7,7 @@ import com.se.EC.Mapper.ReviewMapper;
 import com.se.EC.Service.Review.ReviewServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 @Service

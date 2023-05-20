@@ -9,6 +9,4 @@ import java.io.Serializable;
 @Data
 @TableName("user")
 public class Cart implements Serializable {
-
-
 }

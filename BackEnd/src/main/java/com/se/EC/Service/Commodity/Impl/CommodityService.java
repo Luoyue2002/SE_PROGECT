@@ -6,9 +6,8 @@ import com.se.EC.Entity.Commodity;
 import com.se.EC.Mapper.CommodityMapper;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Utils.ApiResult;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 
 @Service

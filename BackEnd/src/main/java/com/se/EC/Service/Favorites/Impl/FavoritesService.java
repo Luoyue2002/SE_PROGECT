@@ -6,9 +6,8 @@ import com.se.EC.Entity.Favorites;
 import com.se.EC.Mapper.FavoritesMapper;
 import com.se.EC.Service.Favorites.FavoritesServiceInterface;
 import com.se.EC.Utils.ApiResult;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 
 @Service
