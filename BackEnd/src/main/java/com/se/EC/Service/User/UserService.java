@@ -14,28 +14,24 @@ import java.util.List;
 
 @Service
 public class UserService extends ServiceImpl<UserMapper, User> implements UserServiceInterface {
-    //
     @Resource //依赖注入,必须要注入对应的mapper
     private UserMapper userMapper;
 
-
     @Override
     public User UserRegister(User userinfo) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name", userinfo.getUserName());
         User findUser = this.baseMapper.selectOne(queryWrapper);
         if (findUser != null) {
             throw new RuntimeException("exist user name !");
         }
 
-
-        QueryWrapper<User> queryWrapper_email = new QueryWrapper();
+        QueryWrapper<User> queryWrapper_email = new QueryWrapper<>();
         queryWrapper_email.eq("user_phone", userinfo.getUserPhone());
-        User finduser_eamil = this.baseMapper.selectOne(queryWrapper_email);
-        if (finduser_eamil != null) {
+        User find = this.baseMapper.selectOne(queryWrapper_email);
+        if (find != null) {
             throw new RuntimeException("phone had been used");
         }
-
 
         userMapper.insert(userinfo);
         return userinfo;
@@ -97,7 +93,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserSe
     public String UserResetPassword() {
         return null;
     }
-
 
     @Override
     public String UserResetInfo(String userId, String attribute, String resetInfo) {

@@ -23,7 +23,8 @@ public class ChatController implements ChatControllerInterface {
      */
     @Override
     @PostMapping("/create_session")
-    public ApiResult<Boolean> createSession(Integer senderId, Integer receiverId) {
+    public ApiResult<Boolean> createSession(@RequestParam(value = "sender_id") Integer senderId,
+                                            @RequestParam(value = "receiver_id") Integer receiverId) {
         try {
             chatServiceInterface.createSession(senderId, receiverId);
             return ApiResult.success(Boolean.TRUE);
@@ -41,7 +42,8 @@ public class ChatController implements ChatControllerInterface {
      */
     @Override
     @PostMapping("/drop_session")
-    public ApiResult<Boolean> dropSession(Integer senderId, Integer receiverId) {
+    public ApiResult<Boolean> dropSession(@RequestParam(value = "sender_id") Integer senderId,
+                                          @RequestParam(value = "receiver_id") Integer receiverId) {
         try {
             chatServiceInterface.dropSession(senderId, receiverId);
             return ApiResult.success(Boolean.TRUE);
@@ -93,7 +95,8 @@ public class ChatController implements ChatControllerInterface {
      */
     @Override
     @GetMapping("/update_message")
-    public ApiResult<List<Information>> updateMessage(Integer senderId, Integer receiverId) {
+    public ApiResult<List<Information>> updateMessage(@RequestParam(value = "sender_id") Integer senderId,
+                                                      @RequestParam(value = "receiver_id") Integer receiverId) {
         try {
             List<Information> informationList = chatServiceInterface.updateMessage(senderId, receiverId);
             return ApiResult.success(informationList);
@@ -111,7 +114,8 @@ public class ChatController implements ChatControllerInterface {
      */
     @Override
     @GetMapping("/retrieve_all_message")
-    public ApiResult<List<Information>> retrieveAllMessage(Integer senderId, Integer receiverId) {
+    public ApiResult<List<Information>> retrieveAllMessage(@RequestParam(value = "sender_id") Integer senderId,
+                                                           @RequestParam(value = "receiver_id") Integer receiverId) {
         try {
             List<Information> informationList = chatServiceInterface.retrieveAllMessage(senderId, receiverId);
             return ApiResult.success(informationList);

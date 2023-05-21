@@ -24,14 +24,14 @@ USE `sedb` ;
 DROP TABLE IF EXISTS `sedb`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`user` (
-  `user_id` INT NOT NULL,
+  `user_id` INT NOT NULL AUTO_INCREMENT,
   `user_name` VARCHAR(16) NOT NULL,
   `user_psw` VARCHAR(16) NOT NULL,
   `user_realname` VARCHAR(16) NOT NULL,
   `user_icid` VARCHAR(18) NOT NULL,
   `user_school` VARCHAR(16) NULL,
   `user_sid` VARCHAR(16) NULL,
-  `user_gender` ENUM('男', '女', '其他') NOT NULL,
+  `user_gender` INT NOT NULL,
   `user_phone` VARCHAR(16) NOT NULL,
   `user_image` VARCHAR(128) NOT NULL,
   `user_add1` VARCHAR(128) NOT NULL,
@@ -96,7 +96,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`commodity` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`commodity` (
-  `com_id` INT NOT NULL,
+  `com_id` INT NOT NULL AUTO_INCREMENT,
   `com_publisher` INT NOT NULL,
   `com_name` VARCHAR(45) NOT NULL,
   `com_des` VARCHAR(256) NOT NULL,
