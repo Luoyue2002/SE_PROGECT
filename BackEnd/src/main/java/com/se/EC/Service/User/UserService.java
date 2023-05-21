@@ -122,7 +122,7 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserSe
             now_user.setUserSid(resetInfo);
         }
         if (attribute.equals("usergender")) {
-            now_user.setUserGender(resetInfo);
+            now_user.setUserGender(Integer.valueOf(resetInfo));
         }
         if (attribute.equals("userphone")) {
             now_user.setUserPhone(resetInfo);
