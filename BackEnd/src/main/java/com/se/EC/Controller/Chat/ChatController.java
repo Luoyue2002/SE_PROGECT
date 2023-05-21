@@ -51,6 +51,19 @@ public class ChatController implements ChatControllerInterface {
     }
 
     /**
+     * 获取会话
+     *
+     * @param id id
+     * @return SessionInformation的List
+     */
+    @Override
+    @GetMapping("/get_session")
+    public ApiResult<List<SessionInformation>> getSession(@RequestParam(value = "id") Integer id) {
+        List<SessionInformation> sessionInformationList = chatServiceInterface.getSession(id);
+        return ApiResult.success(sessionInformationList);
+    }
+
+    /**
      * 发送消息函数
      *
      * @param senderId   发送者id

@@ -31,6 +31,14 @@ public interface ChatControllerInterface {
                                    @RequestParam(value = "receiver_id") Integer receiverId);
 
     /**
+     * 获取会话
+     *
+     * @param id id
+     */
+    @GetMapping("/get_session")
+    ApiResult<List<SessionInformation>> getSession(@RequestParam(value = "id") Integer id);
+
+    /**
      * 发送消息函数
      *
      * @param senderId   发送者id

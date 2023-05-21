@@ -2,6 +2,7 @@ package com.se.EC.Service.Chat;
 
 import com.github.jeffreyning.mybatisplus.service.IMppService;
 import com.se.EC.Controller.Chat.Information;
+import com.se.EC.Controller.Chat.SessionInformation;
 import com.se.EC.Entity.Chat;
 
 import java.util.List;
@@ -22,6 +23,13 @@ public interface ChatServiceInterface extends IMppService<Chat> {
      * @param receiverId 被发起者id
      */
     void dropSession(Integer senderId, Integer receiverId);
+
+    /**
+     * 获取会话
+     *
+     * @param id id
+     */
+    List<SessionInformation> getSession(Integer id);
 
     /**
      * 发送消息
