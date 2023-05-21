@@ -157,12 +157,10 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
         LocalDateTime updateTime = sessionList.get(0).getUpdateTime();
 
         // 筛选数据库中比这个时间更新的数据
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = simpleDateFormat.format(updateTime);
         QueryWrapper<Chat> chatQueryWrapper = new QueryWrapper<>();
         chatQueryWrapper.eq("chat_sender", senderId);
         chatQueryWrapper.eq("chat_receiver", receiverId);
-        chatQueryWrapper.ge("chat_time", format);
+        chatQueryWrapper.ge("chat_time", updateTime);
         List<Chat> chatList = chatMapper.selectList(chatQueryWrapper);
 
         // 更新更新时间
