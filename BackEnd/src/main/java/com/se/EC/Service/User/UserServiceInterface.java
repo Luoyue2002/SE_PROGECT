@@ -11,25 +11,25 @@ public interface UserServiceInterface extends IService<User> {
     // Service 层接口， impl 里是具体实现，有一说一分开似乎没啥用，不过我学的教程是分开的
     // Service 层为Controller 层提供服务，是mapper 的上一层
 
-    ApiResult user_register( User userinfo);
-    ApiResult user_login_by_name( String username  ,String password);
-    ApiResult user_login_by_id( String userid  ,String password);
-    ApiResult user_login_by_phone( String userphone  ,String password);
+    User UserRegister( User userInfo);
+    User UserLoginByName( String username  ,String password);
+    User UserLoginById( String userId  ,String password);
+    User UserLoginByPhone( String userPhone  ,String password);
 
 
-    ApiResult user_logout( );
+    String UserLogout( );
 
-    ApiResult user_change_password( );
+    String UserChangePassword( );
 
-    ApiResult user_reset_password( );
+    String UserResetPassword( );
 
-    ApiResult user_reset_info( String userid, String  attribute, String resetinfo);
+    String UserResetInfo( String userId, String  attribute, String resetInfo);
 
-    ApiResult user_account_cancellation();
+    String UserAccountCancellation();
 
-    ApiResult findList( int userid);
+    String FindList( int userId);
 
-    ApiResult user_be_businessmen();
+    String UserBeBusinessmen();
 }
 
 

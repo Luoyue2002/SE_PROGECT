@@ -13,41 +13,69 @@ public class UserController {
     @Resource
     private UserServiceInterface userServiceInterface;
 
-    @RequestMapping("/findlist")
-    public <T> ApiResult<T> findlist(@RequestParam(value = "userid") int userid) {
-        return userServiceInterface.findList(userid);
-    }
 
     @PostMapping("/register") // 二级url 指定 ，前端访问要用 demo/post
-    public ApiResult<User> UserRegister(@RequestBody User user) {
-        return userServiceInterface.user_register(user);
+    public ApiResult<Boolean> UserRegister(@RequestBody User user) {
+
+        try {
+            userServiceInterface.UserRegister(user);
+            return ApiResult.success(Boolean.TRUE);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage(), Boolean.FALSE);
+        }
     }
 
     // get 方法
     @RequestMapping("/loginbyname")
     public ApiResult<User> UserLoginByName(@RequestParam(value = "username") String username,
                                      @RequestParam(value = "password") String password) {
-        return userServiceInterface.user_login_by_name(username, password);
+
+        try {
+            User user = userServiceInterface.UserLoginByName(username, password);
+            return ApiResult.success(user);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage(), null);
+        }
     }
 
     @RequestMapping("/loginbyid")
     public ApiResult<User> UserLoginById(@RequestParam(value = "userid") String userid,
                                    @RequestParam(value = "password") String password) {
-        return userServiceInterface.user_login_by_id(userid, password);
+
+        try {
+            User user = userServiceInterface.UserLoginById(userid, password);
+            return ApiResult.success(user);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage(), null);
+        }
     }
 
     @RequestMapping("/loginbyphone")
     public ApiResult<User> UserLoginByPhone(@RequestParam(value = "userphone") String userphone,
                                       @RequestParam(value = "password") String password) {
-        return userServiceInterface.user_login_by_phone(userphone, password);
+
+        try {
+            User user = userServiceInterface.UserLoginByPhone(userphone, password);
+            return ApiResult.success(user);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage(), null);
+        }
+
     }
 
     @RequestMapping("/resetinfo")
-    public ApiResult<User> UserResetInfo(@RequestParam(value = "userid") String userid,
+    public ApiResult<Boolean> UserResetInfo(@RequestParam(value = "userid") String userid,
                                    @RequestParam(value = "attribute") String attribute,
                                    @RequestParam(value = "resetinfo") String resetinfo
 
     ) {
-        return userServiceInterface.user_reset_info(userid, attribute, resetinfo);
+
+        try {
+            userServiceInterface.UserResetInfo(userid, attribute, resetinfo);
+            return ApiResult.success(Boolean.TRUE);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage(), Boolean.FALSE);
+        }
+
     }
 }

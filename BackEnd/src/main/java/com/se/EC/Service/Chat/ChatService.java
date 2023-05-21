@@ -98,7 +98,7 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
             QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_id", receiverId);
             User user = userMapper.selectOne(userQueryWrapper);
-            SessionInformation sessionInformation = new SessionInformation(receiverId, user.getUser_name());
+            SessionInformation sessionInformation = new SessionInformation(receiverId, user.getUserName());
             sessionInformationList.add(sessionInformation);
         }
 

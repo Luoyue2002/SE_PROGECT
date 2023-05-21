@@ -12,31 +12,31 @@ import java.io.Serializable;
 @TableName("user")
 public class User implements Serializable {
     @TableId("user_id")
-    private Integer user_id;
+    private Integer UserId;
     @TableField("user_name")
-    private String user_name;
+    private String UserName;
     @TableField("user_password")
-    private String user_password;
+    private String UserPassword;
     @TableField("user_realname")
-    private String user_realname;
+    private String UserRealname;
     @TableField("user_icid")
-    private String user_icid;
+    private String UserIcid;
     @TableField("user_school")
-    private String user_school;
+    private String UserSchool;
     @TableField("user_sid")
-    private String user_sid;
+    private String UserSid;
     @TableField("user_gender")
-    private String user_gender;
+    private String UserGender;
     @TableField("user_phone")
-    private String user_phone;
+    private String UserPhone;
     @TableField("user_image")
-    private String user_image;
+    private String UserImage;
     @TableField("user_add1")
-    private String user_add1;
+    private String UserAdd1;
     @TableField("user_add2")
-    private String user_add2;
+    private String UserAdd2;
     @TableField("user_add3")
-    private String user_add3;
+    private String UserAdd3;
     @TableField("user_ifsell")
-    private Integer user_ifsell;
+    private Integer UserIfSell;
 }
