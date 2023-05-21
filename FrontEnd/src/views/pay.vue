@@ -27,6 +27,33 @@
         <h1 style="text-align: center;">订单</h1>
 
         <!-- todo:显示商品： -->
+        <div class="commodity-show">
+          <el-card v-for="(product, index) in products" :key="index">
+            <el-row>
+              <el-col :span="12">
+                <div class="product-image">
+                  <img :src="product.image" alt="商品图片" />
+                </div>
+              </el-col>
+              <el-col :span="12">
+                <div class="product-info">
+                  <el-row>
+                    <div class="product-name">{{ product.name }}</div>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                    <div style="font-size: 30px;">￥{{ product.price }}</div>
+                    </el-col>
+                    <el-col :span="12">
+                    <div style="font-size: 30px;">数量：{{ product.number }}</div>
+                    </el-col>
+                  </el-row>
+                  
+                </div>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
 
         <!-- 地址等信息 -->
         <el-form ref="publishForm" :model="orderInfo" label-position="left" label-width="120px">
@@ -67,7 +94,7 @@
               </el-col>
             </el-row>
           </el-form-item>
-          
+
         </el-form>
 
 
@@ -82,6 +109,21 @@ export default {
   data() {
     return {
       logourl: require("../pic/logo.jpg"),
+      products: [
+        {
+          image: require("../assets/logo.png"),
+          name: "book",
+          number: 1,
+          price: 123,
+        },
+        {
+          image: require("../assets/logo.png"),
+          name: "computer",
+          number: 1,
+          price: 12,
+        }
+      ],
+
       orderInfo: {
         address: "",
         name: "",
@@ -175,6 +217,38 @@ body {
   margin-left: 10%;
   margin-right: 10%;
 }
+
+.commodity-show {
+  height: 400px;
+  /* 调整此值以设置您所需的容器高度 */
+  overflow: auto;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 5%;
+}
+
+.el-card {
+  margin-top: 5%;
+}
+
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 20px;
+}
+
+.product-name {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20%;
+}
+.product-price {
+  font-size: 20px;
+}
+
 </style>
 
 

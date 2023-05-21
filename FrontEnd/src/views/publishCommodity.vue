@@ -44,6 +44,32 @@
             </el-select>
           </el-form-item>
 
+          <el-form-item label="商品子分类">
+            <el-button @click="addSubCategory">添加子分类</el-button>
+          </el-form-item>
+          <div v-for="(subCategory, index) in product.subCategories" :key="index">
+            <el-row>
+              <el-col :span="8">
+                <el-form-item label="子分类名称">
+                  <el-input v-model="subCategory.name" placeholder="请输入名称"></el-input>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="8">
+                <el-form-item label="数量">
+                  <el-input-number v-model="subCategory.quantity" :min="1"></el-input-number>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="8">
+                <el-form-item label="价格">
+              <el-input-number v-model="subCategory.price" :min="0.01" controls-position="right"></el-input-number>
+            </el-form-item>
+              </el-col>
+              
+            </el-row>
+          </div>
+
           <el-form-item label="预览图">
             <!-- action:上传地址 -->
             <el-upload list-type="picture-card" multiple action="https:127.0.0.1" :on-success="handleSuccess"
@@ -82,7 +108,10 @@ export default {
         description: "",
         itemCategory: "",
         fileList: [],
-        moreDescription:"",
+        moreDescription: "",
+        subCategories: [
+          { name: "", quantity: 1, price: 0.01, }
+        ],
       },
       categories: [
         { value: 'apparel', label: '服装' },
@@ -104,6 +133,13 @@ export default {
     handleRemove(file, fileList) {
       console.log('移除文件:', file, fileList);
       this.form.itemImages = fileList.map(f => f.response.data.url); // 将文件的URL保存到表单数据中，此处根据实际返回的数据结构进行修改
+    },
+    addSubCategory() {
+      this.product.subCategories.push({
+        name: "",
+        quantity: 1,
+        price: 0.01,
+      });
     },
   },
 
