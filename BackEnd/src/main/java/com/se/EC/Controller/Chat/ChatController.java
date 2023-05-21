@@ -3,7 +3,10 @@ package com.se.EC.Controller.Chat;
 import com.se.EC.Service.Chat.ChatServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -22,7 +25,7 @@ public class ChatController implements ChatControllerInterface {
      * @return 是否添加成功
      */
     @Override
-    @PostMapping("/create_session")
+    @RequestMapping("/create_session")
     public ApiResult<Boolean> createSession(@RequestParam(value = "sender_id") Integer senderId,
                                             @RequestParam(value = "receiver_id") Integer receiverId) {
         try {
@@ -41,7 +44,7 @@ public class ChatController implements ChatControllerInterface {
      * @return 是否删除成功
      */
     @Override
-    @PostMapping("/drop_session")
+    @RequestMapping("/drop_session")
     public ApiResult<Boolean> dropSession(@RequestParam(value = "sender_id") Integer senderId,
                                           @RequestParam(value = "receiver_id") Integer receiverId) {
         try {
@@ -59,7 +62,7 @@ public class ChatController implements ChatControllerInterface {
      * @return SessionInformation的List
      */
     @Override
-    @GetMapping("/get_session")
+    @RequestMapping("/get_session")
     public ApiResult<List<SessionInformation>> getSession(@RequestParam(value = "id") Integer id) {
         List<SessionInformation> sessionInformationList = chatServiceInterface.getSession(id);
         return ApiResult.success(sessionInformationList);
@@ -74,7 +77,7 @@ public class ChatController implements ChatControllerInterface {
      * @return 对方是否在线
      */
     @Override
-    @PostMapping("/send_message")
+    @RequestMapping("/send_message")
     public ApiResult<Boolean> sendMessage(@RequestParam(value = "sender_id") Integer senderId,
                                           @RequestParam(value = "receiver_id") Integer receiverId,
                                           @RequestParam(value = "content") String content) {
@@ -94,7 +97,7 @@ public class ChatController implements ChatControllerInterface {
      * @return 一个包含信息的链表，信息包含时间和内容，最多500条，从上一次update之后开始，最开始的是最近的消息
      */
     @Override
-    @GetMapping("/update_message")
+    @RequestMapping("/update_message")
     public ApiResult<List<Information>> updateMessage(@RequestParam(value = "sender_id") Integer senderId,
                                                       @RequestParam(value = "receiver_id") Integer receiverId) {
         try {
@@ -113,7 +116,7 @@ public class ChatController implements ChatControllerInterface {
      * @return 一个包含信息的链表，信息包含时间和内容，最多500条，最开始的是最近的消息
      */
     @Override
-    @GetMapping("/retrieve_all_message")
+    @RequestMapping("/retrieve_all_message")
     public ApiResult<List<Information>> retrieveAllMessage(@RequestParam(value = "sender_id") Integer senderId,
                                                            @RequestParam(value = "receiver_id") Integer receiverId) {
         try {

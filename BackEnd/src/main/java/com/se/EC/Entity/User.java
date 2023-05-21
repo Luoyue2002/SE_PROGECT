@@ -3,19 +3,25 @@ package com.se.EC.Entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 // entity 是实体类，和数据库表对应，注解为 @TableName("表名")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @TableName("user")
 public class User implements Serializable {
     @TableId("user_id")
     private Integer UserId;
     @TableField("user_name")
     private String UserName;
-    @TableField("user_password")
+    @TableField("user_psw")
     private String UserPassword;
     @TableField("user_realname")
     private String UserRealname;
@@ -26,7 +32,7 @@ public class User implements Serializable {
     @TableField("user_sid")
     private String UserSid;
     @TableField("user_gender")
-    private String UserGender;
+    private Integer UserGender;
     @TableField("user_phone")
     private String UserPhone;
     @TableField("user_image")

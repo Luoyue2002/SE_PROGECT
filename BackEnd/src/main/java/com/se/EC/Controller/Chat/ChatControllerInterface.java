@@ -3,6 +3,7 @@ package com.se.EC.Controller.Chat;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface ChatControllerInterface {
      * @param receiverId 接收者id
      * @return 是否添加成功
      */
-    @PostMapping("/create_session")
+    @RequestMapping("/create_session")
     ApiResult<Boolean> createSession(@RequestParam(value = "sender_id") Integer senderId,
                                      @RequestParam(value = "receiver_id") Integer receiverId);
 
@@ -26,7 +27,7 @@ public interface ChatControllerInterface {
      * @param receiverId 接收者id
      * @return 是否删除成功
      */
-    @PostMapping("/drop_session")
+    @RequestMapping("/drop_session")
     ApiResult<Boolean> dropSession(@RequestParam(value = "sender_id") Integer senderId,
                                    @RequestParam(value = "receiver_id") Integer receiverId);
 
@@ -35,7 +36,7 @@ public interface ChatControllerInterface {
      *
      * @param id id
      */
-    @GetMapping("/get_session")
+    @RequestMapping("/get_session")
     ApiResult<List<SessionInformation>> getSession(@RequestParam(value = "id") Integer id);
 
     /**
@@ -46,7 +47,7 @@ public interface ChatControllerInterface {
      * @param content    信息
      * @return 对方是否在线
      */
-    @PostMapping("/send_message")
+    @RequestMapping("/send_message")
     ApiResult<Boolean> sendMessage(@RequestParam(value = "sender_id") Integer senderId,
                                    @RequestParam(value = "receiver_id") Integer receiverId,
                                    @RequestParam(value = "content") String content);
@@ -58,7 +59,7 @@ public interface ChatControllerInterface {
      * @param receiverId 请求接收者的id
      * @return 一个包含信息的链表，信息包含时间和内容，最多500条，从上一次update之后开始，最开始的是最近的消息
      */
-    @GetMapping("/update_message")
+    @RequestMapping("/update_message")
     ApiResult<List<Information>> updateMessage(@RequestParam(value = "sender_id") Integer senderId,
                                                @RequestParam(value = "receiver_id") Integer receiverId);
 
@@ -69,7 +70,7 @@ public interface ChatControllerInterface {
      * @param receiverId 请求接收者的id
      * @return 一个包含信息的链表，信息包含时间和内容，最多500条，最开始的是最近的消息
      */
-    @GetMapping("/retrieve_all_message")
+    @RequestMapping("/retrieve_all_message")
     ApiResult<List<Information>> retrieveAllMessage(@RequestParam(value = "sender_id") Integer senderId,
                                                     @RequestParam(value = "receiver_id") Integer receiverId);
 }

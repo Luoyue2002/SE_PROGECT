@@ -98,9 +98,9 @@ DROP TABLE IF EXISTS `sedb`.`commodity` ;
 CREATE TABLE IF NOT EXISTS `sedb`.`commodity` (
   `com_id` INT NOT NULL AUTO_INCREMENT,
   `com_publisher` INT NOT NULL,
-  `com_name` VARCHAR(45) NOT NULL,
-  `com_des` VARCHAR(256) NOT NULL,
-  `com_cat` VARCHAR(10) NOT NULL,
+  `com_name` VARCHAR(64) NOT NULL,
+  `com_des` VARCHAR(512) NOT NULL,
+  `com_cat` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`com_id`),
   CONSTRAINT `publisher`
     FOREIGN KEY (`com_publisher`)
@@ -116,11 +116,11 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`item` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`item` (
-  `item_id` INT NOT NULL,
+  `item_id` INT NOT NULL AUTO_INCREMENT,
   `parent_id` INT NOT NULL,
-  `item_name` VARCHAR(45) NOT NULL,
+  `item_name` VARCHAR(64) NOT NULL,
   `item_left` INT NOT NULL,
-  `item_price` INT NOT NULL,
+  `item_price` FLOAT NOT NULL,
   PRIMARY KEY (`item_id`),
   CONSTRAINT `parent`
     FOREIGN KEY (`parent_id`)
