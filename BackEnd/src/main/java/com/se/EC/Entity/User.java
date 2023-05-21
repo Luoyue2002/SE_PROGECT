@@ -38,5 +38,5 @@ public class User implements Serializable {
     @TableField("user_add3")
     private String user_add3;
     @TableField("user_ifsell")
-    private int user_ifsell;
+    private Integer user_ifsell;
 }

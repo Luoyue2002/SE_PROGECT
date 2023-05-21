@@ -10,5 +10,4 @@ import java.io.Serializable;
 @TableName("user")
 public class PictureUrl implements Serializable {
 
-
 }

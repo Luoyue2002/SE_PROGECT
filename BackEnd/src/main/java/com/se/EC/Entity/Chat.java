@@ -1,25 +1,41 @@
 package com.se.EC.Entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
-// entity 是实体类，和数据库表对应，注解为 @TableName("表名")
 @Data
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
 @TableName("chat")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Chat implements Serializable {
-    @TableId("chat_id")
-    private Integer chatId;
+    @MppMultiId
     @TableField("chat_time")
-    private Date date;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime time;
     @TableField("chat_content")
     private String content;
+    @MppMultiId
     @TableField("chat_sender")
     private Integer sender;
+    @MppMultiId
     @TableField("chat_receiver")
     private Integer receiver;
 }
