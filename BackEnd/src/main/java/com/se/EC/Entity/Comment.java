@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,32 +17,23 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
 @Data
-@TableName("order")
+@TableName("comment")
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order implements Serializable {
+public class Comment implements Serializable {
     @TableId("id")
     private Integer id;
-    @TableField("buyer")
-    private Integer buyer;
-    @TableField("seller")
-    private Integer seller;
-    @TableField("number")
-    private Integer number;
-    @TableField("price")
-    private Float price;
-    @TableField("address")
-    private String address;
-    @TableField("item")
-    private Integer item;
-    @TableField("state")
-    private Integer state;
+    @TableField("content")
+    private String content;
     @TableField("time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime time;
+    @TableField("review")
+    private Integer review;
 }

@@ -13,16 +13,16 @@ import java.io.Serializable;
 
 
 @Data
-@TableName("favorites")
+@TableName("commentpicture")
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Favorites implements Serializable {
+public class CommentPicture implements Serializable{
     @MppMultiId
-    @TableField("user")
-    private Integer user;
+    @TableField("commentId")
+    private Integer commentId;
     @MppMultiId
-    @TableField("item")
-    private Integer item;
+    @TableField("image")
+    private String image;
 }

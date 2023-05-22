@@ -1,33 +1,29 @@
 package com.se.EC.Service.User;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Entity.User;
 import com.se.EC.Mapper.UserMapper;
-import com.se.EC.Service.User.UserServiceInterface;
-import com.se.EC.Utils.ApiResult;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
-import java.util.List;
 
 
 @Service
-public class UserService extends ServiceImpl<UserMapper, User> implements UserServiceInterface {
-    @Resource //依赖注入,必须要注入对应的mapper
+public class UserService extends MppServiceImpl<UserMapper, User> implements UserServiceInterface {
+    @Resource
     private UserMapper userMapper;
 
     @Override
     public User UserRegister(User userinfo) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_name", userinfo.getUserName());
+        queryWrapper.eq("name", userinfo.getName());
         User findUser = this.baseMapper.selectOne(queryWrapper);
         if (findUser != null) {
             throw new RuntimeException("exist user name !");
         }
 
         QueryWrapper<User> queryWrapper_email = new QueryWrapper<>();
-        queryWrapper_email.eq("user_phone", userinfo.getUserPhone());
+        queryWrapper_email.eq("phone", userinfo.getPhone());
         User find = this.baseMapper.selectOne(queryWrapper_email);
         if (find != null) {
             throw new RuntimeException("phone had been used");
@@ -40,11 +36,11 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserSe
     @Override
     public User UserLoginByName(String username, String password) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.eq("user_name", username);
+        userQueryWrapper.eq("name", username);
         User now_user = userMapper.selectOne(userQueryWrapper);
         if (now_user == null) {
             throw new RuntimeException("no such user!");
-        } else if (now_user.getUserPassword().equals(password)) {
+        } else if (now_user.getPassword().equals(password)) {
             return now_user;
         }
         throw new RuntimeException("wrong password!");
@@ -53,12 +49,12 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserSe
     @Override
     public User UserLoginById(String userid, String password) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.eq("user_id", userid);
+        userQueryWrapper.eq("id", userid);
         User now_user = userMapper.selectOne(userQueryWrapper);
 
         if (now_user == null) {
             throw new RuntimeException("no such user!");
-        } else if (now_user.getUserPassword().equals(password)) {
+        } else if (now_user.getPassword().equals(password)) {
             return now_user;
         }
 
@@ -68,11 +64,11 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserSe
     @Override
     public User UserLoginByPhone(String userphone, String password) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.eq("user_phone", userphone);
+        userQueryWrapper.eq("phone", userphone);
         User now_user = userMapper.selectOne(userQueryWrapper);
         if (now_user == null) {
             throw new RuntimeException("no such user!");
-        } else if (now_user.getUserPassword().equals(password)) {
+        } else if (now_user.getPassword().equals(password)) {
             return now_user;
         }
 
@@ -97,44 +93,44 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserSe
     @Override
     public String UserResetInfo(String userId, String attribute, String resetInfo) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.eq("user_id", userId);
+        userQueryWrapper.eq("id", userId);
         User now_user = userMapper.selectOne(userQueryWrapper);
         if (attribute.equals("username")) {
 
             QueryWrapper<User> usernameQueryWrapper = new QueryWrapper<>();
-            usernameQueryWrapper.eq("user_name", resetInfo);
+            usernameQueryWrapper.eq("name", resetInfo);
             User name_user = userMapper.selectOne(userQueryWrapper);
             if (name_user == null) {
                 throw new RuntimeException("have this user name!");
             }
-            now_user.setUserName(resetInfo);
+            now_user.setName(resetInfo);
         }
-        if (attribute.equals("userrealname")) {
-            now_user.setUserRealname(resetInfo);
+        if (attribute.equals("realName")) {
+            now_user.setRealName(resetInfo);
         }
-        if (attribute.equals("usericid")) {
-            now_user.setUserIcid(resetInfo);
+        if (attribute.equals("identity")) {
+            now_user.setIdentity(resetInfo);
         }
-        if (attribute.equals("userschool")) {
-            now_user.setUserSchool(resetInfo);
+        if (attribute.equals("school")) {
+            now_user.setSchool(resetInfo);
         }
-        if (attribute.equals("usersid")) {
-            now_user.setUserSid(resetInfo);
+        if (attribute.equals("schoolId")) {
+            now_user.setSchoolId(resetInfo);
         }
-        if (attribute.equals("usergender")) {
-            now_user.setUserGender(Integer.valueOf(resetInfo));
+        if (attribute.equals("gender")) {
+            now_user.setGender(Integer.valueOf(resetInfo));
         }
-        if (attribute.equals("userphone")) {
-            now_user.setUserPhone(resetInfo);
+        if (attribute.equals("phone")) {
+            now_user.setPhone(resetInfo);
         }
-        if (attribute.equals("useradd1")) {
-            now_user.setUserAdd1(resetInfo);
+        if (attribute.equals("address1")) {
+            now_user.setAddress1(resetInfo);
         }
-        if (attribute.equals("useradd2")) {
-            now_user.setUserAdd2(resetInfo);
+        if (attribute.equals("address2")) {
+            now_user.setAddress2(resetInfo);
         }
-        if (attribute.equals("useradd3")) {
-            now_user.setUserAdd3(resetInfo);
+        if (attribute.equals("address3")) {
+            now_user.setAddress3(resetInfo);
         }
 
         userMapper.updateById(now_user);
@@ -151,11 +147,8 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserSe
         return null;
     }
 
-
     @Override
     public String UserBeBusinessmen() {
         return null;
     }
-
-
 }

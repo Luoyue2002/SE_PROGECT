@@ -1,32 +1,14 @@
 package com.se.EC.Service.Cart;
 
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Entity.Cart;
 import com.se.EC.Mapper.CartMapper;
-import com.se.EC.Service.Cart.CartServiceInterface;
-import com.se.EC.Utils.ApiResult;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 
 @Service
-public class CartService extends ServiceImpl<CartMapper, Cart> implements CartServiceInterface {
+public class CartService extends MppServiceImpl<CartMapper, Cart> implements CartServiceInterface {
     @Resource
-    private CartMapper cartMapper;
-
-    @Override
-    public ApiResult add_to_shoppingcart() {
-        return null;
-    }
-
-    @Override
-    public ApiResult delete_from_shoppingcart() {
-        return null;
-    }
-
-    @Override
-    public ApiResult delete_all_from_shoppingcart() {
-        return null;
-    }
+    CartMapper cartMapper;
 }

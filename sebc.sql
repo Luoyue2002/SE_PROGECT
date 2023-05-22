@@ -24,21 +24,21 @@ USE `sedb` ;
 DROP TABLE IF EXISTS `sedb`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`user` (
-  `user_id` INT NOT NULL AUTO_INCREMENT,
-  `user_name` VARCHAR(16) NOT NULL,
-  `user_psw` VARCHAR(16) NOT NULL,
-  `user_realname` VARCHAR(16) NOT NULL,
-  `user_icid` VARCHAR(18) NOT NULL,
-  `user_school` VARCHAR(16) NULL,
-  `user_sid` VARCHAR(16) NULL,
-  `user_gender` INT NOT NULL,
-  `user_phone` VARCHAR(16) NOT NULL,
-  `user_image` VARCHAR(128) NOT NULL,
-  `user_add1` VARCHAR(128) NOT NULL,
-  `user_add2` VARCHAR(128) NULL,
-  `user_add3` VARCHAR(128) NULL,
-  `user_ifsell` TINYINT NOT NULL,
-  PRIMARY KEY (`user_id`))
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(16) NOT NULL,
+  `password` VARCHAR(16) NOT NULL,
+  `realName` VARCHAR(16) NOT NULL,
+  `identity` VARCHAR(18) NOT NULL,
+  `school` VARCHAR(16) NULL,
+  `schoolId` VARCHAR(16) NULL,
+  `gender` INT NOT NULL,
+  `phone` VARCHAR(16) NOT NULL,
+  `image` VARCHAR(128) NOT NULL,
+  `address1` VARCHAR(128) NOT NULL,
+  `address2` VARCHAR(128) NULL,
+  `address3` VARCHAR(128) NULL,
+  `ifShop` TINYINT NOT NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -49,19 +49,19 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`chat` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`chat` (
-  `chat_time` DATETIME NOT NULL,
-  `chat_content` VARCHAR(100) NOT NULL,
-  `chat_sender` INT NOT NULL,
-  `chat_receiver` INT NOT NULL,
-  PRIMARY KEY (`chat_time`, `chat_sender`, `chat_receiver`),
+  `time` DATETIME NOT NULL,
+  `content` VARCHAR(128) NOT NULL,
+  `senderId` INT NOT NULL,
+  `receiverId` INT NOT NULL,
+  PRIMARY KEY (`time`, `senderId`, `receiverId`),
   CONSTRAINT `sender`
-    FOREIGN KEY (`chat_sender`)
-    REFERENCES `sedb`.`user` (`user_id`)
+    FOREIGN KEY (`senderId`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `receiver`
-    FOREIGN KEY (`chat_receiver`)
-    REFERENCES `sedb`.`user` (`user_id`)
+    FOREIGN KEY (`receiverId`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -73,18 +73,18 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`session` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`session` (
-  `chat_sender` INT NOT NULL,
-  `chat_receiver` INT NOT NULL,
-  `update_time` DATETIME NOT NULL,
-  PRIMARY KEY (`chat_sender`, `chat_receiver`),
+  `senderId` INT NOT NULL,
+  `receiverId` INT NOT NULL,
+  `updateTime` DATETIME NOT NULL,
+  PRIMARY KEY (`senderId`, `receiverId`),
   CONSTRAINT `sender_1`
-    FOREIGN KEY (`chat_sender`)
-    REFERENCES `sedb`.`user` (`user_id`)
+    FOREIGN KEY (`senderId`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `receiver_1`
-    FOREIGN KEY (`chat_receiver`)
-    REFERENCES `sedb`.`user` (`user_id`)
+    FOREIGN KEY (`receiverId`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -96,15 +96,15 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`commodity` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`commodity` (
-  `com_id` INT NOT NULL AUTO_INCREMENT,
-  `com_publisher` INT NOT NULL,
-  `com_name` VARCHAR(64) NOT NULL,
-  `com_des` VARCHAR(512) NOT NULL,
-  `com_cat` VARCHAR(32) NOT NULL,
-  PRIMARY KEY (`com_id`),
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `publisher` INT NOT NULL,
+  `name` VARCHAR(128) NOT NULL,
+  `dscription` VARCHAR(512) NOT NULL,
+  `category` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (`id`),
   CONSTRAINT `publisher`
-    FOREIGN KEY (`com_publisher`)
-    REFERENCES `sedb`.`user` (`user_id`)
+    FOREIGN KEY (`publisher`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -116,15 +116,15 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`item` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`item` (
-  `item_id` INT NOT NULL AUTO_INCREMENT,
-  `parent_id` INT NOT NULL,
-  `item_name` VARCHAR(64) NOT NULL,
-  `item_left` INT NOT NULL,
-  `item_price` FLOAT NOT NULL,
-  PRIMARY KEY (`item_id`),
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `parentId` INT NOT NULL,
+  `name` VARCHAR(256) NOT NULL,
+  `number` INT NOT NULL,
+  `price` FLOAT NOT NULL,
+  PRIMARY KEY (`id`),
   CONSTRAINT `parent`
-    FOREIGN KEY (`parent_id`)
-    REFERENCES `sedb`.`commodity` (`com_id`)
+    FOREIGN KEY (`parentId`)
+    REFERENCES `sedb`.`commodity` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -136,17 +136,18 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`cart` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`cart` (
-  `cart_user` INT NOT NULL,
-  `cart_item` INT NOT NULL,
-  `cart_num` INT NOT NULL,
+  `user` INT NOT NULL,
+  `item` INT NOT NULL,
+  `number` INT NOT NULL,
+  PRIMARY KEY (`user`, `item`),
   CONSTRAINT `user`
-    FOREIGN KEY (`cart_user`)
-    REFERENCES `sedb`.`user` (`user_id`)
+    FOREIGN KEY (`user`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `item`
-    FOREIGN KEY (`cart_item`)
-    REFERENCES `sedb`.`item` (`item_id`)
+    FOREIGN KEY (`item`)
+    REFERENCES `sedb`.`item` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -158,16 +159,17 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`favorites` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`favorites` (
-  `fav_user` INT NOT NULL,
-  `fav_item` INT NULL,
+  `user` INT NOT NULL,
+  `item` INT NOT NULL,
+  PRIMARY KEY (`user`, `item`),
   CONSTRAINT `user_1`
-    FOREIGN KEY (`fav_user`)
-    REFERENCES `sedb`.`user` (`user_id`)
+    FOREIGN KEY (`user`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `item_1`
-    FOREIGN KEY (`fav_item`)
-    REFERENCES `sedb`.`item` (`item_id`)
+    FOREIGN KEY (`item`)
+    REFERENCES `sedb`.`item` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -179,11 +181,11 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`detail` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`detail` (
-  `father_id` INT NOT NULL,
-  `detail_image` VARCHAR(128) NOT NULL,
+  `commodityId` INT NOT NULL,
+  `image` VARCHAR(128) NOT NULL,
   CONSTRAINT `commodity`
-    FOREIGN KEY (`father_id`)
-    REFERENCES `sedb`.`commodity` (`com_id`)
+    FOREIGN KEY (`commodityId`)
+    REFERENCES `sedb`.`commodity` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -195,11 +197,11 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`preview` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`preview` (
-  `father_id` INT NOT NULL,
-  `preview_image` VARCHAR(128) NULL,
+  `commodityId` INT NOT NULL,
+  `image` VARCHAR(128) NULL,
   CONSTRAINT `father`
-    FOREIGN KEY (`father_id`)
-    REFERENCES `sedb`.`commodity` (`com_id`)
+    FOREIGN KEY (`commodityId`)
+    REFERENCES `sedb`.`commodity` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -211,29 +213,29 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`order` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`order` (
-  `order_id` INT NOT NULL,
-  `order_buyer` INT NOT NULL,
-  `order_seller` INT NOT NULL,
-  `order_num` INT NOT NULL,
-  `order_price` INT NOT NULL,
-  `order_address` VARCHAR(128) NOT NULL,
-  `order_item` INT NOT NULL,
-  `order_state` ENUM('发货', '确认收货', '退货') NOT NULL,
-  `order_time` DATETIME NOT NULL,
-  PRIMARY KEY (`order_id`),
+  `id` INT NOT NULL,
+  `buyer` INT NOT NULL,
+  `seller` INT NOT NULL,
+  `number` INT NOT NULL,
+  `price` FLOAT NOT NULL,
+  `address` VARCHAR(128) NOT NULL,
+  `item` INT NOT NULL,
+  `state` INT NOT NULL,
+  `time` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
   CONSTRAINT `buyer`
-    FOREIGN KEY (`order_buyer`)
-    REFERENCES `sedb`.`user` (`user_id`)
+    FOREIGN KEY (`buyer`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `seller`
-    FOREIGN KEY (`order_seller`)
-    REFERENCES `sedb`.`user` (`user_id`)
+    FOREIGN KEY (`seller`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `item_2`
-    FOREIGN KEY (`order_item`)
-    REFERENCES `sedb`.`item` (`item_id`)
+    FOREIGN KEY (`item`)
+    REFERENCES `sedb`.`item` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -245,15 +247,14 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`comment` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`comment` (
-  `com_id` INT NOT NULL,
-  `com_content` VARCHAR(128) NULL,
-  `com_time` DATETIME NULL,
-  `com_choose` ENUM('好评', '中评', '差评') NULL,
-  `commentcol` VARCHAR(45) NULL,
-  PRIMARY KEY (`com_id`),
+  `id` INT NOT NULL,
+  `content` VARCHAR(128) NULL,
+  `time` DATETIME NULL,
+  `review` INT NOT NULL,
+  PRIMARY KEY (`id`),
   CONSTRAINT `order`
-    FOREIGN KEY (`com_id`)
-    REFERENCES `sedb`.`order` (`order_id`)
+    FOREIGN KEY (`id`)
+    REFERENCES `sedb`.`order` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -262,14 +263,15 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sedb`.`comment_picture`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sedb`.`comment_picture` ;
+DROP TABLE IF EXISTS `sedb`.`commentpicture` ;
 
-CREATE TABLE IF NOT EXISTS `sedb`.`comment_picture` (
-  `father_id` INT NOT NULL,
-  `comment_image` VARCHAR(128) NULL,
+CREATE TABLE IF NOT EXISTS `sedb`.`commentpicture` (
+  `commentId` INT NOT NULL,
+  `image` VARCHAR(128) NULL,
+  PRIMARY KEY (`commentId`, `image`),
   CONSTRAINT `comment`
-    FOREIGN KEY (`father_id`)
-    REFERENCES `sedb`.`comment` (`com_id`)
+    FOREIGN KEY (`commentId`)
+    REFERENCES `sedb`.`comment` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

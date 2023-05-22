@@ -10,39 +10,38 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-// entity 是实体类，和数据库表对应，注解为 @TableName("表名")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @TableName("user")
 public class User implements Serializable {
-    @TableId("user_id")
-    private Integer UserId;
-    @TableField("user_name")
-    private String UserName;
-    @TableField("user_psw")
-    private String UserPassword;
-    @TableField("user_realname")
-    private String UserRealname;
-    @TableField("user_icid")
-    private String UserIcid;
-    @TableField("user_school")
-    private String UserSchool;
-    @TableField("user_sid")
-    private String UserSid;
-    @TableField("user_gender")
-    private Integer UserGender;
-    @TableField("user_phone")
-    private String UserPhone;
-    @TableField("user_image")
-    private String UserImage;
-    @TableField("user_add1")
-    private String UserAdd1;
-    @TableField("user_add2")
-    private String UserAdd2;
-    @TableField("user_add3")
-    private String UserAdd3;
-    @TableField("user_ifsell")
-    private Integer UserIfSell;
+    @TableId("id")
+    private Integer id;
+    @TableField("name")
+    private String name;
+    @TableField("password")
+    private String password;
+    @TableField("realName")
+    private String realName;
+    @TableField("identity")
+    private String identity;
+    @TableField("school")
+    private String school;
+    @TableField("schoolId")
+    private String schoolId;
+    @TableField("gender")
+    private Integer gender;
+    @TableField("phone")
+    private String phone;
+    @TableField("image")
+    private String image;
+    @TableField("address1")
+    private String address1;
+    @TableField("address2")
+    private String address2;
+    @TableField("address3")
+    private String address3;
+    @TableField("ifShop")
+    private Integer ifShop;
 }

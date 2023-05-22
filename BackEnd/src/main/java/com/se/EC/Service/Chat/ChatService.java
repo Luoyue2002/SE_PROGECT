@@ -13,7 +13,6 @@ import com.se.EC.Mapper.UserMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,13 +59,13 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
     public void dropSession(Integer senderId, Integer receiverId) {
         // 查看这个会话是否已经存在
         QueryWrapper<Session> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("chat_sender", senderId);
-        queryWrapper.eq("chat_receiver", receiverId);
+        queryWrapper.eq("senderId", senderId);
+        queryWrapper.eq("receiverId", receiverId);
         Long count = sessionMapper.selectCount(queryWrapper);
 
         QueryWrapper<Session> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper.eq("chat_receiver", senderId);
-        queryWrapper.eq("chat_sender", receiverId);
+        queryWrapper.eq("receiverId", senderId);
+        queryWrapper.eq("senderId", receiverId);
         Long count1 = sessionMapper.selectCount(queryWrapper);
 
         if (count == 0 && count1 == 0) {  // 如果不存在返回错误
@@ -88,7 +87,7 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
     public List<SessionInformation> getSession(Integer id) {
         // 获取所有会话
         QueryWrapper<Session> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("chat_sender", id);
+        queryWrapper.eq("senderId", id);
         List<Session> sessionList = sessionMapper.selectList(queryWrapper);
 
         // 转换
@@ -96,9 +95,9 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
         for (var item : sessionList) {
             Integer receiverId = item.getReceiverId();
             QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_id", receiverId);
+            queryWrapper.eq("id", receiverId);
             User user = userMapper.selectOne(userQueryWrapper);
-            SessionInformation sessionInformation = new SessionInformation(receiverId, user.getUserName());
+            SessionInformation sessionInformation = new SessionInformation(receiverId, user.getName());
             sessionInformationList.add(sessionInformation);
         }
 
@@ -123,9 +122,9 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
         // 将消息存入数据库
         LocalDateTime currentTime = LocalDateTime.now();
         QueryWrapper<Chat> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("chat_sender", senderId);
-        queryWrapper.eq("chat_receiver", receiverId);
-        queryWrapper.eq("chat_time", currentTime);
+        queryWrapper.eq("senderId", senderId);
+        queryWrapper.eq("receiverId", receiverId);
+        queryWrapper.eq("time", currentTime);
         count = chatMapper.selectCount(queryWrapper);
         if (count != 0) {
             throw new RuntimeException("Send message too frequent, please try again later");
@@ -146,8 +145,8 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
     public List<Information> updateMessage(Integer senderId, Integer receiverId) {
         // 判断会话是否存在并获取最近的更新消息的时间
         QueryWrapper<Session> sessionQueryWrapper = new QueryWrapper<>();
-        sessionQueryWrapper.eq("chat_sender", senderId);
-        sessionQueryWrapper.eq("chat_receiver", receiverId);
+        sessionQueryWrapper.eq("senderId", senderId);
+        sessionQueryWrapper.eq("receiverId", receiverId);
         List<Session> sessionList = sessionMapper.selectList(sessionQueryWrapper);
         if (sessionList.size() == 0) {
             throw new RuntimeException("Session does not exist");
@@ -158,9 +157,9 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
 
         // 筛选数据库中比这个时间更新的数据
         QueryWrapper<Chat> chatQueryWrapper = new QueryWrapper<>();
-        chatQueryWrapper.eq("chat_sender", senderId);
-        chatQueryWrapper.eq("chat_receiver", receiverId);
-        chatQueryWrapper.ge("chat_time", updateTime);
+        chatQueryWrapper.eq("senderId", senderId);
+        chatQueryWrapper.eq("receiverId", receiverId);
+        chatQueryWrapper.ge("time", updateTime);
         List<Chat> chatList = chatMapper.selectList(chatQueryWrapper);
 
         // 更新更新时间
@@ -183,8 +182,8 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
     public List<Information> retrieveAllMessage(Integer senderId, Integer receiverId) {
         // 判断会话是否存在
         QueryWrapper<Session> sessionQueryWrapper = new QueryWrapper<>();
-        sessionQueryWrapper.eq("chat_sender", senderId);
-        sessionQueryWrapper.eq("chat_receiver", receiverId);
+        sessionQueryWrapper.eq("senderId", senderId);
+        sessionQueryWrapper.eq("receiverId", receiverId);
         Long count = sessionMapper.selectCount(sessionQueryWrapper);
         if (count == 0) {
             throw new RuntimeException("Session does not exist");
@@ -192,8 +191,8 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
 
         // 得到两人聊天的所有数据
         QueryWrapper<Chat> chatQueryWrapper = new QueryWrapper<>();
-        chatQueryWrapper.eq("chat_sender", senderId);
-        chatQueryWrapper.eq("chat_receiver", receiverId);
+        chatQueryWrapper.eq("senderId", senderId);
+        chatQueryWrapper.eq("receiverId", receiverId);
         List<Chat> chatList = chatMapper.selectList(chatQueryWrapper);
 
         // 按照时间排序返回
@@ -231,8 +230,8 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
      */
     private Long sessionCount(Integer senderId, Integer receiverId) {
         QueryWrapper<Session> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("chat_sender", senderId);
-        queryWrapper.eq("chat_receiver", receiverId);
+        queryWrapper.eq("senderId", senderId);
+        queryWrapper.eq("receiverId", receiverId);
         return sessionMapper.selectCount(queryWrapper);
     }
 }

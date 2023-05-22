@@ -1,9 +1,10 @@
 package com.se.EC.Service.User;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.jeffreyning.mybatisplus.service.IMppService;
 import com.se.EC.Entity.User;
 
-public interface UserServiceInterface extends IService<User> {
+
+public interface UserServiceInterface extends IMppService<User> {
 
     User UserRegister(User userInfo);
 

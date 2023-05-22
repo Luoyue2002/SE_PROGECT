@@ -1,38 +1,14 @@
 package com.se.EC.Service.Order;
 
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Entity.Order;
 import com.se.EC.Mapper.OrderMapper;
-import com.se.EC.Service.Order.OrderServiceInterface;
-import com.se.EC.Utils.ApiResult;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 
 
 @Service
-public class OrderService extends ServiceImpl<OrderMapper, Order> implements OrderServiceInterface {
-    //
-    @Resource //依赖注入,必须要注入对应的mapper
+public class OrderService extends MppServiceImpl<OrderMapper, Order> implements OrderServiceInterface {
+    @Resource
     private OrderMapper orderMapper;
-
-    @Override
-    public ApiResult order_search() {
-        return null;
-    }
-
-    @Override
-    public ApiResult order_create() {
-        return null;
-    }
-
-    @Override
-    public ApiResult order_cancle() {
-        return null;
-    }
-
-    @Override
-    public ApiResult order_pay() {
-        return null;
-    }
 }

@@ -17,25 +17,26 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
 @Data
+@TableName("chat")
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("chat")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Chat implements Serializable {
     @MppMultiId
-    @TableField("chat_time")
+    @TableField("time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime time;
-    @TableField("chat_content")
+    @TableField("content")
     private String content;
     @MppMultiId
-    @TableField("chat_sender")
-    private Integer sender;
+    @TableField("senderId")
+    private Integer senderId;
     @MppMultiId
-    @TableField("chat_receiver")
-    private Integer receiver;
+    @TableField("receiverId")
+    private Integer receiverId;
 }

@@ -25,12 +25,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Session implements Serializable {
     @MppMultiId  // 复合主键
-    @TableField("chat_sender")
+    @TableField("senderId")
     private Integer senderId;
     @MppMultiId
-    @TableField("chat_receiver")
+    @TableField("receiverId")
     private Integer receiverId;
-    @TableField("update_time")
+    @TableField("updateTime")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
