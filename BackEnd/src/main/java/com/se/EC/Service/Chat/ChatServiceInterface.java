@@ -9,29 +9,6 @@ import java.util.List;
 
 public interface ChatServiceInterface extends IMppService<Chat> {
     /**
-     * 创建会话
-     *
-     * @param senderId   发起者id
-     * @param receiverId 被发起者id
-     */
-    void createSession(Integer senderId, Integer receiverId);
-
-    /**
-     * 删除会话
-     *
-     * @param senderId   发起者id
-     * @param receiverId 被发起者id
-     */
-    void dropSession(Integer senderId, Integer receiverId);
-
-    /**
-     * 获取会话
-     *
-     * @param id id
-     */
-    List<SessionInformation> getSession(Integer id);
-
-    /**
      * 发送消息
      *
      * @param senderId   发起者id

@@ -14,7 +14,7 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     private UserMapper userMapper;
 
     @Override
-    public User UserRegister(User userinfo) {
+    public User userRegister(User userinfo) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name", userinfo.getName());
         User findUser = this.baseMapper.selectOne(queryWrapper);
@@ -34,7 +34,7 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
-    public User UserLoginByName(String username, String password) {
+    public User userLoginByName(String username, String password) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("name", username);
         User now_user = userMapper.selectOne(userQueryWrapper);
@@ -47,7 +47,7 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
-    public User UserLoginById(String userid, String password) {
+    public User userLoginById(String userid, String password) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("id", userid);
         User now_user = userMapper.selectOne(userQueryWrapper);
@@ -62,7 +62,7 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
-    public User UserLoginByPhone(String userphone, String password) {
+    public User userLoginByPhone(String userphone, String password) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("phone", userphone);
         User now_user = userMapper.selectOne(userQueryWrapper);
@@ -76,22 +76,22 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
-    public String UserLogout() {
+    public String userLogout() {
         return null;
     }
 
     @Override
-    public String UserChangePassword() {
+    public String userChangePassword() {
         return null;
     }
 
     @Override
-    public String UserResetPassword() {
+    public String userResetPassword() {
         return null;
     }
 
     @Override
-    public String UserResetInfo(String userId, String attribute, String resetInfo) {
+    public String userResetInfo(String userId, String attribute, String resetInfo) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("id", userId);
         User now_user = userMapper.selectOne(userQueryWrapper);
@@ -138,17 +138,25 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
-    public String UserAccountCancellation() {
+    public String userAccountCancellation() {
         return null;
     }
 
     @Override
-    public String FindList(int userId) {
+    public String findList(int userId) {
         return null;
     }
 
     @Override
-    public String UserBeBusinessmen() {
+    public String userBeBusinessmen() {
         return null;
+    }
+
+    @Override
+    public String getNameById(Integer id) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("id", id);
+        User user = userMapper.selectOne(userQueryWrapper);
+        return user.getName();
     }
 }

@@ -6,27 +6,29 @@ import com.se.EC.Entity.User;
 
 public interface UserServiceInterface extends IMppService<User> {
 
-    User UserRegister(User userInfo);
+    User userRegister(User userInfo);
 
-    User UserLoginByName(String username, String password);
+    User userLoginByName(String username, String password);
 
-    User UserLoginById(String userId, String password);
+    User userLoginById(String userId, String password);
 
-    User UserLoginByPhone(String userPhone, String password);
+    User userLoginByPhone(String userPhone, String password);
 
-    String UserLogout();
+    String userLogout();
 
-    String UserChangePassword();
+    String userChangePassword();
 
-    String UserResetPassword();
+    String userResetPassword();
 
-    String UserResetInfo(String userId, String attribute, String resetInfo);
+    String userResetInfo(String userId, String attribute, String resetInfo);
 
-    String UserAccountCancellation();
+    String userAccountCancellation();
 
-    String FindList(int userId);
+    String findList(int userId);
 
-    String UserBeBusinessmen();
+    String userBeBusinessmen();
+
+    String getNameById(Integer id);
 }
 
 

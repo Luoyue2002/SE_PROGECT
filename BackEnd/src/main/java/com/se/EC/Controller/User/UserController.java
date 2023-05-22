@@ -16,40 +16,40 @@ public class UserController {
     @PostMapping("/register")
     public ApiResult<Boolean> UserRegister(@RequestBody User user) {
         try {
-            userServiceInterface.UserRegister(user);
+            userServiceInterface.userRegister(user);
             return ApiResult.success(Boolean.TRUE);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage(), Boolean.FALSE);
         }
     }
 
-    @RequestMapping("/loginbyname")
-    public ApiResult<User> UserLoginByName(@RequestParam(value = "username") String username,
+    @RequestMapping("/loginByName")
+    public ApiResult<User> UserLoginByName(@RequestParam(value = "userName") String username,
                                      @RequestParam(value = "password") String password) {
         try {
-            User user = userServiceInterface.UserLoginByName(username, password);
+            User user = userServiceInterface.userLoginByName(username, password);
             return ApiResult.success(user);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage(), null);
         }
     }
 
-    @RequestMapping("/loginbyid")
-    public ApiResult<User> UserLoginById(@RequestParam(value = "userid") String userid,
+    @RequestMapping("/loginById")
+    public ApiResult<User> UserLoginById(@RequestParam(value = "userId") String userid,
                                    @RequestParam(value = "password") String password) {
         try {
-            User user = userServiceInterface.UserLoginById(userid, password);
+            User user = userServiceInterface.userLoginById(userid, password);
             return ApiResult.success(user);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage(), null);
         }
     }
 
-    @RequestMapping("/loginbyphone")
-    public ApiResult<User> UserLoginByPhone(@RequestParam(value = "userphone") String userphone,
+    @RequestMapping("/loginByPhone")
+    public ApiResult<User> UserLoginByPhone(@RequestParam(value = "userPhone") String userphone,
                                       @RequestParam(value = "password") String password) {
         try {
-            User user = userServiceInterface.UserLoginByPhone(userphone, password);
+            User user = userServiceInterface.userLoginByPhone(userphone, password);
             return ApiResult.success(user);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage(), null);
@@ -57,14 +57,14 @@ public class UserController {
 
     }
 
-    @RequestMapping("/resetinfo")
-    public ApiResult<Boolean> UserResetInfo(@RequestParam(value = "userid") String userid,
+    @RequestMapping("/resetInformation")
+    public ApiResult<Boolean> UserResetInfo(@RequestParam(value = "userId") String userid,
                                    @RequestParam(value = "attribute") String attribute,
-                                   @RequestParam(value = "resetinfo") String resetinfo
+                                   @RequestParam(value = "resetInformation") String resetInformation
 
     ) {
         try {
-            userServiceInterface.UserResetInfo(userid, attribute, resetinfo);
+            userServiceInterface.userResetInfo(userid, attribute, resetInformation);
             return ApiResult.success(Boolean.TRUE);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage(), Boolean.FALSE);

@@ -3,13 +3,10 @@ package com.se.EC.Service.Chat;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Controller.Chat.Information;
-import com.se.EC.Controller.Chat.SessionInformation;
 import com.se.EC.Entity.Chat;
 import com.se.EC.Entity.Session;
-import com.se.EC.Entity.User;
 import com.se.EC.Mapper.ChatMapper;
 import com.se.EC.Mapper.SessionMapper;
-import com.se.EC.Mapper.UserMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -23,86 +20,6 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
     private ChatMapper chatMapper;
     @Resource
     private SessionMapper sessionMapper;
-    @Resource
-    private UserMapper userMapper;
-
-    /**
-     * 创建会话
-     *
-     * @param senderId   发起者id
-     * @param receiverId 被发起者id
-     */
-    @Override
-    public void createSession(Integer senderId, Integer receiverId) {
-        // 查看这个会话是否已经存在
-        Long count = sessionCount(senderId, receiverId);
-        Long count1 = sessionCount(receiverId, senderId);
-
-        if (count == 0 && count1 == 0) {  // 如果不存在就新建Session，并返回True
-            LocalDateTime currentTime = LocalDateTime.now();
-            Session session = new Session(senderId, receiverId, currentTime);
-            Session session1 = new Session(receiverId, senderId, currentTime);
-            sessionMapper.insert(session);
-            sessionMapper.insert(session1);
-        } else if (count != 1) {  // 多于一个出错
-            throw new RuntimeException("There are two session between " + senderId + " and " + receiverId);
-        }
-    }
-
-    /**
-     * 删除会话
-     *
-     * @param senderId   发起者id
-     * @param receiverId 被发起者id
-     */
-    @Override
-    public void dropSession(Integer senderId, Integer receiverId) {
-        // 查看这个会话是否已经存在
-        QueryWrapper<Session> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("senderId", senderId);
-        queryWrapper.eq("receiverId", receiverId);
-        Long count = sessionMapper.selectCount(queryWrapper);
-
-        QueryWrapper<Session> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper.eq("receiverId", senderId);
-        queryWrapper.eq("senderId", receiverId);
-        Long count1 = sessionMapper.selectCount(queryWrapper);
-
-        if (count == 0 && count1 == 0) {  // 如果不存在返回错误
-            throw new RuntimeException("Session does not exist");
-        } else if (count == 1 && count1 == 1) {  // 如果已经存在就删除
-            sessionMapper.delete(queryWrapper);
-            sessionMapper.delete(queryWrapper1);
-        } else {  // 如果多于一个返回错误
-            throw new RuntimeException("There are many session between " + senderId + " and " + receiverId);
-        }
-    }
-
-    /**
-     * 获取会话
-     *
-     * @param id id
-     */
-    @Override
-    public List<SessionInformation> getSession(Integer id) {
-        // 获取所有会话
-        QueryWrapper<Session> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("senderId", id);
-        List<Session> sessionList = sessionMapper.selectList(queryWrapper);
-
-        // 转换
-        List<SessionInformation> sessionInformationList = new ArrayList<>();
-        for (var item : sessionList) {
-            Integer receiverId = item.getReceiverId();
-            QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("id", receiverId);
-            User user = userMapper.selectOne(userQueryWrapper);
-            SessionInformation sessionInformation = new SessionInformation(receiverId, user.getName());
-            sessionInformationList.add(sessionInformation);
-        }
-
-        return sessionInformationList;
-    }
 
     /**
      * 发送消息
@@ -113,19 +30,13 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
      */
     @Override
     public void sendMessage(Integer senderId, Integer receiverId, String content) {
-        // 查找有没有会话，没有就返回错误
-        Long count = sessionCount(senderId, receiverId);
-        if (count == 0) {
-            throw new RuntimeException("Session does not exist");
-        }
-
         // 将消息存入数据库
         LocalDateTime currentTime = LocalDateTime.now();
         QueryWrapper<Chat> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("senderId", senderId);
         queryWrapper.eq("receiverId", receiverId);
         queryWrapper.eq("time", currentTime);
-        count = chatMapper.selectCount(queryWrapper);
+        Long count = chatMapper.selectCount(queryWrapper);
         if (count != 0) {
             throw new RuntimeException("Send message too frequent, please try again later");
         } else {
@@ -220,18 +131,5 @@ public class ChatService extends MppServiceImpl<ChatMapper, Chat> implements Cha
             }
         });
         return informationList;
-    }
-
-    /**
-     * 查看两个id建立的会话数量
-     * @param senderId 发起者
-     * @param receiverId 接收者
-     * @return 数目
-     */
-    private Long sessionCount(Integer senderId, Integer receiverId) {
-        QueryWrapper<Session> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("senderId", senderId);
-        queryWrapper.eq("receiverId", receiverId);
-        return sessionMapper.selectCount(queryWrapper);
     }
 }
