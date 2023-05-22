@@ -6,7 +6,6 @@ import com.se.EC.Mapper.CartMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class CartService extends MppServiceImpl<CartMapper, Cart> implements CartServiceInterface {
     @Resource

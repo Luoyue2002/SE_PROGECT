@@ -7,7 +7,6 @@ import com.se.EC.Mapper.UserMapper;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 
-
 @Service
 public class UserService extends MppServiceImpl<UserMapper, User> implements UserServiceInterface {
     @Resource

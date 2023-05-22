@@ -6,7 +6,6 @@ import com.se.EC.Mapper.FavoritesMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class FavoritesService extends MppServiceImpl<FavoritesMapper, Favorites> implements FavoritesServiceInterface {
     @Resource

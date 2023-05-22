@@ -6,7 +6,6 @@ import com.se.EC.Mapper.OrderMapper;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 
-
 @Service
 public class OrderService extends MppServiceImpl<OrderMapper, Order> implements OrderServiceInterface {
     @Resource

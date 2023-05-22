@@ -5,11 +5,13 @@ import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Entity.Session;
 import com.se.EC.Mapper.SessionMapper;
 import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class SessionService extends MppServiceImpl<SessionMapper, Session> implements SessionServiceInterface {
     @Resource
     private SessionMapper sessionMapper;
