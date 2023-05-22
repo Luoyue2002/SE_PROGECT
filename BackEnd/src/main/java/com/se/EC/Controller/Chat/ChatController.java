@@ -90,7 +90,7 @@ public class ChatController implements ChatControllerInterface {
      * @return 对方是否在线
      */
     @Override
-    @RequestMapping("/send_message")
+    @RequestMapping("/sendMessage")
     public ApiResult<Boolean> sendMessage(@RequestParam(value = "senderId") Integer senderId,
                                           @RequestParam(value = "receiverId") Integer receiverId,
                                           @RequestParam(value = "content") String content) {
@@ -110,7 +110,7 @@ public class ChatController implements ChatControllerInterface {
      * @return 一个包含信息的链表，信息包含时间和内容，最多500条，从上一次update之后开始，最开始的是最近的消息
      */
     @Override
-    @RequestMapping("/update_message")
+    @RequestMapping("/updateMessage")
     public ApiResult<List<Information>> updateMessage(@RequestParam(value = "senderId") Integer senderId,
                                                       @RequestParam(value = "receiverId") Integer receiverId) {
         try {
@@ -129,7 +129,7 @@ public class ChatController implements ChatControllerInterface {
      * @return 一个包含信息的链表，信息包含时间和内容，最多500条，最开始的是最近的消息
      */
     @Override
-    @RequestMapping("/retrieve_all_message")
+    @RequestMapping("/retrieveAllMessage")
     public ApiResult<List<Information>> retrieveAllMessage(@RequestParam(value = "senderId") Integer senderId,
                                                            @RequestParam(value = "receiverId") Integer receiverId) {
         try {
