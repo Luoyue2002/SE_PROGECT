@@ -68,6 +68,7 @@ export default {
       userList: [],
       selectedUser: null,
       messages: [{
+        id:1,
         userid: 1,
         textcontent: "jjj",
         timestamp: "2021"
