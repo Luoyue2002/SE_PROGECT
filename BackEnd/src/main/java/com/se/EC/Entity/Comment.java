@@ -27,6 +27,10 @@ import java.time.LocalDateTime;
 public class Comment implements Serializable {
     @TableId("id")
     private Integer id;
+    @TableField("userId")
+    private Integer userId;
+    @TableField("itemId")
+    private Integer itemId;
     @TableField("content")
     private String content;
     @TableField("time")

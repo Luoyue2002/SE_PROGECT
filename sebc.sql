@@ -118,7 +118,7 @@ DROP TABLE IF EXISTS `sedb`.`item` ;
 CREATE TABLE IF NOT EXISTS `sedb`.`item` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `parentId` INT NOT NULL,
-  `name` VARCHAR(256) NOT NULL,
+  `name` VARCHAR(128) NOT NULL,
   `number` INT NOT NULL,
   `price` FLOAT NOT NULL,
   PRIMARY KEY (`id`),
@@ -213,7 +213,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`order` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`order` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `buyer` INT NOT NULL,
   `seller` INT NOT NULL,
   `number` INT NOT NULL,
@@ -247,14 +247,21 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sedb`.`comment` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`comment` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userId` INT NOT NULL,
+  `itemId` INT NOT NULL,
   `content` VARCHAR(128) NULL,
   `time` DATETIME NULL,
   `review` INT NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `order`
-    FOREIGN KEY (`id`)
-    REFERENCES `sedb`.`order` (`id`)
+    FOREIGN KEY (`itemId`)
+    REFERENCES `sedb`.`item` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `comment_user`
+    FOREIGN KEY (`userId`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -267,7 +274,7 @@ DROP TABLE IF EXISTS `sedb`.`commentpicture` ;
 
 CREATE TABLE IF NOT EXISTS `sedb`.`commentpicture` (
   `commentId` INT NOT NULL,
-  `image` VARCHAR(128) NULL,
+  `image` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`commentId`, `image`),
   CONSTRAINT `comment`
     FOREIGN KEY (`commentId`)
