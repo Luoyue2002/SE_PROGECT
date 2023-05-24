@@ -111,26 +111,39 @@ export default {
       captcha: '',
       picofidentifier: '',
       picofstudent: '',
+      add1: '',
+      add2: '',
+      add3: '',
+      avator: '',
+      ifsell: 0
     }
   },
   computed: {
 
   },
   methods: {
-    handregist() {
-      axios.post('http://10.181.247.69:7001/user/register',
+    handleregister() {
+      axios.post('http://10.162.59.81:8080/user/register',
         {
-          username: this.username,
-          userid: this.userid,
+          name: this.username,
+          id: '',
           password: this.password,
-          userrealname: this.realname,
-          usericid: this.identifier,
-          userschool: this.school,
-          usersid: this.studentid,
-          usergender: this.gender,
-          userphone: this.phonenum
+          realName: this.realname,
+          identity: this.identifier,
+          school: this.school,
+          schoolId: this.studentid,
+          gender: this.gender,
+          phone: this.phonenum,
+          image: this.avator,
+          address1: this.add1,
+          address2: this.add2,
+          address3: this.add3,
+          ifShop: this.ifsell
         }).then(res => {
-          console.log("1111111")
+        this.$message({
+          message: res.data.message,
+          type: 'success'
+        });
         })
     },
     reset() {
