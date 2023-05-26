@@ -7,6 +7,9 @@ import com.se.EC.Mapper.FavoritesMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class FavoritesService extends MppServiceImpl<FavoritesMapper, Favorites> implements FavoritesServiceInterface {
     @Resource
@@ -41,5 +44,17 @@ public class FavoritesService extends MppServiceImpl<FavoritesMapper, Favorites>
 
         // 删除商品
         favoritesMapper.delete(queryWrapper);
+    }
+
+    @Override
+    public List<Integer> getFavorites(Integer userId) {
+        QueryWrapper<Favorites> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user", userId);
+        List<Favorites> favoritesList = favoritesMapper.selectList(queryWrapper);
+        List<Integer> idList = new ArrayList<>();
+        for (var item : favoritesList) {
+            idList.add(item.getItem());
+        }
+        return idList;
     }
 }

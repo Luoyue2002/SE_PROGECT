@@ -4,6 +4,8 @@ import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 public interface FavoritesControllerInterface {
     /**
      * 向收藏夹中添加商品
@@ -26,4 +28,13 @@ public interface FavoritesControllerInterface {
     @RequestMapping("/deleteFavorites")
     ApiResult<Boolean> deleteFavorites(@RequestParam(value = "userId") Integer userId,
                                        @RequestParam(value = "itemId") Integer itemId);
+
+    /**
+     * 获取收藏夹商品
+     *
+     * @param userId 用户 id
+     * @return 预览图列表
+     */
+    @RequestMapping("/getFavorites")
+    ApiResult<List<CommodityPreviewObject>> getFavorites(@RequestParam(value = "userId") Integer userId);
 }

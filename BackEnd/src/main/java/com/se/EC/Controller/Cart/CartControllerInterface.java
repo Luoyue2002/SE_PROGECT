@@ -4,6 +4,8 @@ import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 public interface CartControllerInterface {
     /**
      * 向购物车中添加商品
@@ -38,4 +40,13 @@ public interface CartControllerInterface {
     @RequestMapping("/deleteCart")
     ApiResult<Boolean> deleteCart(@RequestParam(value = "userId") Integer userId,
                                   @RequestParam(value = "itemId") Integer itemId);
+
+    /**
+     * 获取购物车商品
+     *
+     * @param userId 用户 id
+     * @return 预览图列表
+     */
+    @RequestMapping("/getCart")
+    ApiResult<List<CommodityPreviewObject>> getFavorites(@RequestParam(value = "userId") Integer userId);
 }

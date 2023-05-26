@@ -37,14 +37,23 @@
         </div>
       </div>
       <div class="messages" ref="messagesContainer">
+<<<<<<< HEAD
+        <div v-for="message in getSelectedUserMessages" :key="message.id" class="message" :class="{ mine: message.isMine }">
+=======
         <div v-for="message in getSelectedUserMessages" :key="message.id" :class="judge(message.isMine)">
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
           <div class="message-avatar">
             <img :src="getUserAvatar(message.userId)" :alt="getUser(message.userId).name">
           </div>
           <div class="message-content">
             <div class="message-sender">{{ getUser(message.userId).name }}</div>
+<<<<<<< HEAD
+            <div class="message-text">{{ message.textcontent }}</div> <!-- 使用 message.textcontent -->
+            <div class="message-time">{{ message.timestamp }}</div> <!-- 使用 message.timestamp -->
+=======
             <div class="message-text">{{ message.textcontent }}</div>
             <div class="message-time">{{ message.timestamp }}</div>
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
           </div>
         </div>
       </div>
@@ -67,9 +76,18 @@ export default {
       userid: '',
       userList: [],
       selectedUser: null,
+<<<<<<< HEAD
+      messages: [{
+        id:1,
+        userid: 1,
+        textcontent: "jjj",
+        timestamp: "2021"
+      }],
+=======
       num: 0,
       messages: [
       ],
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
       newMessage: '',
       searchQuery: "",
     };
@@ -80,6 +98,10 @@ export default {
     },
     filteredUserList() {
       const query = this.searchQuery.toLowerCase();
+<<<<<<< HEAD
+      console.log("query"+query)
+=======
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
       if(query == null)
         return this.userList;
       else
@@ -94,7 +116,11 @@ export default {
   },
   methods: {
     load() {
+<<<<<<< HEAD
+      axios.get('http://10.162.59.81:8080/chat/get_session?id=' + this.userid).then(res => {
+=======
       axios.get('http://10.162.59.81:8080/chat/getSession?id=' + this.userid).then(res => {
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
         for (let i = 0; i < res.data.result.length; i++) {
           const user = {
             id: res.data.result[i].id,
@@ -103,6 +129,18 @@ export default {
           };
           this.userList.push(user);
         }
+<<<<<<< HEAD
+        console.log(this.userList);
+        // this.$route.go(0);
+      });
+    },
+    everySecondFunction() {
+      const selectedUser = this.selectedUser;
+      console.log("selectedUser:", selectedUser);
+      console.log("mess:"+this.messages.length)
+
+      axios.get('http://10.162.59.81:8080/chat/update_message?senderId=' + selectedUser + '&receiverId=' + this.userid)
+=======
       });
     },
     judge(ismine){
@@ -115,21 +153,34 @@ export default {
     everySecondFunction() {
       const selectedUser = this.selectedUser;
       axios.get('http://10.162.59.81:8080/chat/updateMessage?senderId=' + selectedUser + '&receiverId=' + this.userid)
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
           .then(res => {
             if (res.data.result && res.data.result.length > 0) {
               const msg = {
                 userId: selectedUser,
                 textcontent: res.data.result[0].content, // 使用 textcontent
+<<<<<<< HEAD
+                timestamp: res.data.result[0].time // 使用 timestamp
+              };
+              console.log(res.data.result[0]);
+=======
                 timestamp: res.data.result[0].time, // 使用 timestamp
                 isMine: false,
                 id: this.num++
               };
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
               this.messages.push(msg);
             }
           })
           .catch(error => {
             console.log(error);
           });
+<<<<<<< HEAD
+    }
+    ,
+    selectUser(userId) {
+      this.selectedUser = userId;
+=======
     },
     selectUser(userId) {
       this.selectedUser = userId;
@@ -151,6 +202,7 @@ export default {
             console.log(error);
           });
       console.log("length:"+this.messages.length)
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
       this.scrollToBottom();
     },
     getUser(userId) {
@@ -161,6 +213,19 @@ export default {
       return user ? user.avatar : '';
     },
     sendMessage() {
+<<<<<<< HEAD
+      if (this.newMessage && this.selectedUser) {
+        const messageId = this.messages.length + 1;
+        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const newMessage = {
+          id: messageId,
+          content: this.newMessage,
+          time: currentTime,
+          userId: this.selectedUser,
+          isMine: true
+        };
+        this.messages.push(newMessage);
+=======
       const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       let newMessagecontent = this.newMessage;
       if (this.newMessage != null && this.selectedUser) {
@@ -176,6 +241,7 @@ export default {
           this.messages.push(newMessage);
           console.log("length:"+this.messages.length)
         })
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
         this.newMessage = '';
         this.scrollToBottom();
       }
@@ -188,8 +254,11 @@ export default {
     },
   },
 };
+<<<<<<< HEAD
+=======
 
 //123
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
 </script>
 
 <style>
@@ -322,8 +391,11 @@ export default {
 .message {
   display: flex;
   margin-bottom: 10px;
+<<<<<<< HEAD
+=======
   width: 30%;
   margin-left: 5%;
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
 }
 
 .message-avatar {
@@ -349,9 +421,14 @@ export default {
   color: #999999;
 }
 
+<<<<<<< HEAD
+.message.mine {
+  flex-direction: row-reverse;
+=======
 .mine {
   /*flex-direction: row-reverse;*/
   margin-right: 5%;
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
 }
 
 .input-area {
