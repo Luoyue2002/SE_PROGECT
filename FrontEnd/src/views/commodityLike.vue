@@ -209,22 +209,16 @@ body {
   margin-bottom: 5%;
 }
 
-.el-card {
-  margin-top: 5%;
-  margin-right:5%;
-}
+
 .el-card {
   margin-top: 5%;
   margin-right: 5%;
-  justify-content: space-between;
-  height: 100%;
-  padding: 20px;
 }
 
 .product-name {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 50%;
+  margin-bottom: 60%;
 }
 
 .product-price {
@@ -232,6 +226,14 @@ body {
 }
 .foot-section{
   background-color: white;
+}
+
+.product-image{
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.product-info{
+  margin-left: 5%;
 }
 </style>
 
