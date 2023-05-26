@@ -40,6 +40,9 @@
                       <el-col :span="12">
                         <div style="font-size: 30px;">￥{{ product.price }}</div>
                       </el-col>
+                      <el-col :span="12">
+                        <el-button type="danger" @click="removeFromFavorites(rowIndex,index)">取消收藏</el-button>
+                      </el-col>
                     </el-row>
                   </div>
                 </el-col>
@@ -61,11 +64,16 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "commodityLike",
   data() {
     return {
       logourl: require("../pic/logo.jpg"),
+      
+      userid: 1,
+      username: "123",
       pagination: {
         currentPage: 1,
         pageSize: 6,
@@ -116,6 +124,11 @@ export default {
         },
       ],
     };
+  },
+  created() {
+    this.userid = this.$route.query.userid;
+    this.username = this.$route.query.username;
+    this.load();
   },
   computed: {
     rows() {
@@ -195,11 +208,11 @@ body {
   margin-right: 10%;
   margin-bottom: 5%;
 }
-<<<<<<< HEAD
+
 .el-card {
   margin-top: 5%;
   margin-right:5%;
-=======
+}
 .el-card {
   margin-top: 5%;
   margin-right: 5%;
@@ -225,8 +238,5 @@ body {
 
 
 
-<<<<<<< HEAD
-<style scoped></style>
-=======
 <style scoped></style>
 <!-- 123 -->
