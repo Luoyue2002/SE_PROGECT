@@ -80,37 +80,43 @@ export default {
       currentPage: 1,
       productList: [
         {
+          id:1,
           name: '这就是商品1！',
           image: require('../pic/logo.jpg'),
           price: 123,
         },
         {
+          id:1,
           name: '这就是商品2！',
           image: require('../pic/logo.jpg'),
           price: 123,
         },
         {
-
+          id:1,
           name: '这就是商品3！',
           image: require('../pic/logo.jpg'),
           price: 123,
         },
         {
+          id:1,
           name: '这就是商品4！',
           image: require('../pic/logo.jpg'),
           price: 123,
         },
         {
+          id:1,
           name: '这就是商品5！',
           image: require('../pic/logo.jpg'),
           price: 123,
         },
         {
+          id:1,
           name: '这就是商品6！',
           image: require('../pic/logo.jpg'),
           price: 123,
         },
         {
+          id:1,
           name: '这就是商品7！',
           image: require('../pic/logo.jpg'),
           price: 123,
@@ -139,7 +145,7 @@ export default {
   },
   methods: {
     load() {
-      axios.get('http://10.162.59.81:8080/' + this.userid).then(res => {
+      axios.get('http://127.0.0.1:8080/' + this.userid).then(res => {
 
       });
     },

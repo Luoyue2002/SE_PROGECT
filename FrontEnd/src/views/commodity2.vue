@@ -77,6 +77,7 @@ export default {
 
       userid: 1,
       username: "123",
+      
       currentImgIndex: 1,
       totalImgIndex: 8,
       commodity: {
@@ -88,6 +89,7 @@ export default {
           { user: "123", content: "good" },
           { user: "1234", content: "bad" },
         ],
+
       },
 
 
