@@ -19,12 +19,3 @@ public class CommodityObject {
     private List<String> pictureList;  // 图片路径
 }
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class ItemObject {
-    private Integer itemId;  // 商品子分类id，前端传入不需要填
-    private String name;  // 子分类名称
-    private Integer number;  // 库存数量
-    private Float price;  // 价格
-}

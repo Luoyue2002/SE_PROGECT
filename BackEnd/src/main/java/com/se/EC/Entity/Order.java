@@ -30,16 +30,10 @@ public class Order implements Serializable {
     private Integer id;
     @TableField("buyer")
     private Integer buyer;
-    @TableField("seller")
-    private Integer seller;
-    @TableField("number")
-    private Integer number;
     @TableField("price")
     private Float price;
     @TableField("address")
     private String address;
-    @TableField("item")
-    private Integer item;
     @TableField("state")
     private Integer state;
     @TableField("time")
