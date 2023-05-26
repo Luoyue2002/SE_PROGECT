@@ -141,7 +141,7 @@ export default {
     },
     login() {
       if(this.loginoption == "username")
-      axios.post('http://10.162.59.81:8080/user/loginbyname?username='+this.username+'&password='+this.password).then(res => {
+      axios.post('http://127.0.0.1:8080/user/loginbyname?username='+this.username+'&password='+this.password).then(res => {
         console.log(res == null)
         if (res.userid != null) {
           this.$message.success("success!")
@@ -157,7 +157,7 @@ export default {
         this.showMessage(error.response);
       })
       else if(this.loginoption == "userid"){
-        axios.get('http://10.162.59.81:8080/user/loginById?userId='+this.form.userid+'&password='+this.form.pw).then(res => {
+        axios.get('http://127.0.0.1:8080/user/loginById?userId='+this.form.userid+'&password='+this.form.pw).then(res => {
           console.log(res.data.success)
           if (res.data.success == true) {
             this.$message.success("success!")
@@ -179,7 +179,7 @@ export default {
         })
       }
       else if(this.loginoption == "phone"){
-        axios.post('http://10.162.59.81:8080/user/loginbyphone?userphone='+this.username+'&password='+this.password).then(res => {
+        axios.post('http://127.0.0.1:8080/user/loginbyphone?userphone='+this.username+'&password='+this.password).then(res => {
           console.log("111")
           console.log(res == null)
           if (res.userid != null) {

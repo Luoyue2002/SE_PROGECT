@@ -3,10 +3,7 @@ package com.se.EC.Controller.Order;
 import com.se.EC.Service.Order.OrderServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
@@ -17,7 +14,7 @@ public class OrderController implements OrderControllerInterface {
 
     @Override
     @PostMapping("/createOrder")
-    public ApiResult<OrderObject> createOrder(OrderObject object) {
+    public ApiResult<OrderObject> createOrder(@RequestBody OrderObject object) {
         try {
             return ApiResult.success(orderServiceInterface.createOrder(object));
         } catch (Exception e) {

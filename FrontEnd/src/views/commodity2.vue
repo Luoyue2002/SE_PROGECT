@@ -76,7 +76,6 @@ export default {
       logourl: require("../pic/logo.jpg"),
 
       userid: 1,
-      username: "123",
       
       currentImgIndex: 1,
       totalImgIndex: 8,
@@ -95,29 +94,25 @@ export default {
 
     };
   },
-  methods: {
-
-    load() {
-      axios.get('http://10.162.59.81:8080/' + this.userid).then(res => {
-
-      });
-    },
-    addToFavorate(){
-
-    },
-    addToCart(){
-
-    },
-    connectToSeller(){
-
-    },
-  },
   created() {
     this.userid = this.$route.query.userid;
-    this.username = this.$route.query.username;
     this.load();
   },
-
+  methods: {
+    load() {
+      
+    },
+    addToFavorate(){
+      console.log("add to favorate");
+    },
+    addToCart(){
+      console.log("add to cart");
+    },
+    connectToSeller(){
+      console.log("connect");
+    },
+  },
+ 
 }
 </script>
 

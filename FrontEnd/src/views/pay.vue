@@ -90,7 +90,7 @@
                 <p>共计：￥{{ orderInfo.total }}</p>
               </el-col>
               <el-col :span="12" style="display: flex; justify-content: flex-end;">
-                <el-button type="primary" @click="submitForm('form')">提交订单</el-button>
+                <el-button type="primary" @click="submitForm()">提交订单</el-button>
               </el-col>
             </el-row>
           </el-form-item>
@@ -111,13 +111,15 @@ export default {
       logourl: require("../pic/logo.jpg"),
       products: [
         {
-          image: require("../assets/logo.png"),
+          id:1,
+          url: require("../assets/logo.png"),
           name: "book",
           number: 1,
           price: 123,
         },
         {
-          image: require("../assets/logo.png"),
+          id:2,
+          url: require("../assets/logo.png"),
           name: "computer",
           number: 1,
           price: 12,
@@ -142,11 +144,14 @@ export default {
       ]
     };
   },
+  created(){
+    this.userid = this.$route.query.userid;
+    this.product=this.$route.query.product
+    this.load();
+  },
   methods: {
     submitForm() {
-      // 在这里添加发布商品的逻辑
-      // 例如：调用 API 将表单数据发送到后端
-      console.log("发布商品：", this.product);
+      console.log(this.orderInfo);
     },
     handleSuccess(response, file, fileList) {
       console.log('上传成功:', response, file, fileList);

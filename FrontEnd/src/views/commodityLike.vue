@@ -28,7 +28,7 @@
               <el-row>
                 <el-col :span="12">
                   <div class="product-image">
-                    <img :src="product.image" alt="商品图片" />
+                    <img :src="product.url" alt="商品图片" />
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -41,7 +41,7 @@
                         <div style="font-size: 30px;">￥{{ product.price }}</div>
                       </el-col>
                       <el-col :span="12">
-                        <el-button type="danger" @click="removeFromFavorites(rowIndex,index)">取消收藏</el-button>
+                        <el-button type="danger" @click="removeFromFavorites(rowIndex, index)">取消收藏</el-button>
                       </el-col>
                     </el-row>
                   </div>
@@ -71,9 +71,8 @@ export default {
   data() {
     return {
       logourl: require("../pic/logo.jpg"),
-      
+
       userid: 1,
-      username: "123",
       pagination: {
         currentPage: 1,
         pageSize: 6,
@@ -81,45 +80,45 @@ export default {
       currentPage: 1,
       productList: [
         {
-          id:1,
+          id: 1,
           name: '这就是商品1！',
-          image: require('../pic/logo.jpg'),
+          url: require('../pic/logo.jpg'),
           price: 123,
         },
         {
-          id:1,
+          id: 1,
           name: '这就是商品2！',
-          image: require('../pic/logo.jpg'),
+          url: require('../pic/logo.jpg'),
           price: 123,
         },
         {
-          id:1,
+          id: 1,
           name: '这就是商品3！',
-          image: require('../pic/logo.jpg'),
+          url: require('../pic/logo.jpg'),
           price: 123,
         },
         {
-          id:1,
+          id: 1,
           name: '这就是商品4！',
-          image: require('../pic/logo.jpg'),
+          url: require('../pic/logo.jpg'),
           price: 123,
         },
         {
-          id:1,
+          id: 1,
           name: '这就是商品5！',
-          image: require('../pic/logo.jpg'),
+          url: require('../pic/logo.jpg'),
           price: 123,
         },
         {
-          id:1,
+          id: 1,
           name: '这就是商品6！',
-          image: require('../pic/logo.jpg'),
+          url: require('../pic/logo.jpg'),
           price: 123,
         },
         {
-          id:1,
+          id: 1,
           name: '这就是商品7！',
-          image: require('../pic/logo.jpg'),
+          url: require('../pic/logo.jpg'),
           price: 123,
         },
       ],
@@ -127,7 +126,6 @@ export default {
   },
   created() {
     this.userid = this.$route.query.userid;
-    this.username = this.$route.query.username;
     this.load();
   },
   computed: {
@@ -155,6 +153,18 @@ export default {
       console.log(`当前页: ${val}`);
       this.pagination.currentPage = val;
     },
+    load() {
+      axios.get('http://127.0.0.1:8080/favorites/getFavorites?userId=' + this.userid).then(res => {
+        console.log(res);
+        this.productList=res.data.data;
+      });
+    },
+    removeFromFavorites(rowIndex, index){
+      var productIndex=this.pagination.pageSize*rowIndex+index;
+      axios.get('http://127.0.0.1:8080/favorites/deleteFavorites?userId=' + this.userid+'&itemId='+this.productList[productIndex].id).then(res => {
+        console.log(res);
+      });
+    }
   },
 
 }
@@ -203,7 +213,8 @@ body {
 .Back {
   background-color: gray;
 }
-.commodity-show-section{
+
+.commodity-show-section {
   margin-left: 10%;
   margin-right: 10%;
   margin-bottom: 5%;
@@ -224,15 +235,17 @@ body {
 .product-price {
   font-size: 20px;
 }
-.foot-section{
+
+.foot-section {
   background-color: white;
 }
 
-.product-image{
+.product-image {
   margin-left: 5%;
   margin-right: 5%;
 }
-.product-info{
+
+.product-info {
   margin-left: 5%;
 }
 </style>
