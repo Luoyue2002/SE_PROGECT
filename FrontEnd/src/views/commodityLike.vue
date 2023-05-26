@@ -40,6 +40,9 @@
                       <el-col :span="12">
                         <div style="font-size: 30px;">￥{{ product.price }}</div>
                       </el-col>
+                      <el-col :span="12">
+                        <el-button type="danger" @click="removeFromFavorites(rowIndex,index)">取消收藏</el-button>
+                      </el-col>
                     </el-row>
                   </div>
                 </el-col>
@@ -61,11 +64,15 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "commodityLike",
   data() {
     return {
       logourl: require("../pic/logo.jpg"),
+      userid: 1,
+      username: "123",
       pagination: {
         currentPage: 1,
         pageSize: 6,
@@ -111,6 +118,11 @@ export default {
       ],
     };
   },
+  created() {
+    this.userid = this.$route.query.userid;
+    this.username = this.$route.query.username;
+    this.load();
+  },
   computed: {
     rows() {
       const currentPage = this.pagination.currentPage;
@@ -126,6 +138,11 @@ export default {
     },
   },
   methods: {
+    load() {
+      axios.get('http://10.162.59.81:8080/' + this.userid).then(res => {
+
+      });
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 件`);
       this.pagination.currentPage = 1;
@@ -135,6 +152,10 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.pagination.currentPage = val;
+    },
+    removeFromFavorites(rowIndex,index){
+      productIndex=rowIndex*this.pagination.pageSize+index;
+
     },
   },
 
@@ -184,14 +205,16 @@ body {
 .Back {
   background-color: gray;
 }
-.commodity-show-section{
+
+.commodity-show-section {
   margin-left: 10%;
   margin-right: 10%;
   margin-bottom: 5%;
 }
+
 .el-card {
   margin-top: 5%;
-  margin-right:5%;
+  margin-right: 5%;
 }
 
 .product-info {
@@ -211,7 +234,8 @@ body {
 .product-price {
   font-size: 20px;
 }
-.foot-section{
+
+.foot-section {
   background-color: white;
 }
 </style>

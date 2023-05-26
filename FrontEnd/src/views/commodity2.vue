@@ -40,9 +40,9 @@
             <p>{{ commodity.tag }}</p>
             <!-- 其他详情 -->
             <div class="buttons-container">
-              <el-button>联系卖家</el-button>
-              <el-button>收藏</el-button>
-              <el-button>加入购物车</el-button>
+              <el-button @click="connectToSeller()">联系卖家</el-button>
+              <el-button @click="addToFavorate()">收藏</el-button>
+              <el-button @click="addToCart()">加入购物车</el-button>
             </div>
           </div>
         </el-col>
@@ -75,6 +75,8 @@ export default {
       commodityImg: require("../assets/logo.png"),
       logourl: require("../pic/logo.jpg"),
 
+      userid: 1,
+      username: "123",
       currentImgIndex: 1,
       totalImgIndex: 8,
       commodity: {
@@ -83,8 +85,8 @@ export default {
         tag: "信用良好，使用痕迹",
         discription: "商品详细描述",
         reviews: [
-          {user: "123",content: "good"}, 
-          {user: "1234",content: "bad"},
+          { user: "123", content: "good" },
+          { user: "1234", content: "bad" },
         ],
       },
 
@@ -92,6 +94,25 @@ export default {
     };
   },
   methods: {
+    load() {
+      axios.get('http://10.162.59.81:8080/' + this.userid).then(res => {
+
+      });
+    },
+    addToFavorate(){
+
+    },
+    addToCart(){
+
+    },
+    connectToSeller(){
+
+    },
+  },
+  created() {
+    this.userid = this.$route.query.userid;
+    this.username = this.$route.query.username;
+    this.load();
   },
 
 }
