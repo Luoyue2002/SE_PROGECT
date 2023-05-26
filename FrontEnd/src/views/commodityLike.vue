@@ -40,6 +40,12 @@
                       <el-col :span="12">
                         <div style="font-size: 30px;">￥{{ product.price }}</div>
                       </el-col>
+<<<<<<< HEAD
+=======
+                      <el-col :span="12">
+                        <el-button type="danger" @click="removeFromFavorites(rowIndex,index)">取消收藏</el-button>
+                      </el-col>
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
                     </el-row>
                   </div>
                 </el-col>
@@ -61,11 +67,21 @@
 </template>
 
 <script>
+<<<<<<< HEAD
+=======
+import axios from "axios";
+
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
 export default {
   name: "commodityLike",
   data() {
     return {
       logourl: require("../pic/logo.jpg"),
+<<<<<<< HEAD
+=======
+      userid: 1,
+      username: "123",
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
       pagination: {
         currentPage: 1,
         pageSize: 6,
@@ -111,6 +127,14 @@ export default {
       ],
     };
   },
+<<<<<<< HEAD
+=======
+  created() {
+    this.userid = this.$route.query.userid;
+    this.username = this.$route.query.username;
+    this.load();
+  },
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
   computed: {
     rows() {
       const currentPage = this.pagination.currentPage;
@@ -126,6 +150,14 @@ export default {
     },
   },
   methods: {
+<<<<<<< HEAD
+=======
+    load() {
+      axios.get('http://10.162.59.81:8080/' + this.userid).then(res => {
+
+      });
+    },
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
     handleSizeChange(val) {
       console.log(`每页 ${val} 件`);
       this.pagination.currentPage = 1;
@@ -136,6 +168,13 @@ export default {
       console.log(`当前页: ${val}`);
       this.pagination.currentPage = val;
     },
+<<<<<<< HEAD
+=======
+    removeFromFavorites(rowIndex,index){
+      productIndex=rowIndex*this.pagination.pageSize+index;
+
+    },
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
   },
 
 }
@@ -184,14 +223,26 @@ body {
 .Back {
   background-color: gray;
 }
+<<<<<<< HEAD
 .commodity-show-section{
+=======
+
+.commodity-show-section {
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
   margin-left: 10%;
   margin-right: 10%;
   margin-bottom: 5%;
 }
+<<<<<<< HEAD
 .el-card {
   margin-top: 5%;
   margin-right:5%;
+=======
+
+.el-card {
+  margin-top: 5%;
+  margin-right: 5%;
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
 }
 
 .product-info {
@@ -211,7 +262,12 @@ body {
 .product-price {
   font-size: 20px;
 }
+<<<<<<< HEAD
 .foot-section{
+=======
+
+.foot-section {
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c
   background-color: white;
 }
 </style>
@@ -219,4 +275,9 @@ body {
 
 
 
+<<<<<<< HEAD
 <style scoped></style>
+=======
+<style scoped></style>
+<!-- 123 -->
+>>>>>>> 1f36c9cdde0e450a06b6540d9a19d4d904eaff1c

@@ -1,5 +1,6 @@
 package com.se.EC.Service.Preview;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Entity.Preview;
 import com.se.EC.Mapper.PreviewMapper;

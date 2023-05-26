@@ -3,6 +3,7 @@ package com.se.EC.Controller.Favorites;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Service.Favorites.FavoritesServiceInterface;
 import com.se.EC.Service.Preview.PreviewServiceInterface;
+import com.se.EC.Service.Favorites.FavoritesServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;

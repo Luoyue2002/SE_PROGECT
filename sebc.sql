@@ -216,27 +216,14 @@ DROP TABLE IF EXISTS `sedb`.`order` ;
 CREATE TABLE IF NOT EXISTS `sedb`.`order` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `buyer` INT NOT NULL,
-  `seller` INT NOT NULL,
-  `number` INT NOT NULL,
   `price` FLOAT NOT NULL,
   `address` VARCHAR(128) NOT NULL,
-  `item` INT NOT NULL,
   `state` INT NOT NULL,
   `time` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `buyer`
     FOREIGN KEY (`buyer`)
     REFERENCES `sedb`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `seller`
-    FOREIGN KEY (`seller`)
-    REFERENCES `sedb`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `item_2`
-    FOREIGN KEY (`item`)
-    REFERENCES `sedb`.`item` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -304,6 +291,36 @@ CREATE TABLE IF NOT EXISTS `sedb`.`history` (
   CONSTRAINT `history_commodity`
     FOREIGN KEY (`commodityId`)
     REFERENCES `sedb`.`commodity` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `sedb`.`orderitem`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `sedb`.`orderitem` ;
+
+CREATE TABLE IF NOT EXISTS `sedb`.`orderitem` (
+  `orderId` INT NOT NULL,
+  `itemId` INT NOT NULL,
+  `publisherId` INT NOT NULL,
+  `name` VARCHAR(128) NOT NULL,
+  `number` INT NOT NULL,
+  `price` FLOAT NOT NULL,
+  CONSTRAINT `orderitem_orderId`
+    FOREIGN KEY (`orderId`)
+    REFERENCES `sedb`.`order` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `history_commodity`
+    FOREIGN KEY (`item`)
+    REFERENCES `sedb`.`itemId` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `publisher_commodity`
+    FOREIGN KEY (`publisherId`)
+    REFERENCES `sedb`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
