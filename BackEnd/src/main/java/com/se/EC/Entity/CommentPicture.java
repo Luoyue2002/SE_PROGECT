@@ -1,6 +1,7 @@
 package com.se.EC.Entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class CommentPicture implements Serializable{
     @MppMultiId
-    @TableField("commentId")
+    @TableId("commentId")
     private Integer commentId;
     @MppMultiId
     @TableField("image")

@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Information implements Serializable {
+    private Integer senderId;
+    private Integer receiverId;
     private LocalDateTime time;
     private String content;
 }

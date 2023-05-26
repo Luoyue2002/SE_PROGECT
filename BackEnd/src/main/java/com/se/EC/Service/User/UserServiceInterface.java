@@ -3,6 +3,8 @@ package com.se.EC.Service.User;
 import com.github.jeffreyning.mybatisplus.service.IMppService;
 import com.se.EC.Entity.User;
 
+import java.util.List;
+
 
 public interface UserServiceInterface extends IMppService<User> {
 
@@ -29,6 +31,8 @@ public interface UserServiceInterface extends IMppService<User> {
     String userBeBusinessmen();
 
     String getNameById(Integer id);
+
+    List<User> getUsers();
 }
 
 

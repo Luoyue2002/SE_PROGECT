@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @CrossOrigin
@@ -24,13 +26,6 @@ public class ChatController implements ChatControllerInterface {
     @Resource
     private UserService userService;
 
-    /**
-     * 新增会话，商店界面点击`聊天`按钮与商家建立会话，建立会话后方可发送消息。
-     *
-     * @param senderId   发送者id
-     * @param receiverId 接收者id
-     * @return 是否添加成功
-     */
     @Override
     @RequestMapping("/createSession")
     public ApiResult<Boolean> createSession(@RequestParam(value = "senderId") Integer senderId,
@@ -43,13 +38,6 @@ public class ChatController implements ChatControllerInterface {
         }
     }
 
-    /**
-     * 删除会话，聊天界面点击`清空聊天记录`按钮删除会话。
-     *
-     * @param senderId   发送者id
-     * @param receiverId 接收者id
-     * @return 是否删除成功
-     */
     @Override
     @RequestMapping("/dropSession")
     public ApiResult<Boolean> dropSession(@RequestParam(value = "senderId") Integer senderId,
@@ -62,12 +50,6 @@ public class ChatController implements ChatControllerInterface {
         }
     }
 
-    /**
-     * 获取会话
-     *
-     * @param id id
-     * @return SessionInformation的List
-     */
     @Override
     @RequestMapping("/getSession")
     public ApiResult<List<SessionInformation>> getSession(@RequestParam(value = "id") Integer id) {
@@ -81,14 +63,6 @@ public class ChatController implements ChatControllerInterface {
         return ApiResult.success(sessionInformationList);
     }
 
-    /**
-     * 发送消息函数
-     *
-     * @param senderId   发送者id
-     * @param receiverId 接收者id
-     * @param content    信息
-     * @return 对方是否在线
-     */
     @Override
     @RequestMapping("/sendMessage")
     public ApiResult<Boolean> sendMessage(@RequestParam(value = "senderId") Integer senderId,
@@ -102,42 +76,62 @@ public class ChatController implements ChatControllerInterface {
         }
     }
 
-    /**
-     * 接受新增消息函数
-     *
-     * @param senderId   发送者id
-     * @param receiverId 请求接收者的id
-     * @return 一个包含信息的链表，信息包含时间和内容，最多500条，从上一次update之后开始，最开始的是最近的消息
-     */
     @Override
     @RequestMapping("/updateMessage")
     public ApiResult<List<Information>> updateMessage(@RequestParam(value = "senderId") Integer senderId,
                                                       @RequestParam(value = "receiverId") Integer receiverId) {
         try {
-            List<Information> informationList = chatServiceInterface.updateMessage(senderId, receiverId);
-            return ApiResult.success(informationList);
+            LocalDateTime updateTime = sessionService.getUpdateTime(senderId, receiverId);
+            List<Information> informationList1 = chatServiceInterface.updateMessage(senderId, receiverId, updateTime);
+            List<Information> informationList2 = chatServiceInterface.updateMessage(receiverId, senderId, updateTime);
+
+            LocalDateTime currentTime = LocalDateTime.now();
+            sessionService.updateUpdateTime(senderId, receiverId, currentTime);
+
+            return ApiResult.success(mergeSort(informationList1, informationList2));
         } catch (Exception e) {
-            return ApiResult.error(e.getMessage(), null);
+            return ApiResult.error(e.getMessage());
         }
     }
 
-    /**
-     * 接受所有消息函数
-     *
-     * @param senderId   发送者id
-     * @param receiverId 请求接收者的id
-     * @return 一个包含信息的链表，信息包含时间和内容，最多500条，最开始的是最近的消息
-     */
     @Override
     @RequestMapping("/retrieveAllMessage")
     public ApiResult<List<Information>> retrieveAllMessage(@RequestParam(value = "senderId") Integer senderId,
                                                            @RequestParam(value = "receiverId") Integer receiverId) {
         try {
-            List<Information> informationList = chatServiceInterface.retrieveAllMessage(senderId, receiverId);
-            return ApiResult.success(informationList);
+            List<Information> informationList1 = chatServiceInterface.retrieveAllMessage(senderId, receiverId);
+            List<Information> informationList2 = chatServiceInterface.retrieveAllMessage(receiverId, senderId);
+
+            return ApiResult.success(mergeSort(informationList1, informationList2));
         } catch (Exception e) {
-            return ApiResult.error(e.getMessage(), null);
+            return ApiResult.error(e.getMessage());
         }
+    }
+
+    @Override
+    @RequestMapping("/unreadMessageCount")
+    public ApiResult<Integer> unreadMessageCount(@RequestParam(value = "senderId") Integer senderId,
+                                                 @RequestParam(value = "receiverId") Integer receiverId) {
+        try {
+            LocalDateTime updateTime = sessionService.getUpdateTime(senderId, receiverId);
+            return ApiResult.success(chatServiceInterface.updateMessageCount(senderId, receiverId, updateTime));
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    private List<Information> mergeSort(List<Information> informationList1, List<Information> informationList2) {
+        informationList1.addAll(informationList2);
+        informationList1.sort((o1, o2) -> {
+            if (o1.getTime().isAfter(o2.getTime())) {
+                return -1;
+            } else if (o1.getTime().equals(o2.getTime())) {
+                return 0;
+            } else {
+                return 1;
+            }
+        });
+        return informationList1;
     }
 }
 

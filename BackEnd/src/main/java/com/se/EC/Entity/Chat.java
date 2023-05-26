@@ -1,6 +1,7 @@
 package com.se.EC.Entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -34,7 +35,7 @@ public class Chat implements Serializable {
     @TableField("content")
     private String content;
     @MppMultiId
-    @TableField("senderId")
+    @TableId("senderId")
     private Integer senderId;
     @MppMultiId
     @TableField("receiverId")

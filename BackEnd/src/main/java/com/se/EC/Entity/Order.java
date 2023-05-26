@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order implements Serializable {
+    @MppMultiId
     @TableId("id")
     private Integer id;
     @TableField("buyer")

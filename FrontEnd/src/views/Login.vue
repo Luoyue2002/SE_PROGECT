@@ -114,11 +114,9 @@ export default {
   },
   methods: {
     handlogin() {
-      console.log("show router")
-      console.log(this.$router)
       this.login()
-      this.loginvisible = true
-      this.form = {}
+      // this.loginvisible = true
+      // this.form = {}
     },
     handregist(){
       this.$router.push({name:'regist'});
@@ -142,15 +140,12 @@ export default {
       this.idvisible = false
     },
     login() {
-      console.log("122")
       if(this.loginoption == "username")
-      axios.post('http://10.192.22.86:7001/user/loginbyname?username='+this.username+'&password='+this.password).then(res => {
-        console.log("111")
+      axios.post('http://10.162.59.81:8080/user/loginbyname?username='+this.username+'&password='+this.password).then(res => {
         console.log(res == null)
         if (res.userid != null) {
           this.$message.success("success!")
-          console.log("user:"+res.userid)
-          this.$router.push({name:'userinfo',query:{userid : res.userid,username: res.username}});
+          this.$router.push({name:'userinfo',query:{userid : this.form.userid, username: this.form.username}});
         }
         else{
           this.$message({
@@ -162,13 +157,13 @@ export default {
         this.showMessage(error.response);
       })
       else if(this.loginoption == "userid"){
-        axios.get('http://10.192.22.86:7001/user/loginbyid?userid='+this.userid+'&password='+this.password).then(res => {
-          console.log("111")
-          console.log(res == null)
-          if (res.userid != null) {
+        axios.get('http://10.162.59.81:8080/user/loginById?userId='+this.form.userid+'&password='+this.form.pw).then(res => {
+          console.log(res.data.success)
+          if (res.data.success == true) {
             this.$message.success("success!")
-            console.log("user:"+res.userid)
-            this.$router.push({name:'userinfo',query:{userid : res.userid,username: res.username}});
+            // console.log("user:"+res.userid)
+            // this.$router.push({name:'userinfo',query:{userid : res.userid,username: res.username}});
+            this.$router.push({name:'chat',query:{userid : this.form.userid,username: this.form.username}});
           }
           else{
             this.$message({
@@ -177,11 +172,14 @@ export default {
             });
           }
         }).catch((error) => {
-          this.showMessage(error.response);
+          this.$message({
+            message: error,
+            type: 'warning'
+          });
         })
       }
       else if(this.loginoption == "phone"){
-        axios.post('http://10.192.22.86:7001/user/loginbyphone?phone='+this.username+'&password='+this.password).then(res => {
+        axios.post('http://10.162.59.81:8080/user/loginbyphone?userphone='+this.username+'&password='+this.password).then(res => {
           console.log("111")
           console.log(res == null)
           if (res.userid != null) {

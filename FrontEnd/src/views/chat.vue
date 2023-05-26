@@ -37,14 +37,14 @@
         </div>
       </div>
       <div class="messages" ref="messagesContainer">
-        <div v-for="message in getSelectedUserMessages" :key="message.id" class="message" :class="{ mine: message.isMine }">
+        <div v-for="message in getSelectedUserMessages" :key="message.id" :class="judge(message.isMine)">
           <div class="message-avatar">
             <img :src="getUserAvatar(message.userId)" :alt="getUser(message.userId).name">
           </div>
           <div class="message-content">
             <div class="message-sender">{{ getUser(message.userId).name }}</div>
-            <div class="message-text">{{ message.textcontent }}</div> <!-- 使用 message.textcontent -->
-            <div class="message-time">{{ message.timestamp }}</div> <!-- 使用 message.timestamp -->
+            <div class="message-text">{{ message.textcontent }}</div>
+            <div class="message-time">{{ message.timestamp }}</div>
           </div>
         </div>
       </div>
@@ -67,12 +67,9 @@ export default {
       userid: '',
       userList: [],
       selectedUser: null,
-      messages: [{
-        id:1,
-        userid: 1,
-        textcontent: "jjj",
-        timestamp: "2021"
-      }],
+      num: 0,
+      messages: [
+      ],
       newMessage: '',
       searchQuery: "",
     };
@@ -83,7 +80,6 @@ export default {
     },
     filteredUserList() {
       const query = this.searchQuery.toLowerCase();
-      console.log("query"+query)
       if(query == null)
         return this.userList;
       else
@@ -98,7 +94,7 @@ export default {
   },
   methods: {
     load() {
-      axios.get('http://10.162.59.81:8080/chat/get_session?id=' + this.userid).then(res => {
+      axios.get('http://10.162.59.81:8080/chat/getSession?id=' + this.userid).then(res => {
         for (let i = 0; i < res.data.result.length; i++) {
           const user = {
             id: res.data.result[i].id,
@@ -107,34 +103,54 @@ export default {
           };
           this.userList.push(user);
         }
-        console.log(this.userList);
-        // this.$route.go(0);
       });
+    },
+    judge(ismine){
+      if(ismine == true){
+        return 'message'
+      }
+      else
+        return 'mine'
     },
     everySecondFunction() {
       const selectedUser = this.selectedUser;
-      console.log("selectedUser:", selectedUser);
-      console.log("mess:"+this.messages.length)
-
-      axios.get('http://10.162.59.81:8080/chat/update_message?senderId=' + selectedUser + '&receiverId=' + this.userid)
+      axios.get('http://10.162.59.81:8080/chat/updateMessage?senderId=' + selectedUser + '&receiverId=' + this.userid)
           .then(res => {
             if (res.data.result && res.data.result.length > 0) {
               const msg = {
                 userId: selectedUser,
                 textcontent: res.data.result[0].content, // 使用 textcontent
-                timestamp: res.data.result[0].time // 使用 timestamp
+                timestamp: res.data.result[0].time, // 使用 timestamp
+                isMine: false,
+                id: this.num++
               };
-              console.log(res.data.result[0]);
               this.messages.push(msg);
             }
           })
           .catch(error => {
             console.log(error);
           });
-    }
-    ,
+    },
     selectUser(userId) {
       this.selectedUser = userId;
+      this.messages.length = 0
+      axios.get('http://10.162.59.81:8080/chat/retrieveAllMessage?senderId=' + this.selectedUser + '&receiverId=' + this.userid)
+          .then(res => {
+            for (let i = res.data.result.length - 1; i >= 0; i--) {
+              const msg = {
+                userId: this.selectedUser,
+                textcontent: res.data.result[i].content, // 使用 textcontent
+                timestamp: res.data.result[i].time.replace('T',' '), // 使用 timestamp
+                isMine: false,
+                id: this.num++
+              };
+              this.messages.push(msg);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      console.log("length:"+this.messages.length)
       this.scrollToBottom();
     },
     getUser(userId) {
@@ -145,17 +161,21 @@ export default {
       return user ? user.avatar : '';
     },
     sendMessage() {
-      if (this.newMessage && this.selectedUser) {
-        const messageId = this.messages.length + 1;
-        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const newMessage = {
-          id: messageId,
-          content: this.newMessage,
-          time: currentTime,
-          userId: this.selectedUser,
-          isMine: true
-        };
-        this.messages.push(newMessage);
+      const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      let newMessagecontent = this.newMessage;
+      if (this.newMessage != null && this.selectedUser) {
+        axios.post('http://10.162.59.81:8080/chat/sendMessage?senderId='+this.userid+'&receiverId='+this.selectedUser+'&content='+this.newMessage).then(res=>{
+          console.log("message:"+newMessagecontent)
+          const newMessage = {
+            id: this.num++,
+            textcontent: newMessagecontent,
+            timestamp: currentTime,
+            userId: this.selectedUser,
+            isMine: true
+          };
+          this.messages.push(newMessage);
+          console.log("length:"+this.messages.length)
+        })
         this.newMessage = '';
         this.scrollToBottom();
       }
@@ -168,6 +188,8 @@ export default {
     },
   },
 };
+
+//123
 </script>
 
 <style>
@@ -300,6 +322,8 @@ export default {
 .message {
   display: flex;
   margin-bottom: 10px;
+  width: 30%;
+  margin-left: 5%;
 }
 
 .message-avatar {
@@ -325,8 +349,9 @@ export default {
   color: #999999;
 }
 
-.message.mine {
-  flex-direction: row-reverse;
+.mine {
+  /*flex-direction: row-reverse;*/
+  margin-right: 5%;
 }
 
 .input-area {

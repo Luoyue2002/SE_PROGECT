@@ -16,12 +16,6 @@ public class SessionService extends MppServiceImpl<SessionMapper, Session> imple
     @Resource
     private SessionMapper sessionMapper;
 
-    /**
-     * 创建会话
-     *
-     * @param senderId   发起者id
-     * @param receiverId 被发起者id
-     */
     @Override
     public void createSession(Integer senderId, Integer receiverId) {
         // 查看这个会话是否已经存在
@@ -39,12 +33,6 @@ public class SessionService extends MppServiceImpl<SessionMapper, Session> imple
         }
     }
 
-    /**
-     * 删除会话
-     *
-     * @param senderId   发起者id
-     * @param receiverId 被发起者id
-     */
     @Override
     public void dropSession(Integer senderId, Integer receiverId) {
         // 查看这个会话是否已经存在
@@ -68,12 +56,6 @@ public class SessionService extends MppServiceImpl<SessionMapper, Session> imple
         }
     }
 
-    /**
-     * 获取会话
-     *
-     * @param id id
-     * @return id List
-     */
     @Override
     public List<Integer> getSession(Integer id) {
         // 获取所有会话
@@ -89,6 +71,29 @@ public class SessionService extends MppServiceImpl<SessionMapper, Session> imple
         }
 
         return idList;
+    }
+
+    @Override
+    public LocalDateTime getUpdateTime(Integer senderId, Integer receiverId) {
+        QueryWrapper<Session> sessionQueryWrapper = new QueryWrapper<>();
+        sessionQueryWrapper.eq("senderId", senderId);
+        sessionQueryWrapper.eq("receiverId", receiverId);
+        List<Session> sessionList = sessionMapper.selectList(sessionQueryWrapper);
+        if (sessionList.size() == 0) {
+            throw new RuntimeException("Session does not exist");
+        } else if (sessionList.size() > 1) {
+            throw new RuntimeException("There are many session between " + senderId + " and " + receiverId);
+        }
+        return sessionList.get(0).getUpdateTime();
+    }
+
+    @Override
+    public void updateUpdateTime(Integer senderId, Integer receiverId, LocalDateTime updateTime) {
+        QueryWrapper<Session> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("senderId", senderId);
+        queryWrapper.eq("receiverId", receiverId);
+        Session session = new Session(senderId, receiverId, updateTime);
+        sessionMapper.update(session, queryWrapper);
     }
 
     /**
