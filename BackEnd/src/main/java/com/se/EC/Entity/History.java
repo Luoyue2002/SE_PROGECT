@@ -15,33 +15,24 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("order")
+@TableName("history")
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order implements Serializable {
+public class History {
     @MppMultiId
-    @TableId("id")
-    private Integer id;
-    @TableField("buyer")
-    private Integer buyer;
-    @TableField("seller")
-    private Integer seller;
+    @TableId("userId")
+    private Integer userId;
+    @MppMultiId
+    @TableField("commodityId")
+    private Integer commodityId;
     @TableField("number")
     private Integer number;
-    @TableField("price")
-    private Float price;
-    @TableField("address")
-    private String address;
-    @TableField("item")
-    private Integer item;
-    @TableField("state")
-    private Integer state;
+    @MppMultiId
     @TableField("time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

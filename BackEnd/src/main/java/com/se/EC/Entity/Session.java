@@ -1,6 +1,7 @@
 package com.se.EC.Entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -24,8 +25,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Session implements Serializable {
-    @MppMultiId  // 复合主键
-    @TableField("senderId")
+    @MppMultiId
+    @TableId("senderId")
     private Integer senderId;
     @MppMultiId
     @TableField("receiverId")

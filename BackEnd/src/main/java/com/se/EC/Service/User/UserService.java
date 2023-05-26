@@ -7,6 +7,8 @@ import com.se.EC.Mapper.UserMapper;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 
+import java.util.List;
+
 @Service
 public class UserService extends MppServiceImpl<UserMapper, User> implements UserServiceInterface {
     @Resource
@@ -157,5 +159,10 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
         userQueryWrapper.eq("id", id);
         User user = userMapper.selectOne(userQueryWrapper);
         return user.getName();
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userMapper.selectList(null);
     }
 }
