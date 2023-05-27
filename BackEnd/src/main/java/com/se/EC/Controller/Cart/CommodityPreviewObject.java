@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class CommodityPreviewObject {
-    private Integer id;  // 商品id，前端传入不需要填
+    private Integer id;  // itemId
     private String name;  // 商品名称
     private String url;  // 图片url
+    private Float price;  // 价格
+    private Integer count;  // 数量
 }
