@@ -11,6 +11,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.ansj.recognition.impl.StopRecognition;
+import org.ansj.splitWord.analysis.ToAnalysis;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,24 +40,29 @@ public class CommodityController implements CommodityControllerInterface {
 
     @Override
     @RequestMapping("/recommend")
-    public ApiResult<List<CommodityPreviewObject>> recommend(@RequestParam(value = "id") Integer id,
-                                                             @RequestParam(value = "pageNumber") Integer pageNumber,
-                                                             @RequestParam(value = "pageIndex") Integer pageIndex) {
+    public ApiResult<List<CommodityPreviewObject>> recommend(@RequestParam(value = "id") Integer id) {
         try {
             List<Integer> idList = historyMatrix.recommend(id);
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
             for (var item : idList) {
-                String name = commodityServiceInterface.getNameById(item);
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(item, name, null);
+                Commodity commodity = commodityServiceInterface.getCommodityDetailById(item);
+                String name = commodity.getName();
+                Integer sales = commodity.getSales();
+                List<Item> itemList = itemServiceInterface.getItemsByParentId(item);
+                itemList.sort((o1, o2) -> {
+                    if (o1.getPrice() > o2.getPrice()) {
+                        return 1;
+                    } else if (o1.getPrice().equals(o2.getPrice())) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                });
+                Float price = itemList.get(0).getPrice();
+                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(item, name, null, price, sales);
                 commodityPreviewObjectList.add(commodityPreviewObject);
             }
-            int fromIndex = pageNumber * (pageIndex - 1);
-            int size = commodityPreviewObjectList.size();
-            if (fromIndex > size) {
-                return null;
-            } else {
-                return ApiResult.success(commodityPreviewObjectList.subList(fromIndex, size));
-            }
+            return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
@@ -64,42 +71,131 @@ public class CommodityController implements CommodityControllerInterface {
     @Override
     @RequestMapping("/searchByContent")
     public ApiResult<List<CommodityPreviewObject>> searchByContent(@RequestParam(value = "id") Integer id,
-                                                                   @RequestParam(value = "content") String content,
-                                                                   @RequestParam(value = "pageNumber") Integer pageNumber,
-                                                                   @RequestParam(value = "pageIndex") Integer pageIndex) {
+                                                                   @RequestParam(value = "content") String content) {
         try {
+            List<String> tokens = tokenizer(content);
+            Map<Integer, Integer> commodityMap = new HashMap<>();
+            List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
+            for (var token : tokens) {
+                List<Commodity> commodityList = commodityServiceInterface.getCommoditiesByFuzzyContent(token);
+                for (var commodity : commodityList) {
+                    Integer commodityId = commodity.getId();
+                    if (commodityMap.containsKey(commodityId)) {
+                        commodityMap.put(commodityId, commodityMap.get(commodityId) + 1);
+                    } else {
+                        commodityMap.put(commodityId, 1);
+                    }
+                }
+            }
+            List<Map.Entry<Integer, Integer>> sortList = new ArrayList<>(commodityMap.entrySet());
+            sortList.sort((o1, o2) -> {
+                if (o1.getValue() > o2.getValue()) {
+                    return -1;
+                } else if (o1.getValue().equals(o2.getValue())) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            });
+            for (var item : sortList) {
+                Integer commodityId = item.getKey();
+                Commodity commodity = commodityServiceInterface.getCommodityDetailById(commodityId);
+                String name = commodity.getName();
+                Integer sales = commodity.getSales();
+                List<Item> itemList = itemServiceInterface.getItemsByParentId(commodityId);
+                itemList.sort((o1, o2) -> {
+                    if (o1.getPrice() > o2.getPrice()) {
+                        return 1;
+                    } else if (o1.getPrice().equals(o2.getPrice())) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                });
+                Float price = itemList.get(0).getPrice();
+                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, null, price, sales);
+                commodityPreviewObjectList.add(commodityPreviewObject);
+            }
+            return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
-        return null;
+    }
+
+    /**
+     * 分词
+     * @param text 搜索内容
+     * @return 分词结果
+     */
+    public List<String> tokenizer(String text) {
+        StopRecognition stopRecognition = new StopRecognition();
+        stopRecognition.insertStopNatures("w");
+        stopRecognition.insertStopWords(" ");
+        String analysedText = ToAnalysis.parse(text).recognition(stopRecognition).toStringWithOutNature();
+        return Arrays.asList(analysedText.split(","));
     }
 
     @Override
     @RequestMapping("/searchByPublisher")
     public ApiResult<List<CommodityPreviewObject>> searchByPublisher(@RequestParam(value = "id") Integer id,
-                                                                     @RequestParam(value = "publisher_id") Integer publisherId,
-                                                                     @RequestParam(value = "pageNumber") Integer pageNumber,
-                                                                     @RequestParam(value = "pageIndex") Integer pageIndex) {
+                                                                     @RequestParam(value = "publisher_id") Integer publisherId) {
         try {
-
+            List<Commodity> commodityList = commodityServiceInterface.getCommoditiesByPublisher(publisherId);
+            List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
+            for (var item : commodityList) {
+                String name = item.getName();
+                Integer sales = item.getSales();
+                Integer commodityId = item.getId();
+                List<Item> itemList = itemServiceInterface.getItemsByParentId(commodityId);
+                itemList.sort((o1, o2) -> {
+                    if (o1.getPrice() > o2.getPrice()) {
+                        return 1;
+                    } else if (o1.getPrice().equals(o2.getPrice())) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                });
+                Float price = itemList.get(0).getPrice();
+                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, null, price, sales);
+                commodityPreviewObjectList.add(commodityPreviewObject);
+            }
+            return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
-        return null;
     }
 
     @Override
     @RequestMapping("/searchByCategory")
     public ApiResult<List<CommodityPreviewObject>> searchByCategory(@RequestParam(value = "id") Integer id,
-                                                                    @RequestParam(value = "category") String category,
-                                                                    @RequestParam(value = "pageNumber") Integer pageNumber,
-                                                                    @RequestParam(value = "pageIndex") Integer pageIndex) {
+                                                                    @RequestParam(value = "category") String category) {
         try {
             checkCategory(category);
+            List<Commodity> commodityList = commodityServiceInterface.getCommoditiesByCategory(category);
+            List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
+            for (var item : commodityList) {
+                String name = item.getName();
+                Integer sales = item.getSales();
+                Integer commodityId = item.getId();
+                List<Item> itemList = itemServiceInterface.getItemsByParentId(commodityId);
+                itemList.sort((o1, o2) -> {
+                    if (o1.getPrice() > o2.getPrice()) {
+                        return 1;
+                    } else if (o1.getPrice().equals(o2.getPrice())) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                });
+                Float price = itemList.get(0).getPrice();
+                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, null, price, sales);
+                commodityPreviewObjectList.add(commodityPreviewObject);
+            }
+            return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -283,7 +379,7 @@ public class CommodityController implements CommodityControllerInterface {
         /**
          * 协同过滤算法，定时计算
          */
-        @Scheduled(cron = "0/10 * * * * ?")
+        @Scheduled(cron = "0/20 * * * * ?")
         public void collaborativeFiltering() {
             staticMatrix = activeUserCommodityMatrix.clone();
             for (int i = 0; i < userNumber; i++) {

@@ -11,5 +11,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SessionInformation implements Serializable {
     private Integer id;
+    private Integer unreadCount;
     private String name;
 }

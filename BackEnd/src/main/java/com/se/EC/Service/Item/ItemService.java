@@ -20,4 +20,11 @@ public class ItemService extends MppServiceImpl<ItemMapper, Item> implements Ite
         queryWrapper.eq("parentId", parentId);
         return itemMapper.selectList(queryWrapper);
     }
+
+    @Override
+    public Item getItemById(Integer id) {
+        QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        return itemMapper.selectOne(queryWrapper);
+    }
 }

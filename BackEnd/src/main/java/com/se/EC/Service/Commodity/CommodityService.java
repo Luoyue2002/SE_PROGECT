@@ -31,6 +31,27 @@ public class CommodityService extends MppServiceImpl<CommodityMapper, Commodity>
         return commodityList.get(0);
     }
 
+    @Override
+    public List<Commodity> getCommoditiesByCategory(String category) {
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("category", category);
+        return commodityMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<Commodity> getCommoditiesByPublisher(Integer id) {
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("publisher", id);
+        return commodityMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<Commodity> getCommoditiesByFuzzyContent(String content) {
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("name", content);
+        return commodityMapper.selectList(queryWrapper);
+    }
+
     private List<Commodity> getCommodityListById(Integer id) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);

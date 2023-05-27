@@ -1,8 +1,9 @@
 package com.se.EC.Controller.Cart;
 
+import com.se.EC.Entity.Cart;
+import com.se.EC.Entity.Item;
 import com.se.EC.Service.Cart.CartServiceInterface;
-import com.se.EC.Service.Commodity.CommodityServiceInterface;
-import com.se.EC.Service.Favorites.FavoritesServiceInterface;
+import com.se.EC.Service.Item.ItemServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
@@ -17,9 +18,7 @@ public class CartController implements CartControllerInterface {
     @Resource
     private CartServiceInterface cartServiceInterface;
     @Resource
-    private FavoritesServiceInterface favoritesServiceInterface;
-    @Resource
-    private CommodityServiceInterface commodityServiceInterface;
+    private ItemServiceInterface itemServiceInterface;
 
     @Override
     @RequestMapping("/addCart")
@@ -61,13 +60,17 @@ public class CartController implements CartControllerInterface {
 
     @Override
     @RequestMapping("/getCart")
-    public ApiResult<List<CommodityPreviewObject>> getFavorites(@RequestParam(value = "userId") Integer userId) {
+    public ApiResult<List<CommodityPreviewObject>> getCart(@RequestParam(value = "userId") Integer userId) {
         try {
-            List<Integer> idList = favoritesServiceInterface.getFavorites(userId);
+            List<Cart> cartList = cartServiceInterface.getCart(userId);
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
-            for (var item : idList) {
-                String name = commodityServiceInterface.getNameById(item);
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(item, name, null);
+            for (var cart : cartList) {
+                Integer id = cart.getItem();
+                Item item = itemServiceInterface.getById(id);
+                String name = item.getName();
+                Float price = item.getPrice();
+                Integer count = cart.getNumber();
+                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(id, name, null, price, count);
                 commodityPreviewObjectList.add(commodityPreviewObject);
             }
             return ApiResult.success(commodityPreviewObjectList);

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @CrossOrigin
@@ -56,8 +55,10 @@ public class ChatController implements ChatControllerInterface {
         List<Integer> idList = sessionService.getSession(id);
         List<SessionInformation> sessionInformationList = new ArrayList<>();
         for (var item: idList) {
+            LocalDateTime updateTime = sessionService.getUpdateTime(item, id);
+            Integer unreadCount = chatServiceInterface.updateMessageCount(item, id, updateTime);
             String name = userService.getNameById(item);
-            SessionInformation sessionInformation = new SessionInformation(item, name);
+            SessionInformation sessionInformation = new SessionInformation(item, unreadCount, name);
             sessionInformationList.add(sessionInformation);
         }
         return ApiResult.success(sessionInformationList);
