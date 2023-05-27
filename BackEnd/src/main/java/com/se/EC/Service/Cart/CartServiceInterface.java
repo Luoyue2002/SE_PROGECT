@@ -3,6 +3,8 @@ package com.se.EC.Service.Cart;
 import com.github.jeffreyning.mybatisplus.service.IMppService;
 import com.se.EC.Entity.Cart;
 
+import java.util.List;
+
 
 public interface CartServiceInterface extends IMppService<Cart> {
     /**
@@ -27,6 +29,13 @@ public interface CartServiceInterface extends IMppService<Cart> {
      * @param itemId 商品细分类 id
      */
     void deleteCart(Integer userId, Integer itemId);
+
+    /**
+     * 获取购物车商品
+     * @param userId 用户 id
+     * @return cart列表
+     */
+    List<Cart> getCart(Integer userId);
 }
 
 
