@@ -15,7 +15,4 @@ public interface ItemServiceInterface extends IMppService<Item> {
 
 
     public void deleteCommodity(int commodityId);
-
-
-    Item getItemById(Integer id);
 }

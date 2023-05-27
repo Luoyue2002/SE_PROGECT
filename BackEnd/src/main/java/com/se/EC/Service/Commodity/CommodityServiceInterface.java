@@ -19,11 +19,6 @@ public interface CommodityServiceInterface extends IMppService<Commodity> {
     //LY
     CommodityObject  deleteCommodity(int commodityId);
 
-
-
-    List<Commodity> getCommoditiesByCategory(String category);
-    List<Commodity> getCommoditiesByPublisher(Integer id);
-    List<Commodity> getCommoditiesByFuzzyContent(String content);
 }
 
 

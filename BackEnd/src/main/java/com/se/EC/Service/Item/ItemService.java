@@ -5,6 +5,9 @@ import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Controller.Order.OrderItemObject;
 import com.se.EC.Controller.Shop.CommodityObject;
 import com.se.EC.Controller.Shop.ItemObject;
+import com.se.EC.Controller.Order.OrderItemObject;
+import com.se.EC.Controller.Shop.CommodityObject;
+import com.se.EC.Controller.Shop.ItemObject;
 import com.se.EC.Entity.Item;
 import com.se.EC.Entity.OrderItem;
 import com.se.EC.Mapper.ItemMapper;
@@ -47,10 +50,4 @@ public class ItemService extends MppServiceImpl<ItemMapper, Item> implements Ite
         return ;
     }
 
-    @Override
-    public Item getItemById(Integer id) {
-        QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
-        return itemMapper.selectOne(queryWrapper);
-    }
 }
