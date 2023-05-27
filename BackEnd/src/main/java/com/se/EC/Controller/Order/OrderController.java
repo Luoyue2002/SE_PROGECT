@@ -1,12 +1,15 @@
 package com.se.EC.Controller.Order;
 
+import com.se.EC.Entity.Order;
+import com.se.EC.Entity.OrderItem;
 import com.se.EC.Service.Order.OrderServiceInterface;
+import com.se.EC.Service.OrderItem.OrderItemServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 
 @CrossOrigin
 @RestController
@@ -14,12 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController implements OrderControllerInterface {
     @Resource
     private OrderServiceInterface orderServiceInterface;
-
+    @Resource
+    OrderItemServiceInterface orderItemServiceInterface;
     @Override
     @PostMapping("/createOrder")
-    public ApiResult<OrderObject> createOrder(OrderObject object) {
+    public ApiResult<OrderObject> createOrder(@RequestBody OrderObject object) {
         try {
-            return ApiResult.success(orderServiceInterface.createOrder(object));
+            OrderObject order = orderServiceInterface.createOrder(object);
+            order = orderItemServiceInterface.createOrder(order);
+            return ApiResult.success(order);
+
         } catch (Exception e) {
             return ApiResult.error("unknown error!");
         }
@@ -28,7 +35,7 @@ public class OrderController implements OrderControllerInterface {
 
     @Override
     @RequestMapping("/getOrderList")
-    public ApiResult getOrderList(int userId) {
+    public ApiResult<List<Order>> getOrderList(@RequestParam(value = "userId")int userId) {
         try {
             return ApiResult.success(orderServiceInterface.getOrderList(userId));
         } catch (Exception e) {
@@ -37,9 +44,15 @@ public class OrderController implements OrderControllerInterface {
     }
 
     @RequestMapping("/getOrderInfo")
-    public ApiResult getOrderInfo(int userId) {
+    public ApiResult<OrderObject> getOrderInfo(@RequestParam(value = "orderId")int orderId ) {
         try {
-            return ApiResult.success(orderServiceInterface.getOrderInfo(userId));
+            Order orderNow = orderServiceInterface.getOrderInfo(orderId);
+            List<OrderItemObject> itemList = orderItemServiceInterface.getOrderInfo(orderId);
+
+            return ApiResult.success(
+                    new OrderObject(orderNow.getId(), orderNow.getBuyer(), orderNow.getState()
+                    , orderNow.getAddress(), orderNow.getPrice(), orderNow.getTime(), itemList)
+            );
         } catch (Exception e) {
             return ApiResult.error("unknown error!");
         }
@@ -47,9 +60,28 @@ public class OrderController implements OrderControllerInterface {
 
 
     @RequestMapping("/orderPay")
-    public ApiResult orderPay(int userId) {
+    public ApiResult<Boolean> orderPay(@RequestParam(value = "orderId")int orderId ) {
         try {
-            return ApiResult.success(orderServiceInterface.orderPay(userId));
+            boolean success = orderServiceInterface.orderPay(orderId);
+            if(!success){
+                return ApiResult.error("failed");
+            }
+            return ApiResult.error("success");
+        } catch (Exception e) {
+            return ApiResult.error("unknown error!");
+        }
+    }
+
+
+    @RequestMapping("/orderDelete")
+    public ApiResult<Boolean> orderDelete(@RequestParam(value = "orderId")int orderId ) {
+        try {
+            boolean success = orderServiceInterface.orderDelete(orderId);
+            if(!success){
+                return ApiResult.error("failed");
+            }
+            orderItemServiceInterface.orderDelete(orderId);
+            return ApiResult.error("success");
         } catch (Exception e) {
             return ApiResult.error("unknown error!");
         }

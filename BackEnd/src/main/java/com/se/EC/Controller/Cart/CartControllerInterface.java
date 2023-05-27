@@ -48,5 +48,5 @@ public interface CartControllerInterface {
      * @return 预览图列表
      */
     @RequestMapping("/getCart")
-    ApiResult<List<CommodityPreviewObject>> getCart(@RequestParam(value = "userId") Integer userId);
+    ApiResult<List<CommodityPreviewObject>> getFavorites(@RequestParam(value = "userId") Integer userId);
 }

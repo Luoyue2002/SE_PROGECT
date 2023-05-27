@@ -16,7 +16,9 @@ public interface CommodityControllerInterface {
      * @return List<CommodityPreviewObject>
      */
     @RequestMapping("/recommend")
-    ApiResult<List<CommodityPreviewObject>> recommend(@RequestParam(value = "id") Integer id);
+    ApiResult<List<CommodityPreviewObject>> recommend(@RequestParam(value = "id") Integer id,
+                                                      @RequestParam(value = "pageNumber") Integer pageNumber,
+                                                      @RequestParam(value = "pageIndex") Integer pageIndex);
 
     /**
      * 搜索商品，得到一系列商品预览
@@ -29,7 +31,9 @@ public interface CommodityControllerInterface {
      */
     @RequestMapping("/searchByContent")
     ApiResult<List<CommodityPreviewObject>> searchByContent(@RequestParam(value = "id") Integer id,
-                                                            @RequestParam(value = "content") String content);
+                                                            @RequestParam(value = "content") String content,
+                                                            @RequestParam(value = "pageNumber") Integer pageNumber,
+                                                            @RequestParam(value = "pageIndex") Integer pageIndex);
 
     /**
      * 搜索商品，得到一系列商品预览
@@ -42,7 +46,9 @@ public interface CommodityControllerInterface {
      */
     @RequestMapping("/searchByPublisher")
     ApiResult<List<CommodityPreviewObject>> searchByPublisher(@RequestParam(value = "id") Integer id,
-                                                              @RequestParam(value = "publisher_id") Integer publisherId);
+                                                              @RequestParam(value = "publisher_id") Integer publisherId,
+                                                              @RequestParam(value = "pageNumber") Integer pageNumber,
+                                                              @RequestParam(value = "pageIndex") Integer pageIndex);
 
     /**
      * 搜索商品，得到一系列商品预览
@@ -55,7 +61,9 @@ public interface CommodityControllerInterface {
      */
     @RequestMapping("/searchByCategory")
     ApiResult<List<CommodityPreviewObject>> searchByCategory(@RequestParam(value = "id") Integer id,
-                                                             @RequestParam(value = "category") String category);
+                                                             @RequestParam(value = "category") String category,
+                                                             @RequestParam(value = "pageNumber") Integer pageNumber,
+                                                             @RequestParam(value = "pageIndex") Integer pageIndex);
 
     /**
      * 点击预览图进入详情界面

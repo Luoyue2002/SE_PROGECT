@@ -7,8 +7,6 @@ import com.se.EC.Mapper.CartMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CartService extends MppServiceImpl<CartMapper, Cart> implements CartServiceInterface {
     @Resource
@@ -59,12 +57,5 @@ public class CartService extends MppServiceImpl<CartMapper, Cart> implements Car
 
         // 删除商品
         cartMapper.delete(queryWrapper);
-    }
-
-    @Override
-    public List<Cart> getCart(Integer userId) {
-        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user", userId);
-        return cartMapper.selectList(queryWrapper);
     }
 }

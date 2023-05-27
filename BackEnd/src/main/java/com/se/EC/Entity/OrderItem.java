@@ -19,6 +19,11 @@ import lombok.experimental.Accessors;
 public class OrderItem {
     @TableId("orderId")
     private Integer orderId;
+
+
+    @TableField("commodityId")
+    private Integer commodityId;
+
     @TableField("itemId")
     private Integer itemId;
     @TableField("publisherId")
