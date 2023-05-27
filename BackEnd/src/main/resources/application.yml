@@ -25,6 +25,10 @@ spring:
     encoding: utf-8
     mode: HTML
 
+
+  web:
+    resources:
+      static-locations: classpath:/static/
 # mybatis-plus配置
 mybatis-plus:
   mapper-locations:

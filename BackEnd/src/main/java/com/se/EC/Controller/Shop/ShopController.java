@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin // 跨域配置
 @RestController // 表明是Controller层
 @RequestMapping("/shop") // url 指定
-public class ShopController {
+public class ShopController implements ShopConttollerInterface {
 
     @Resource
     private CommodityServiceInterface commodityServiceInterface;
