@@ -1,6 +1,7 @@
 package com.se.EC.Service.Order;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Controller.Order.OrderItemObject;
 import com.se.EC.Controller.Order.OrderObject;
@@ -11,7 +12,9 @@ import com.se.EC.Mapper.OrderMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,31 +27,20 @@ import java.util.List;
 public class OrderService extends MppServiceImpl<OrderMapper, Order> implements OrderServiceInterface {
     @Resource
     private OrderMapper orderMapper;
-    @Resource
-    private OrderItemMapper orderItemMapper;
+
 
     @Override
     public OrderObject createOrder(OrderObject orderCreateObject) {
 
-        List<OrderItemObject> itemList = orderCreateObject.getItemObjectList();
-        int buyer = orderCreateObject.getBuyerId();
-
         Order createOrder = new Order(null, orderCreateObject.getBuyerId(), orderCreateObject.getPrice(),
-                orderCreateObject.getAddress(), 0, orderCreateObject.getDateTime()
+                orderCreateObject.getAddress(), 0, LocalDateTime.now()
         );
 
         orderMapper.insert(createOrder);
         // 获取主键
-        int orderId = createOrder.getId();
-
-        for (OrderItemObject orderItem : itemList) {
-            OrderItem item = new OrderItem(orderId, orderItem.getItemId(), orderItem.getPublisherId(), orderItem.getName(), orderItem.getNumber(), orderItem.getPrice());
-            orderItemMapper.insert(item);
-        }
-
-        orderCreateObject.setOrderId(orderId);
-
+        orderCreateObject.setOrderId(createOrder.getId());
         return orderCreateObject;
+
     }
 
     @Override
@@ -59,26 +51,12 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
     }
 
     @Override
-    public OrderObject getOrderInfo(int orderId) {
+    public Order getOrderInfo(int orderId) {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", orderId);
         Order orderNow = orderMapper.selectOne(queryWrapper);
-        QueryWrapper<OrderItem> itemQueryWrapper = new QueryWrapper<>();
-        itemQueryWrapper.eq("orderId", orderId);
-        List<OrderItem> List = orderItemMapper.selectList(itemQueryWrapper);
-        List<OrderItemObject> itemList = new ArrayList<>();
-        for (OrderItem item : List) {
-            OrderItemObject itemObject = new OrderItemObject();
-            itemObject.setItemId(item.getItemId());
-            itemObject.setNumber(item.getNumber());
-            itemObject.setPrice(item.getPrice());
-            itemObject.setName(item.getName());
 
-            itemList.add(itemObject);
-
-        }
-        return new OrderObject(orderNow.getId(), orderNow.getBuyer(), orderNow.getState()
-                , orderNow.getAddress(), orderNow.getPrice(), orderNow.getTime(), itemList);
+        return orderNow;
 
     }
 
@@ -90,4 +68,18 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
         orderMapper.updateById(order);
         return true;
     }
+
+    @Override
+    public boolean orderDelete(int orderId) {
+        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", orderId);
+        Order orderNow = orderMapper.selectOne(queryWrapper);
+        if(orderNow.getState()!=3){
+            return false;
+        }
+        orderMapper.delete(queryWrapper);
+        return true;
+    }
+
+
 }
