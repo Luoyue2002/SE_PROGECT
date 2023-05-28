@@ -28,7 +28,7 @@ public class OrderController implements OrderControllerInterface {
             return ApiResult.success(order);
 
         } catch (Exception e) {
-            return ApiResult.error("unknown error!");
+            return ApiResult.error(e.getMessage());
         }
 
     }
@@ -39,7 +39,7 @@ public class OrderController implements OrderControllerInterface {
         try {
             return ApiResult.success(orderServiceInterface.getOrderList(userId));
         } catch (Exception e) {
-            return ApiResult.error("unknown error!");
+            return ApiResult.error(e.getMessage());
         }
     }
 

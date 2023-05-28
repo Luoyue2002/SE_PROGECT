@@ -27,7 +27,7 @@ public class OrderItemService extends MppServiceImpl<OrderItemMapper, OrderItem>
         int buyer = orderCreateObject.getBuyerId();
         int orderId = orderCreateObject.getOrderId();
         for (OrderItemObject orderItem : itemList) {
-            OrderItem item = new OrderItem(orderId,orderItem.getCommodityId() ,orderItem.getItemId(), orderItem.getPublisherId(), orderItem.getName(), orderItem.getNumber(), orderItem.getPrice());
+            OrderItem item = new OrderItem(orderId,orderItem.getCommodityId() ,orderItem.getItemId(),  orderItem.getName(), orderItem.getNumber(), orderItem.getPrice());
             orderItemMapper.insert(item);
         }
 

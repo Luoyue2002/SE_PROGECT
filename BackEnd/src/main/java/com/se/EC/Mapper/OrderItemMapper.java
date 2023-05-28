@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface OrderItemMapper extends MppBaseMapper<OrderItem> {
 //        select * from sedb.orderItem , sedb.order  where ( sedb.order.state=0 or sedb.order.state=1 ) and orderItem.commodityId = 1 ;
-        @Select("select * from orderItem , order  where order.id = orderItem.orderId  and( order.state=0 or order.state=1 ) and orderItem.commodityId = #{commodityId}")
+        @Select("select * from orderItem , payment  where payment.id = orderItem.orderId  and( payment.state=0 or payment.state=1 ) and orderItem.commodityId = #{commodityId}")
         List<OrderItem> haveCommodityInOrder(@Param("commodityId") Integer commodityId);
 
 
