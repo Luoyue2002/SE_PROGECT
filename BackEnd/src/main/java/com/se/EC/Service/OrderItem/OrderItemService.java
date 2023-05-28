@@ -53,7 +53,7 @@ public class OrderItemService extends MppServiceImpl<OrderItemMapper, OrderItem>
             itemObject.setNumber(item.getNumber());
             itemObject.setPrice(item.getPrice());
             itemObject.setName(item.getName());
-
+            itemObject.setCommodityId(item.getCommodityId());
             itemList.add(itemObject);
 
         }

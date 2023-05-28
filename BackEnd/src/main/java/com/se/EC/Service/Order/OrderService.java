@@ -69,17 +69,23 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
         return true;
     }
 
+    //LY
     @Override
-    public boolean orderDelete(int orderId) {
+    public boolean checkOrderDelete(int orderId) {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", orderId);
         Order orderNow = orderMapper.selectOne(queryWrapper);
         if(orderNow.getState()!=3){
             return false;
         }
+        return true;
+    }
+    //LY
+    public boolean orderDelete(int orderId) {
+        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", orderId);
         orderMapper.delete(queryWrapper);
         return true;
     }
-
 
 }

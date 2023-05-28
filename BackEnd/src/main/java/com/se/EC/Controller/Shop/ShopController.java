@@ -39,8 +39,10 @@ public class ShopController implements ShopConttollerInterface {
     public ApiResult<String> deleteCommodity(@RequestParam(value = "Commodityid") Integer commodityId) {
             boolean couldDelete = orderItemServiceInterface.commodityInOrder(commodityId);
             if(couldDelete){
-                commodityServiceInterface.deleteCommodity(commodityId);
+
                 itemServiceInterface.deleteCommodity(commodityId);
+                commodityServiceInterface.deleteCommodity(commodityId);
+
             }else{
                 return ApiResult.error("have unfinished order");
             }
