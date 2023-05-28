@@ -26,8 +26,8 @@ public class OrderItem {
 
     @TableField("itemId")
     private Integer itemId;
-    @TableField("publisherId")
-    private Integer publisherId;
+
+
     @TableField("name")
     private String name;
     @TableField("number")

@@ -28,7 +28,7 @@ public class OrderController implements OrderControllerInterface {
             return ApiResult.success(order);
 
         } catch (Exception e) {
-            return ApiResult.error("unknown error!");
+            return ApiResult.error(e.getMessage());
         }
 
     }
