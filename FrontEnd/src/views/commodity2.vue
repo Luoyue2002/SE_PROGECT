@@ -76,14 +76,16 @@ export default {
       logourl: require("../pic/logo.jpg"),
 
       userid: 1,
-      
+      username:"",
       currentImgIndex: 1,
       totalImgIndex: 8,
       commodity: {
+        commodityId:1,
         name: "book",
         price: "99",
         tag: "信用良好，使用痕迹",
         discription: "商品详细描述",
+        publisherId:1,
         reviews: [
           {user: "123",content: "good"}, 
           {user: "1234",content: "bad"},
@@ -96,6 +98,7 @@ export default {
   },
   created() {
     this.userid = this.$route.query.userid;
+    this.username=this.$route.query.username;
     this.load();
   },
   methods: {

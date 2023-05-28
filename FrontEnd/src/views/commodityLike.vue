@@ -80,6 +80,7 @@ export default {
       currentPage: 1,
       productList: [
         {
+          //实际上是itemid
           id: 1,
           name: '这就是商品1！',
           url: require('../pic/logo.jpg'),
