@@ -32,7 +32,7 @@
             <el-row>
               <el-col :span="12">
                 <div class="product-image">
-                  <img :src="product.image" alt="商品图片" />
+                  <img :src="product.url" alt="商品图片" />
                 </div>
               </el-col>
               <el-col :span="12">
@@ -42,13 +42,13 @@
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                    <div style="font-size: 30px;">￥{{ product.price }}</div>
+                      <div style="font-size: 30px;">￥{{ product.price }}</div>
                     </el-col>
                     <el-col :span="12">
-                    <div style="font-size: 30px;">数量：{{ product.number }}</div>
+                      <div style="font-size: 30px;">数量：{{ product.number }}</div>
                     </el-col>
                   </el-row>
-                  
+
                 </div>
               </el-col>
             </el-row>
@@ -104,21 +104,28 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "pay",
   data() {
     return {
       logourl: require("../pic/logo.jpg"),
+      userid:1,
       products: [
         {
-          id:1,
+          itemId: 1,
+          commodityId:1,
+          publisherId:1,
           url: require("../assets/logo.png"),
           name: "book",
           number: 1,
           price: 123,
         },
         {
-          id:2,
+          itemId: 2,
+          commodityId:2,
+          publisherId:1,
           url: require("../assets/logo.png"),
           name: "computer",
           number: 1,
@@ -144,14 +151,47 @@ export default {
       ]
     };
   },
-  created(){
-    this.userid = this.$route.query.userid;
-    this.product=this.$route.query.product
+  created() {
+    // this.userid = this.$route.query.userid;
+    // this.product = this.$route.query.product
     this.load();
+  },
+  computed:{
+    orderItemObjectList() {
+      return this.products.map(product => (
+        {
+          itemId: product.itemId, 
+          commodityId: product.commodityId,
+          publisherId: product.publisherId, 
+          name: product.name,
+          number: product.number,
+          price: product.price,
+        }
+      ));
+    },
   },
   methods: {
     submitForm() {
-      console.log(this.orderInfo);
+      //console.log(this.orderInfo);
+      var orderObject = {
+        orderId: -1,
+        buyerId: this.userid,
+        state: 0,
+        address: this.orderInfo.address,
+        price:this.orderInfo.total,
+        dateTime:'',
+        itemObjectList:this.orderItemObjectList,
+      }
+      console.log(orderObject);
+
+      // axios.get('http://127.0.0.1:8080/order/getOrderList?userId='+this.userid).then(res=>{
+      //   console.log(res);
+      // })
+
+      axios.post('http://127.0.0.1:8080/order/createOrder', orderObject).then(res => {
+        console.log(res);
+      });
+
     },
     handleSuccess(response, file, fileList) {
       console.log('上传成功:', response, file, fileList);
@@ -250,10 +290,10 @@ body {
   font-weight: bold;
   margin-bottom: 20%;
 }
+
 .product-price {
   font-size: 20px;
 }
-
 </style>
 
 
