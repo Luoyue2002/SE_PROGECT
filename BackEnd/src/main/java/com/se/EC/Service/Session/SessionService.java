@@ -28,7 +28,7 @@ public class SessionService extends MppServiceImpl<SessionMapper, Session> imple
             Session session1 = new Session(receiverId, senderId, currentTime);
             sessionMapper.insert(session);
             sessionMapper.insert(session1);
-        } else if (count != 1) {  // 多于一个出错
+        } else if (count > 1 || count1 > 1) {  // 多于一个出错
             throw new RuntimeException("There are two session between " + senderId + " and " + receiverId);
         }
     }
@@ -102,7 +102,8 @@ public class SessionService extends MppServiceImpl<SessionMapper, Session> imple
      * @param receiverId 接收者
      * @return 数目
      */
-    private Long sessionCount(Integer senderId, Integer receiverId) {
+    @Override
+    public Long sessionCount(Integer senderId, Integer receiverId) {
         QueryWrapper<Session> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("senderId", senderId);
         queryWrapper.eq("receiverId", receiverId);

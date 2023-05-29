@@ -1,6 +1,10 @@
 package com.se.EC.Controller.Commodity;
 
 import com.se.EC.Entity.*;
+import com.se.EC.Pojo.Category;
+import com.se.EC.Pojo.CommodityObject;
+import com.se.EC.Pojo.CommodityPreviewObject;
+import com.se.EC.Pojo.ItemObject;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Service.Detail.DetailServiceInterface;
 import com.se.EC.Service.History.HistoryServiceInterface;
@@ -42,27 +46,101 @@ public class CommodityController implements CommodityControllerInterface {
     @RequestMapping("/recommend")
     public ApiResult<List<CommodityPreviewObject>> recommend(@RequestParam(value = "id") Integer id) {
         try {
-            List<Integer> idList = historyMatrix.recommend(id);
+            checkUser(id);
+            List<Integer> idList = cutAndMend(historyMatrix.recommend(id));
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
             for (var item : idList) {
                 Commodity commodity = commodityServiceInterface.getCommodityDetailById(item);
                 String name = commodity.getName();
                 Integer sales = commodity.getSales();
-                List<Item> itemList = itemServiceInterface.getItemsByParentId(item);
-                itemList.sort((o1, o2) -> {
-                    if (o1.getPrice() > o2.getPrice()) {
-                        return 1;
-                    } else if (o1.getPrice().equals(o2.getPrice())) {
-                        return 0;
-                    } else {
-                        return -1;
-                    }
-                });
-                Float price = itemList.get(0).getPrice();
+                Float price = getPrice(item);
                 CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(item, name, null, price, sales);
                 commodityPreviewObjectList.add(commodityPreviewObject);
             }
             return ApiResult.success(commodityPreviewObjectList);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 删减或修补
+     * @param idList 推荐商品的id列表
+     * @return 裁剪之后的商品id列表
+     */
+    private List<Integer> cutAndMend(List<Integer> idList) {
+        int maxSize = 500;
+        int minSize = 50;
+        if (idList.size() < minSize) {
+            List<CommodityPreviewObject> commodityPreviewObjectList = rankBySales();
+            List<Integer> commodityIdList = new ArrayList<>();
+            for (var item : commodityPreviewObjectList) {
+                commodityIdList.add(item.getId());
+            }
+            idList.addAll(commodityIdList);
+        }
+        if (idList.size() > maxSize) {
+            return idList.subList(0, maxSize);
+        }
+        return idList;
+    }
+
+    /**
+     * 根据商品获取价格
+     * @param id 商品id
+     * @return 细分类最低价格
+     */
+    private Float getPrice(Integer id) {
+        List<Item> itemList = itemServiceInterface.getItemsByParentId(id);
+        itemList.sort((o1, o2) -> {
+            if (o1.getPrice() > o2.getPrice()) {
+                return 1;
+            } else if (o1.getPrice().equals(o2.getPrice())) {
+                return 0;
+            } else {
+                return -1;
+            }
+        });
+        return itemList.get(0).getPrice();
+    }
+
+    /**
+     * 将所有商品按照销量排序
+     * @return 排序结果
+     */
+    private List<CommodityPreviewObject> rankBySales() {
+        int maxSize = 500;
+        List<Commodity> commodityList = commodityServiceInterface.getCommodities();
+        commodityList.sort((o1, o2) -> {
+            if (o1.getSales() > o2.getSales()) {
+                return -1;
+            } else if (o1.getSales().equals(o2.getSales())) {
+                return 0;
+            } else {
+                return 1;
+            }
+        });
+        if (commodityList.size() > maxSize) {
+            commodityList = commodityList.subList(0, maxSize);
+        }
+        List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
+        for (var item : commodityList) {
+            Integer commodityId = item.getId();
+            String name = item.getName();
+            Float price = getPrice(commodityId);
+            Integer sales = item.getSales();
+            CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, null, price, sales);
+            commodityPreviewObjectList.add(commodityPreviewObject);
+        }
+        return commodityPreviewObjectList;
+    }
+
+    @Override
+    @RequestMapping("/searchBySales")
+    public ApiResult<List<CommodityPreviewObject>> searchBySales(@RequestParam(value = "id") Integer id) {
+        try {
+            checkUser(id);
+            return ApiResult.success(rankBySales());
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
@@ -73,6 +151,7 @@ public class CommodityController implements CommodityControllerInterface {
     public ApiResult<List<CommodityPreviewObject>> searchByContent(@RequestParam(value = "id") Integer id,
                                                                    @RequestParam(value = "content") String content) {
         try {
+            checkUser(id);
             List<String> tokens = tokenizer(content);
             Map<Integer, Integer> commodityMap = new HashMap<>();
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
@@ -102,17 +181,7 @@ public class CommodityController implements CommodityControllerInterface {
                 Commodity commodity = commodityServiceInterface.getCommodityDetailById(commodityId);
                 String name = commodity.getName();
                 Integer sales = commodity.getSales();
-                List<Item> itemList = itemServiceInterface.getItemsByParentId(commodityId);
-                itemList.sort((o1, o2) -> {
-                    if (o1.getPrice() > o2.getPrice()) {
-                        return 1;
-                    } else if (o1.getPrice().equals(o2.getPrice())) {
-                        return 0;
-                    } else {
-                        return -1;
-                    }
-                });
-                Float price = itemList.get(0).getPrice();
+                Float price = getPrice(commodityId);
                 CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, null, price, sales);
                 commodityPreviewObjectList.add(commodityPreviewObject);
             }
@@ -127,7 +196,7 @@ public class CommodityController implements CommodityControllerInterface {
      * @param text 搜索内容
      * @return 分词结果
      */
-    public List<String> tokenizer(String text) {
+    private List<String> tokenizer(String text) {
         StopRecognition stopRecognition = new StopRecognition();
         stopRecognition.insertStopNatures("w");
         stopRecognition.insertStopWords(" ");
@@ -140,6 +209,7 @@ public class CommodityController implements CommodityControllerInterface {
     public ApiResult<List<CommodityPreviewObject>> searchByPublisher(@RequestParam(value = "id") Integer id,
                                                                      @RequestParam(value = "publisher_id") Integer publisherId) {
         try {
+            checkUser(id);
             List<Commodity> commodityList = commodityServiceInterface.getCommoditiesByPublisher(publisherId);
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
             for (var item : commodityList) {
@@ -171,8 +241,13 @@ public class CommodityController implements CommodityControllerInterface {
     public ApiResult<List<CommodityPreviewObject>> searchByCategory(@RequestParam(value = "id") Integer id,
                                                                     @RequestParam(value = "category") String category) {
         try {
+            checkUser(id);
             checkCategory(category);
             List<Commodity> commodityList = commodityServiceInterface.getCommoditiesByCategory(category);
+            int maxSize = 500;
+            if (commodityList.size() > maxSize) {
+                commodityList = commodityList.subList(0, maxSize);
+            }
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
             for (var item : commodityList) {
                 String name = item.getName();
@@ -203,6 +278,8 @@ public class CommodityController implements CommodityControllerInterface {
     public ApiResult<CommodityObject> click(@RequestParam(value = "userId") Integer userId,
                                             @RequestParam(value = "commodityId") Integer commodityId) {
         try {
+            checkUser(userId);
+            checkCommodity(commodityId);
             historyMatrix.click(userId, commodityId);
             historyServiceInterface.click(userId, commodityId);
             Commodity commodity = commodityServiceInterface.getCommodityDetailById(commodityId);
@@ -222,6 +299,50 @@ public class CommodityController implements CommodityControllerInterface {
             return ApiResult.success(commodityObject);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 检查商品是否存在
+     * @param id 商品id
+     */
+    private void checkCommodity(Integer id) {
+        if (!commodityServiceInterface.ifCommodityExists(id)) {
+            throw new RuntimeException("Commodity " + id + " does not exist");
+        }
+    }
+
+    /**
+     * 检查商品细分类是否存在
+     * @param itemId 商品id
+     */
+    private void checkItem(Integer itemId) {
+        if (!itemServiceInterface.ifItemExists(itemId)) {
+            throw new RuntimeException("Item " + itemId + " does not exist");
+        }
+    }
+
+    @Override
+    @RequestMapping("/clickItem")
+    public ApiResult<CommodityObject> clickItem(@RequestParam(value = "userId") Integer userId,
+                                         @RequestParam(value = "item") Integer itemId) {
+        try {
+            checkUser(userId);
+            checkItem(itemId);
+            Integer commodityId = itemServiceInterface.getParentId(itemId);
+            return click(userId, commodityId);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 检查用户是否存在
+     * @param userId 用户 id
+     */
+    private void checkUser(Integer userId) {
+        if (!userServiceInterface.ifUserExists(userId)) {
+            throw new RuntimeException("User " + userId + " does not exist");
         }
     }
 

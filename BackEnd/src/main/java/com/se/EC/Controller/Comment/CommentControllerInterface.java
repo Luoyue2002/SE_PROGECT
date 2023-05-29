@@ -35,6 +35,14 @@ public interface CommentControllerInterface {
     ApiResult<List<Comment>> getCommentByItem(@RequestParam(value = "itemId") Integer itemId);
 
     /**
+     * 根据商品获取评论
+     * @param commodityId 商品的id
+     * @return Comment组成的链表
+     */
+    @RequestMapping("/getCommentByCommodity")
+    ApiResult<List<Comment>> getCommentByCommodity(Integer commodityId);
+
+    /**
      * 根据用户获取评论
      * @param userId 用户id
      * @return Comment组成的链表

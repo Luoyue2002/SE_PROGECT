@@ -6,10 +6,10 @@ import com.se.EC.Utils.ApiResult;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin // 跨域配置
-@RestController // 表明是Controller层
-@RequestMapping("/user") // url 指定
-public class UserController {
+@CrossOrigin
+@RestController
+@RequestMapping("/user")
+public class UserController implements UserControllerInterface {
     @Resource
     private UserServiceInterface userServiceInterface;
 
@@ -25,7 +25,7 @@ public class UserController {
 
     @RequestMapping("/loginByName")
     public ApiResult<User> UserLoginByName(@RequestParam(value = "userName") String username,
-                                     @RequestParam(value = "password") String password) {
+                                           @RequestParam(value = "password") String password) {
         try {
             User user = userServiceInterface.userLoginByName(username, password);
             return ApiResult.success(user);
@@ -36,7 +36,7 @@ public class UserController {
 
     @RequestMapping("/loginById")
     public ApiResult<User> UserLoginById(@RequestParam(value = "userId") String userid,
-                                   @RequestParam(value = "password") String password) {
+                                         @RequestParam(value = "password") String password) {
         try {
             User user = userServiceInterface.userLoginById(userid, password);
             return ApiResult.success(user);
@@ -46,10 +46,10 @@ public class UserController {
     }
 
     @RequestMapping("/loginByPhone")
-    public ApiResult<User> UserLoginByPhone(@RequestParam(value = "userPhone") String userphone,
-                                      @RequestParam(value = "password") String password) {
+    public ApiResult<User> UserLoginByPhone(@RequestParam(value = "userPhone") String userPhone,
+                                            @RequestParam(value = "password") String password) {
         try {
-            User user = userServiceInterface.userLoginByPhone(userphone, password);
+            User user = userServiceInterface.userLoginByPhone(userPhone, password);
             return ApiResult.success(user);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage(), null);
@@ -58,16 +58,25 @@ public class UserController {
     }
 
     @RequestMapping("/resetInformation")
-    public ApiResult<Boolean> UserResetInfo(@RequestParam(value = "userId") String userid,
-                                   @RequestParam(value = "attribute") String attribute,
-                                   @RequestParam(value = "resetInformation") String resetInformation
-
-    ) {
+    public ApiResult<Boolean> UserResetInfo(@RequestParam(value = "userId") Integer userid,
+                                            @RequestParam(value = "attribute") String attribute,
+                                            @RequestParam(value = "resetInformation") String resetInformation) {
         try {
+            checkUser(userid);
             userServiceInterface.userResetInfo(userid, attribute, resetInformation);
             return ApiResult.success(Boolean.TRUE);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage(), Boolean.FALSE);
+        }
+    }
+
+    /**
+     * 检查用户是否存在
+     * @param userId 用户 id
+     */
+    private void checkUser(Integer userId) {
+        if (!userServiceInterface.ifUserExists(userId)) {
+            throw new RuntimeException("User " + userId + " does not exist");
         }
     }
 }

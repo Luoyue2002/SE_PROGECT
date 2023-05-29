@@ -1,5 +1,6 @@
 package com.se.EC.Controller.Favorites;
 
+import com.se.EC.Pojo.CommodityPreviewObject;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

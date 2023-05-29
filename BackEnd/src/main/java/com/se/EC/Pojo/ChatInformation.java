@@ -1,4 +1,4 @@
-package com.se.EC.Controller.Chat;
+package com.se.EC.Pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Information implements Serializable {
+public class ChatInformation implements Serializable {
     private Integer senderId;
     private Integer receiverId;
     private LocalDateTime time;

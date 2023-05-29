@@ -1,4 +1,4 @@
-package com.se.EC.Controller.Chat;
+package com.se.EC.Pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

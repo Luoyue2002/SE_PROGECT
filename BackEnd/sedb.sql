@@ -211,9 +211,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sedb`.`order`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sedb`.`order` ;
+DROP TABLE IF EXISTS `sedb`.`payment` ;
 
-CREATE TABLE IF NOT EXISTS `sedb`.`order` (
+CREATE TABLE IF NOT EXISTS `sedb`.`payment` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `buyer` INT NOT NULL,
   `price` FLOAT NOT NULL,
@@ -310,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `sedb`.`orderitem` (
   `price` FLOAT NOT NULL,
   CONSTRAINT `orderitem_orderId`
     FOREIGN KEY (`orderId`)
-    REFERENCES `sedb`.`order` (`id`)
+    REFERENCES `sedb`.`payment` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `orderitem_itemId`

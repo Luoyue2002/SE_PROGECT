@@ -2,14 +2,15 @@ package com.se.EC.Controller.Favorites;
 
 import com.se.EC.Entity.Commodity;
 import com.se.EC.Entity.Item;
+import com.se.EC.Pojo.CommodityPreviewObject;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Service.Favorites.FavoritesServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
+import com.se.EC.Service.User.UserServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +24,15 @@ public class FavoritesController implements FavoritesControllerInterface {
     private CommodityServiceInterface commodityServiceInterface;
     @Resource
     private ItemServiceInterface itemServiceInterface;
+    @Resource
+    private UserServiceInterface userServiceInterface;
 
     @Override
     @RequestMapping("/addFavorites")
     public ApiResult<Boolean> addFavorites(Integer userId, Integer itemId) {
         try {
+            checkUser(userId);
+            checkItem(itemId);
             favoritesServiceInterface.addFavorites(userId, itemId);
             return ApiResult.success();
         } catch (Exception e) {
@@ -39,6 +44,8 @@ public class FavoritesController implements FavoritesControllerInterface {
     @RequestMapping("/deleteFavorites")
     public ApiResult<Boolean> deleteFavorites(Integer userId, Integer itemId) {
         try {
+            checkUser(userId);
+            checkItem(itemId);
             favoritesServiceInterface.deleteFavorites(userId, itemId);
             return ApiResult.success();
         } catch (Exception e) {
@@ -50,6 +57,7 @@ public class FavoritesController implements FavoritesControllerInterface {
     @RequestMapping("/getFavorites")
     public ApiResult<List<CommodityPreviewObject>> getFavorites(@RequestParam(value = "userId") Integer userId) {
         try {
+            checkUser(userId);
             List<Integer> idList = favoritesServiceInterface.getFavorites(userId);
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
             for (var item : idList) {
@@ -66,12 +74,33 @@ public class FavoritesController implements FavoritesControllerInterface {
                     }
                 });
                 Float price = itemList.get(0).getPrice();
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(item, name, null, price);
+                Integer sales = commodity.getSales();
+                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(item, name, null, price, sales);
                 commodityPreviewObjectList.add(commodityPreviewObject);
             }
             return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    /**
+     * 检查用户是否存在
+     * @param userId 用户 id
+     */
+    private void checkUser(Integer userId) {
+        if (!userServiceInterface.ifUserExists(userId)) {
+            throw new RuntimeException("User " + userId + " does not exist");
+        }
+    }
+
+    /**
+     * 检查商品是否存在
+     * @param itemId 商品id
+     */
+    private void checkItem(Integer itemId) {
+        if (!itemServiceInterface.ifItemExists(itemId)) {
+            throw new RuntimeException("Item " + itemId + " does not exist");
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.se.EC.Service.Chat;
 
 import com.github.jeffreyning.mybatisplus.service.IMppService;
-import com.se.EC.Controller.Chat.Information;
+import com.se.EC.Pojo.ChatInformation;
 import com.se.EC.Entity.Chat;
 
 import java.time.LocalDateTime;
@@ -24,7 +24,7 @@ public interface ChatServiceInterface extends IMppService<Chat> {
      * @param receiverId 请求接收者id
      * @return error信息
      */
-    List<Information> updateMessage(Integer senderId, Integer receiverId, LocalDateTime updateTime);
+    List<ChatInformation> updateMessage(Integer senderId, Integer receiverId, LocalDateTime updateTime);
 
     /**
      * 获取更新消息的数量
@@ -42,5 +42,5 @@ public interface ChatServiceInterface extends IMppService<Chat> {
      * @param receiverId 请求接收者id
      * @return error信息
      */
-    List<Information> retrieveAllMessage(Integer senderId, Integer receiverId);
+    List<ChatInformation> retrieveAllMessage(Integer senderId, Integer receiverId);
 }

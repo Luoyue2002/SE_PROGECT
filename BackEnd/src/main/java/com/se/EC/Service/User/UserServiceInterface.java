@@ -22,7 +22,7 @@ public interface UserServiceInterface extends IMppService<User> {
 
     String userResetPassword();
 
-    String userResetInfo(String userId, String attribute, String resetInfo);
+    String userResetInfo(Integer userId, String attribute, String resetInfo);
 
     String userAccountCancellation();
 
@@ -33,6 +33,8 @@ public interface UserServiceInterface extends IMppService<User> {
     String getNameById(Integer id);
 
     List<User> getUsers();
+
+    Boolean ifUserExists(Integer userId);
 }
 
 

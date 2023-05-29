@@ -16,48 +16,43 @@ public class CartService extends MppServiceImpl<CartMapper, Cart> implements Car
 
     @Override
     public void addCart(Integer userId, Integer itemId, Integer itemNumber) {
-        // 检查是否已经添加了此商品
-        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user", userId);
-        queryWrapper.eq("item", itemId);
-        Long count = cartMapper.selectCount(queryWrapper);
-        if (count != 0) {
+        if (checkCartNumber(userId, itemId) != 0) {
             throw new RuntimeException("You have already add this item to the cart");
         }
 
-        // 向数据库中添加商品
+        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user", userId);
+        Long count = cartMapper.selectCount(queryWrapper);
+        if (count > 500) {
+            throw new RuntimeException("You have added too many things to your cart");
+        }
+
         Cart cart = new Cart(userId, itemId, itemNumber);
         cartMapper.insert(cart);
     }
 
     @Override
     public void modifyCart(Integer userId, Integer itemId, Integer itemNumber) {
-        // 检查是否已经添加了此商品
-        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user", userId);
-        queryWrapper.eq("item", itemId);
-        Long count = cartMapper.selectCount(queryWrapper);
-        if (count == 0) {
+        if (checkCartNumber(userId, itemId) == 0) {
             throw new RuntimeException("You have not add this item to the cart yet");
         }
 
-        // 修改商品数量
+        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user", userId);
+        queryWrapper.eq("item", itemId);
         Cart cart = new Cart(userId, itemId, itemNumber);
         cartMapper.update(cart, queryWrapper);
     }
 
     @Override
     public void deleteCart(Integer userId, Integer itemId) {
-        // 检查是否已经添加了此商品
-        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user", userId);
-        queryWrapper.eq("item", itemId);
-        Long count = cartMapper.selectCount(queryWrapper);
-        if (count == 0) {
+        if (checkCartNumber(userId, itemId) == 0) {
             throw new RuntimeException("You have not add this item to the cart yet");
         }
 
-        // 删除商品
+        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user", userId);
+        queryWrapper.eq("item", itemId);
         cartMapper.delete(queryWrapper);
     }
 
@@ -66,5 +61,22 @@ public class CartService extends MppServiceImpl<CartMapper, Cart> implements Car
         QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user", userId);
         return cartMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 返回某个用户购物车中是否有这个商品
+     * @param userId 用户id
+     * @param itemId 物品id
+     * @return 数量
+     */
+    private Long checkCartNumber(Integer userId, Integer itemId) {
+        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user", userId);
+        queryWrapper.eq("item", itemId);
+        Long count = cartMapper.selectCount(queryWrapper);
+        if (count > 1) {
+            throw new RuntimeException("duplicate entry in cart");
+        }
+        return count;
     }
 }

@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Entity.User;
 import com.se.EC.Mapper.UserMapper;
-import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -63,9 +63,9 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
-    public User userLoginByPhone(String userphone, String password) {
+    public User userLoginByPhone(String userPhone, String password) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.eq("phone", userphone);
+        userQueryWrapper.eq("phone", userPhone);
         User now_user = userMapper.selectOne(userQueryWrapper);
         if (now_user == null) {
             throw new RuntimeException("no such user!");
@@ -92,46 +92,54 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
-    public String userResetInfo(String userId, String attribute, String resetInfo) {
+    public String userResetInfo(Integer userId, String attribute, String resetInfo) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("id", userId);
         User now_user = userMapper.selectOne(userQueryWrapper);
-        if (attribute.equals("username")) {
-
-            QueryWrapper<User> usernameQueryWrapper = new QueryWrapper<>();
-            usernameQueryWrapper.eq("name", resetInfo);
-            User name_user = userMapper.selectOne(userQueryWrapper);
-            if (name_user == null) {
-                throw new RuntimeException("have this user name!");
+        switch (attribute) {
+            case "username" -> {
+                QueryWrapper<User> usernameQueryWrapper = new QueryWrapper<>();
+                usernameQueryWrapper.eq("name", resetInfo);
+                User name_user = userMapper.selectOne(userQueryWrapper);
+                if (name_user == null) {
+                    throw new RuntimeException("this user name does not exist!");
+                }
+                now_user.setName(resetInfo);
             }
-            now_user.setName(resetInfo);
-        }
-        if (attribute.equals("realName")) {
-            now_user.setRealName(resetInfo);
-        }
-        if (attribute.equals("identity")) {
-            now_user.setIdentity(resetInfo);
-        }
-        if (attribute.equals("school")) {
-            now_user.setSchool(resetInfo);
-        }
-        if (attribute.equals("schoolId")) {
-            now_user.setSchoolId(resetInfo);
-        }
-        if (attribute.equals("gender")) {
-            now_user.setGender(Integer.valueOf(resetInfo));
-        }
-        if (attribute.equals("phone")) {
-            now_user.setPhone(resetInfo);
-        }
-        if (attribute.equals("address1")) {
-            now_user.setAddress1(resetInfo);
-        }
-        if (attribute.equals("address2")) {
-            now_user.setAddress2(resetInfo);
-        }
-        if (attribute.equals("address3")) {
-            now_user.setAddress3(resetInfo);
+            case "realName" -> now_user.setRealName(resetInfo);
+            case "name" -> {
+                QueryWrapper<User> usernameQueryWrapper = new QueryWrapper<>();
+                usernameQueryWrapper.eq("name", resetInfo);
+                Long count = userMapper.selectCount(userQueryWrapper);
+                if (count != 0) {
+                    throw new RuntimeException("this phone number has already exist");
+                }
+                now_user.setName(resetInfo);
+            }
+            case "password" -> now_user.setPassword(resetInfo);
+            case "identity" -> now_user.setIdentity(resetInfo);
+            case "school" -> now_user.setSchool(resetInfo);
+            case "schoolId" -> now_user.setSchoolId(resetInfo);
+            case "gender" -> {
+                int gender = Integer.parseInt(resetInfo);
+                if (gender != 0 && gender != 1) {
+                    throw new RuntimeException("Gender must either be 0 or 1");
+                }
+                now_user.setGender(gender);
+            }
+            case "phone" -> {
+                QueryWrapper<User> usernameQueryWrapper = new QueryWrapper<>();
+                usernameQueryWrapper.eq("phone", resetInfo);
+                Long count = userMapper.selectCount(userQueryWrapper);
+                if (count != 0) {
+                    throw new RuntimeException("this phone number has already exist");
+                }
+                now_user.setPhone(resetInfo);
+            }
+            case "address1" -> now_user.setAddress1(resetInfo);
+            case "address2" -> now_user.setAddress2(resetInfo);
+            case "address3" -> now_user.setAddress3(resetInfo);
+            default -> throw new RuntimeException("Invalid attribute");
         }
 
         userMapper.updateById(now_user);
@@ -164,5 +172,13 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     @Override
     public List<User> getUsers() {
         return userMapper.selectList(null);
+    }
+
+    @Override
+    public Boolean ifUserExists(Integer userId) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("id", userId);
+        Long count = userMapper.selectCount(userQueryWrapper);
+        return count > 0;
     }
 }

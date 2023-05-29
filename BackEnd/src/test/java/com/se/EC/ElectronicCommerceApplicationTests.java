@@ -16,9 +16,5 @@ class ElectronicCommerceApplicationTests {
 
     @Test
     void contextLoads() {
-        CommodityController commodityController = new CommodityController();
-        String text = "iphone 13 pro max 星空紫";
-        List<String> result = commodityController.tokenizer(text);
-        System.out.println(result);
     }
 }

@@ -19,7 +19,7 @@ public interface CommentServiceInterface extends IMppService<Comment> {
     void deleteComment(Integer id);
 
     /**
-     * 根据商品获取评论
+     * 根据商品细分类获取评论
      * @param itemId 商品子分类的id
      * @return Comment组成的链表
      */

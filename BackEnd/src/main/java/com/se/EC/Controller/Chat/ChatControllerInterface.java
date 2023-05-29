@@ -1,5 +1,7 @@
 package com.se.EC.Controller.Chat;
 
+import com.se.EC.Pojo.ChatInformation;
+import com.se.EC.Pojo.SessionInformation;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,8 +60,8 @@ public interface ChatControllerInterface {
      * @return 一个包含信息的链表，信息包含时间和内容，最多500条，从上一次update之后开始，最开始的是最近的消息
      */
     @RequestMapping("/updateMessage")
-    ApiResult<List<Information>> updateMessage(@RequestParam(value = "senderId") Integer senderId,
-                                               @RequestParam(value = "receiverId") Integer receiverId);
+    ApiResult<List<ChatInformation>> updateMessage(@RequestParam(value = "senderId") Integer senderId,
+                                                   @RequestParam(value = "receiverId") Integer receiverId);
 
     /**
      * 接受所有消息函数
@@ -69,8 +71,8 @@ public interface ChatControllerInterface {
      * @return 一个包含信息的链表，信息包含时间和内容，最多500条，最开始的是最近的消息
      */
     @RequestMapping("/retrieveAllMessage")
-    ApiResult<List<Information>> retrieveAllMessage(@RequestParam(value = "senderId") Integer senderId,
-                                                    @RequestParam(value = "receiverId") Integer receiverId);
+    ApiResult<List<ChatInformation>> retrieveAllMessage(@RequestParam(value = "senderId") Integer senderId,
+                                                        @RequestParam(value = "receiverId") Integer receiverId);
 
     /**
      * 未读消息数量

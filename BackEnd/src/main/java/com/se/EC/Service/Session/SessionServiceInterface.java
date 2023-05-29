@@ -48,4 +48,12 @@ public interface SessionServiceInterface extends IMppService<Session> {
      * @param updateTime 新的更新时间
      */
     void updateUpdateTime(Integer senderId, Integer receiverId, LocalDateTime updateTime);
+
+    /**
+     * 查看两个id建立的会话数量
+     * @param senderId 发起者
+     * @param receiverId 接收者
+     * @return 数目
+     */
+    Long sessionCount(Integer senderId, Integer receiverId);
 }

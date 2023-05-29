@@ -1,4 +1,4 @@
-package com.se.EC.Controller.Favorites;
+package com.se.EC.Pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,4 +15,5 @@ public class CommodityPreviewObject {
     private String name;  // 商品名称
     private String url;  // 图片url
     private Float price;  // 价格
+    private Integer sales;  // 销量
 }
