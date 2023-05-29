@@ -12,9 +12,9 @@ public interface OrderServiceInterface extends IMppService<Order> {
     boolean orderPay(int orderId);
 
 
+    boolean checkOrderDelete(int orderId);
+
     boolean orderDelete(int orderId);
-
-
 
 }
 

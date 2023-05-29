@@ -73,17 +73,19 @@ public class OrderController implements OrderControllerInterface {
     }
 
 
+    //LY
     @RequestMapping("/orderDelete")
     public ApiResult<Boolean> orderDelete(@RequestParam(value = "orderId")int orderId ) {
         try {
-            boolean success = orderServiceInterface.orderDelete(orderId);
+            boolean success = orderServiceInterface.checkOrderDelete(orderId);
             if(!success){
                 return ApiResult.error("failed");
             }
             orderItemServiceInterface.orderDelete(orderId);
+            orderServiceInterface.orderDelete(orderId);
             return ApiResult.error("success");
         } catch (Exception e) {
-            return ApiResult.error("unknown error!");
+            return ApiResult.error(e.getMessage());
         }
     }
 }
