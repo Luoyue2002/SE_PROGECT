@@ -1,0 +1,10 @@
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >-->
+<!--<mapper namespace="com.se.EC.Mapper.OrderItemMapper">-->
+
+
+<!--    <select id="haveCommodityInItem" resultType="com.se.EC.Entity.OrderItem">-->
+<!--        select * from ordrtItem , order  where order.state=0 or order.state=1 and orderItem.commodityId = #{commodityId}-->
+<!--    </select>-->
+
+<!--</mapper>-->

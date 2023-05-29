@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.github.jeffreyning:mybatisplus-plus:1.7.3-RELEASE">
+    <CLASSES>
+      <root url="jar://D:/maven/repository/com/github/jeffreyning/mybatisplus-plus/1.7.3-RELEASE/mybatisplus-plus-1.7.3-RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/maven/repository/com/github/jeffreyning/mybatisplus-plus/1.7.3-RELEASE/mybatisplus-plus-1.7.3-RELEASE-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://D:/maven/repository/com/github/jeffreyning/mybatisplus-plus/1.7.3-RELEASE/mybatisplus-plus-1.7.3-RELEASE-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
