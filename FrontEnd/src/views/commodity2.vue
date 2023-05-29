@@ -41,8 +41,8 @@
             <!-- 其他详情 -->
             <div class="buttons-container">
               <el-button @click="connectToSeller()">联系卖家</el-button>
-              <el-button @click="addToFavorate()">收藏</el-button>
-              <el-button @click="addToCart()">加入购物车</el-button>
+              <el-button @click="showAddFavorateInfo()">收藏</el-button>
+              <el-button @click="showAddToCart()">加入购物车</el-button>
             </div>
           </div>
         </el-col>
@@ -63,11 +63,50 @@
           </div>
         </div>
       </div>
+
+
+      <el-dialog :visible.sync="showItemInfo" title="收藏" width="50%">
+        <!-- 详细信息 -->
+        <el-table ref="multipleTable" :data="commodity.itemObjectList" tooltip-effect="dark" style="width: 100%"
+          @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="50"></el-table-column>
+          <el-table-column prop="name" label="名称" width="180"></el-table-column>
+          <el-table-column prop="price" label="价格" width="140"></el-table-column>
+        </el-table>
+        <!-- 按钮 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showItemInfo = false">取消</el-button>
+          <el-button type="primary" @click="addToFavorate()">确定</el-button>
+        </span>
+      </el-dialog>
+
+      <el-dialog :visible.sync="showAddToCartInfo" title="添加到购物车" width="50%">
+        <!-- 详细信息 -->
+        <el-table ref="multipleTable" :data="commodity.itemObjectList" tooltip-effect="dark" style="width: 100%"
+          @selection-change="handleSelectionChangeInCart">
+          <el-table-column type="selection" width="50"></el-table-column>
+          <el-table-column prop="name" label="名称" width="180"></el-table-column>
+          <el-table-column prop="price" label="价格" width="140"></el-table-column>
+          <el-table-column prop="number" label="库存" width="140"></el-table-column>
+        </el-table>
+        <div>
+          <span>输入数量：</span>
+          <el-input-number v-model="inputNumber" :min="1"></el-input-number>
+        </div>
+        <!-- 按钮 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showAddToCartInfo = false">取消</el-button>
+          <el-button type="primary" @click="addToCart()">确定</el-button>
+        </span>
+      </el-dialog>
+
+
     </el-container>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "commodity2",
   data() {
@@ -76,46 +115,104 @@ export default {
       logourl: require("../pic/logo.jpg"),
 
       userid: 1,
-      username:"",
+      username: "haha",
       currentImgIndex: 1,
       totalImgIndex: 8,
       commodity: {
-        commodityId:1,
+        commodityId: 1,
         name: "book",
         price: "99",
         tag: "信用良好，使用痕迹",
         discription: "商品详细描述",
-        publisherId:1,
+        publisherId: 1,
         reviews: [
-          {user: "123",content: "good"}, 
-          {user: "1234",content: "bad"},
+          { user: "123", content: "good" },
+          { user: "1234", content: "bad" },
         ],
-
+        itemObjectList: [
+          { itemId: 1, name: "haha", number: 123, price: 13.2 },
+          { itemId: 2, name: "haha2", number: 1234, price: 25.4 },
+        ]
       },
 
-
+      showItemInfo: false,
+      selectedItems: [],
+      //添加购物车
+      showAddToCartInfo: false,
+      inputNumber: 1,
     };
   },
   created() {
     this.userid = this.$route.query.userid;
-    this.username=this.$route.query.username;
+    this.username = this.$route.query.username;
     this.load();
   },
   methods: {
     load() {
-      
+
     },
-    addToFavorate(){
+    //添加收藏
+    showAddFavorateInfo() {
+      this.showItemInfo = true;
+    },
+    handleSelectionChange(val) {
+      this.selectedItems = val;
+      console.log(this.selectedItems);
+    },
+    addToFavorate() {
+      if (this.selectedItems.length > 0) {
+        this.selectedItems.forEach(item => {
+          console.log("itemid=", item.itemId);
+          axios.get('http://127.0.0.1:8080/favorites/addFavorites?userId=' + this.userid + '&itemId=' + item.itemId).then(res => {
+            console.log(res);
+          });
+        });
+      } else {
+        console.log('您未选择任何项目');
+      }
+      this.showItemInfo = false;
       console.log("add to favorate");
     },
-    addToCart(){
-      console.log("add to cart");
+
+    //添加购物车
+    showAddToCart() {
+      this.showAddToCartInfo = true;
     },
-    connectToSeller(){
-      console.log("connect");
+    handleSelectionChangeInCart(val) {
+      this.selectedItems = val;
+      // console.log(this.selectedItems);
+    },
+    addToCart() {
+      if (this.selectedItems.length == 1) {
+        if (Number.isInteger(this.inputNumber)) {
+          this.selectedItems.forEach(item => {
+            console.log("itemid=", item.itemId);
+            axios.get('http://127.0.0.1:8080/cart/addCart?userId=' + this.userid + '&itemId=' + item.itemId + '&itemNumber=' + this.inputNumber).then(res => {
+              console.log(res);
+              console.log("add to cart");
+            });
+          });
+        } else {
+          console.log("请输入小数");
+        }
+      } else {
+        console.log("请只选1个item");
+      }
+      this.showAddToCartInfo = false;
+    },
+
+    //联系卖家
+    connectToSeller() {
+      // first create session
+      axios.get('http://127.0.0.1:8080/chat/createSession?senderId=' + this.userid + '&receiverId=' + this.commodity.publisherId).then(res => {
+        console.log(res);
+        console.log("connect");
+        // go to chat
+        this.$router.push({ name: 'chat', query: { userid: this.userid, username: this.username } });
+      });
     },
   },
- 
+
 }
 </script>
 

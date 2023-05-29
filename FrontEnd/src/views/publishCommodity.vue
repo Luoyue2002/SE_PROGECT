@@ -63,10 +63,10 @@
 
               <el-col :span="8">
                 <el-form-item label="价格">
-              <el-input-number v-model="subCategory.price" :min="0.01" controls-position="right"></el-input-number>
-            </el-form-item>
+                  <el-input-number v-model="subCategory.price" :min="0.01" controls-position="right"></el-input-number>
+                </el-form-item>
               </el-col>
-              
+
             </el-row>
           </div>
 
@@ -79,11 +79,11 @@
             </el-upload>
           </el-form-item>
 
-          <el-form-item label="商品详情">
+          <!-- <el-form-item label="商品详情">
             <el-input type="textarea" v-model="product.moreDescription" :autosize="{ minRows: 3, maxRows: 6 }"
               style="width: 300px;">
             </el-input>
-          </el-form-item>
+          </el-form-item> -->
 
 
           <el-form-item style="display: flex; justifyContent: center;">
@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "publishCommodity",
   data() {
@@ -120,11 +121,32 @@ export default {
       ],
     };
   },
+  computed:{
+    ItemObjectList() {
+      return this.product.subCategories.map(item => (
+        {
+          itemId: 0, 
+          name: item.name,
+          number: item.number,
+          price: item.price,
+        }
+      ));
+    },
+  },
   methods: {
     submitForm() {
-      // 在这里添加发布商品的逻辑
-      // 例如：调用 API 将表单数据发送到后端
-      console.log("发布商品：", this.product);
+      var CommodityObject = {
+        commodityId: 0,
+        publisherId: this.userid,
+        name: this.product.name,
+        description: this.product.description,
+        category: this.product.itemCategory,
+        itemObjectList: this.ItemObjectList,
+      }
+      axios.post('http://127.0.0.1:8080/shop/addCommodity', CommodityObject).then(res => {
+        console.log("发布商品：", CommodityObject);
+        console.log(res);
+      });
     },
     handleSuccess(response, file, fileList) {
       console.log('上传成功:', response, file, fileList);
