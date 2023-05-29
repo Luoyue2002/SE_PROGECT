@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/sedb?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
     username: root
-    password: jsc
+    password: 20021203
     driver-class-name: com.mysql.cj.jdbc.Driver
   application:
     name: spring_learn
@@ -25,10 +25,6 @@ spring:
     encoding: utf-8
     mode: HTML
 
-
-  web:
-    resources:
-      static-locations: classpath:/static/
 # mybatis-plus配置
 mybatis-plus:
   mapper-locations:

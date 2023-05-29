@@ -246,8 +246,9 @@ export default {
       // http
       axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "name"+'&resetInformation='+this.editDialogData.username).then(res => {
         console.log(res);
+        console.log(this.editDialogData.username);
       });
-      this.user.username = this.editDialogData.username;
+      this.user.name = this.editDialogData.username;
       this.editDialogVisible.username = false;
     },
     //密码
@@ -259,6 +260,7 @@ export default {
       // http
       axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "password"+'&resetInformation='+this.editDialogData.password).then(res => {
         console.log(res);
+        console.log(this.userid);
       });
       this.user.password = this.editDialogData.password;
       this.editDialogVisible.password = false;

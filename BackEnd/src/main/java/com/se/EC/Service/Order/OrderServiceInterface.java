@@ -8,14 +8,8 @@ import java.util.List;
 public interface OrderServiceInterface extends IMppService<Order> {
     OrderObject createOrder(OrderObject orderCreateObject);
     List<Order> getOrderList(int userId);
-    Order getOrderInfo(int orderId);
+    OrderObject getOrderInfo(int orderId);
     boolean orderPay(int orderId);
-
-
-    boolean checkOrderDelete(int orderId);
-
-    boolean orderDelete(int orderId);
-
 }
 
 
