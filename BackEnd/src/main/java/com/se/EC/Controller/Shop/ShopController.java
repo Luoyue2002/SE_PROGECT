@@ -1,13 +1,19 @@
 package com.se.EC.Controller.Shop;
 
+import com.se.EC.Entity.Item;
+import com.se.EC.Pojo.Category;
 import com.se.EC.Pojo.CommodityObject;
+import com.se.EC.Service.Cart.CartServiceInterface;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
+import com.se.EC.Service.Favorites.FavoritesServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
 import com.se.EC.Service.OrderItem.OrderItemServiceInterface;
 import com.se.EC.Service.User.UserServiceInterface;
 import com.se.EC.Utils.ApiResult;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -21,12 +27,15 @@ public class ShopController implements ShopControllerInterface {
     private ItemServiceInterface itemServiceInterface;
     @Resource
     private UserServiceInterface userServiceInterface;
+    @Resource
+    private CartServiceInterface cartServiceInterface;
+    @Resource
+    private FavoritesServiceInterface favoritesServiceInterface;
 
     @PostMapping("/addCommodity")
     public ApiResult<CommodityObject> addCommodity(@RequestBody CommodityObject commodityObject) {
         try {
-            Integer userId = commodityObject.getPublisherId();
-            checkUser(userId);
+            checkCommodity(commodityObject);
             CommodityObject commodity = commodityServiceInterface.addCommodity(commodityObject);
             commodity = itemServiceInterface.addCommodityItem(commodity);
             return ApiResult.success(commodity);
@@ -37,15 +46,51 @@ public class ShopController implements ShopControllerInterface {
 
     @RequestMapping("/deleteCommodity")
     public ApiResult<String> deleteCommodity(@RequestParam(value = "CommodityId") Integer commodityId) {
-        checkCommodity(commodityId);
-        boolean couldDelete = orderItemServiceInterface.commodityInOrder(commodityId);
-        if (couldDelete) {
-            commodityServiceInterface.deleteCommodity(commodityId);
+        try {
+            checkCommodity(commodityId);
+            boolean couldDelete = orderItemServiceInterface.commodityInOrder(commodityId);
+            if (!couldDelete) {
+                throw new RuntimeException("This commodity has unfinished order");
+            }
+
+            List<Item> itemList = itemServiceInterface.getItemsByParentId(commodityId);
+            for (var item : itemList) {
+                // 级联删除购物车
+                Integer itemId = item.getId();
+                cartServiceInterface.deleteOnItemId(itemId);
+                // 级联删除收藏夹
+                favoritesServiceInterface.deleteFavoritesOnItemId(itemId);
+            }
+
             itemServiceInterface.deleteCommodity(commodityId);
-        } else {
-            return ApiResult.error("have unfinished order");
+            commodityServiceInterface.deleteCommodity(commodityId);
+            return ApiResult.success("delete success");
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
         }
-        return ApiResult.success("delete success");
+    }
+
+    /**
+     * 检测商品商家信息
+     * @param commodityObject pojo
+     */
+    private void checkCommodity(CommodityObject commodityObject) {
+        Integer userId = commodityObject.getPublisherId();
+        checkUser(userId);
+        String name = commodityObject.getName();
+        if (name.length() > 128) {
+            throw new RuntimeException("Name is too long");
+        }
+        String description = commodityObject.getDescription();
+        if (description.length() > 512) {
+            throw new RuntimeException("Description is too long");
+        }
+        String category = commodityObject.getCategory();
+        try {
+            Category.valueOf(category);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Unknown category");
+        }
     }
 
     /**

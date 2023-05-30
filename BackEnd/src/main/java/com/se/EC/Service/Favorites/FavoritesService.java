@@ -57,4 +57,11 @@ public class FavoritesService extends MppServiceImpl<FavoritesMapper, Favorites>
         }
         return idList;
     }
+
+    @Override
+    public void deleteFavoritesOnItemId(Integer itemId) {
+        QueryWrapper<Favorites> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("item", itemId);
+        favoritesMapper.delete(queryWrapper);
+    }
 }

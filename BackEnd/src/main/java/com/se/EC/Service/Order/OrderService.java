@@ -48,10 +48,7 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
     public Order getOrderInfo(int orderId) {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", orderId);
-        Order orderNow = orderMapper.selectOne(queryWrapper);
-
-        return orderNow;
-
+        return orderMapper.selectOne(queryWrapper);
     }
 
     @Override
@@ -68,12 +65,10 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", orderId);
         Order orderNow = orderMapper.selectOne(queryWrapper);
-        if(orderNow.getState()!=3){
+        if(orderNow.getState() != 3){
             return false;
         }
         orderMapper.delete(queryWrapper);
         return true;
     }
-
-
 }

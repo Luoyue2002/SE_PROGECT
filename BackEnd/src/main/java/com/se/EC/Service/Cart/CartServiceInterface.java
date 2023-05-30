@@ -36,6 +36,12 @@ public interface CartServiceInterface extends IMppService<Cart> {
      * @return cart列表
      */
     List<Cart> getCart(Integer userId);
+
+    /**
+     * 根据 item id 删除购物车物品，用于级联删除
+     * @param itemId 商品细分类 id
+     */
+    void deleteOnItemId(Integer itemId);
 }
 
 

@@ -10,12 +10,7 @@ public interface OrderServiceInterface extends IMppService<Order> {
     List<Order> getOrderList(int userId);
     Order getOrderInfo(int orderId);
     boolean orderPay(int orderId);
-
-
     boolean orderDelete(int orderId);
-
-
-
 }
 
 

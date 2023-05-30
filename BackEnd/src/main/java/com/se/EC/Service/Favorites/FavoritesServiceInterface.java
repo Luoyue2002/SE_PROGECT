@@ -29,4 +29,10 @@ public interface FavoritesServiceInterface extends IMppService<Favorites> {
      * @return 商品id列表
      */
     List<Integer> getFavorites(Integer userId);
+
+    /**
+     * 根据 item id 删除收藏夹
+     * @param itemId 商品细分类id
+     */
+    void deleteFavoritesOnItemId(Integer itemId);
 }

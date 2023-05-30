@@ -29,7 +29,7 @@ public class ItemService extends MppServiceImpl<ItemMapper, Item> implements Ite
         List<ItemObject> itemList = commodityObject.getItemObjectList();
         int index = 0;
         for (ItemObject commodityItem : itemList) {
-            Item item = new Item(null,commodityObject.getCommodityId(), commodityItem.getName(), commodityItem.getNumber(),commodityItem.getPrice());
+            Item item = new Item(null, commodityObject.getCommodityId(), commodityItem.getName(), commodityItem.getNumber(), commodityItem.getPrice());
             itemMapper.insert(item);
             itemList.get(index).setItemId(item.getId());
         }
@@ -42,7 +42,7 @@ public class ItemService extends MppServiceImpl<ItemMapper, Item> implements Ite
         QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("parentId", commodityId);
         itemMapper.delete(queryWrapper);
-        return ;
+        return;
     }
 
     @Override

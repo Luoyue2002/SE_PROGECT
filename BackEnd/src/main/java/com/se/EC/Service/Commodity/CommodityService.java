@@ -5,6 +5,7 @@ import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Entity.Commodity;
 import com.se.EC.Mapper.CommodityMapper;
 import com.se.EC.Pojo.CommodityObject;
+import com.se.EC.Service.Cart.CartServiceInterface;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,6 @@ public class CommodityService extends MppServiceImpl<CommodityMapper, Commodity>
         return commodityList.get(0);
     }
 
-    //LY
     @Override
     public CommodityObject addCommodity(CommodityObject commodityObject) {
         Commodity newCommodity = new Commodity(null, commodityObject.getPublisherId(), 0,
@@ -44,7 +44,6 @@ public class CommodityService extends MppServiceImpl<CommodityMapper, Commodity>
         return commodityObject;
     }
 
-    //LY
     @Override
     public CommodityObject deleteCommodity(int commodityId) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
@@ -59,7 +58,6 @@ public class CommodityService extends MppServiceImpl<CommodityMapper, Commodity>
         commodityMapper.deleteById(commodityId);
         return null;
     }
-
 
     private List<Commodity> getCommodityListById(Integer id) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();

@@ -107,6 +107,15 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
                 now_user.setName(resetInfo);
             }
             case "realName" -> now_user.setRealName(resetInfo);
+            case "name" -> {
+                QueryWrapper<User> usernameQueryWrapper = new QueryWrapper<>();
+                usernameQueryWrapper.eq("name", resetInfo);
+                Long count = userMapper.selectCount(userQueryWrapper);
+                if (count != 0) {
+                    throw new RuntimeException("this phone number has already exist");
+                }
+                now_user.setName(resetInfo);
+            }
             case "password" -> now_user.setPassword(resetInfo);
             case "identity" -> now_user.setIdentity(resetInfo);
             case "school" -> now_user.setSchool(resetInfo);

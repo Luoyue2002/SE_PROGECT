@@ -30,6 +30,10 @@ public class OrderController implements OrderControllerInterface {
         try {
             Integer userId = object.getBuyerId();
             checkUser(userId);
+            int itemNumber = object.getItemObjectList().size();
+            if (itemNumber == 0) {
+                throw new RuntimeException("Item number can not be 0");
+            }
             OrderObject order = orderServiceInterface.createOrder(object);
             order = orderItemServiceInterface.createOrder(order);
             return ApiResult.success(order);
@@ -82,7 +86,7 @@ public class OrderController implements OrderControllerInterface {
         try {
             boolean success = orderServiceInterface.orderDelete(orderId);
             if (!success) {
-                return ApiResult.error("failed");
+                return ApiResult.error("This order is not accomplished, you can not delete it");
             }
             orderItemServiceInterface.orderDelete(orderId);
             return ApiResult.error("success");

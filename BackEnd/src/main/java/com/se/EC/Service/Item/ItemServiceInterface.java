@@ -8,13 +8,9 @@ import java.util.List;
 
 public interface ItemServiceInterface extends IMppService<Item> {
     List<Item> getItemsByParentId(Integer parentId);
-
     CommodityObject addCommodityItem(CommodityObject commodityObject);
-
-    public void deleteCommodity(int commodityId);
-
+    void deleteCommodity(int commodityId);
     Item getItemById(Integer id);
-
     Boolean ifItemExists(Integer itemId);
     Integer getParentId(Integer id);
 }

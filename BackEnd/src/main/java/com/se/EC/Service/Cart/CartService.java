@@ -79,4 +79,11 @@ public class CartService extends MppServiceImpl<CartMapper, Cart> implements Car
         }
         return count;
     }
+
+    @Override
+    public void deleteOnItemId(Integer itemId) {
+        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("item", itemId);
+        cartMapper.delete(queryWrapper);
+    }
 }
