@@ -67,4 +67,31 @@ public class ItemService extends MppServiceImpl<ItemMapper, Item> implements Ite
         Item item = itemMapper.selectOne(queryWrapper);
         return item.getParentId();
     }
+
+    @Override
+    public Item changeNumber(int itemId, int number) {
+        QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", itemId);
+        Item item = itemMapper.selectOne(queryWrapper);
+        int totalNum = item.getNumber();
+        if(totalNum  + number < 0){
+            throw new RuntimeException("not enough commodity!");
+        }
+        item.setNumber(totalNum+number);
+        itemMapper.updateById(item);
+        return item;
+
+    }
+
+    @Override
+    public CommodityObject changeItemInfo(CommodityObject commodityObject) {
+        List<ItemObject> itemList = commodityObject.getItemObjectList();
+        int index = 0;
+        for (ItemObject commodityItem : itemList) {
+            Item item = new Item(commodityItem.getItemId(), commodityObject.getCommodityId(), commodityItem.getName(), commodityItem.getNumber(), commodityItem.getPrice());
+            itemMapper.updateById(item);
+        }
+        commodityObject.setItemObjectList(itemList);
+        return commodityObject;
+    }
 }

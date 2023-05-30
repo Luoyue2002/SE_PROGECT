@@ -35,6 +35,7 @@ public class ShopController implements ShopControllerInterface {
     @PostMapping("/addCommodity")
     public ApiResult<CommodityObject> addCommodity(@RequestBody CommodityObject commodityObject) {
         try {
+            checkIfShop(commodityObject.getPublisherId());
             checkCommodity(commodityObject);
             CommodityObject commodity = commodityServiceInterface.addCommodity(commodityObject);
             commodity = itemServiceInterface.addCommodityItem(commodity);
@@ -45,8 +46,9 @@ public class ShopController implements ShopControllerInterface {
     }
 
     @RequestMapping("/deleteCommodity")
-    public ApiResult<String> deleteCommodity(@RequestParam(value = "CommodityId") Integer commodityId) {
+    public ApiResult<String> deleteCommodity(@RequestParam(value = "CommodityId") Integer commodityId,@RequestParam(value = "userId") Integer userId) {
         try {
+            checkIfShop(userId);
             checkCommodity(commodityId);
             boolean couldDelete = orderItemServiceInterface.commodityInOrder(commodityId);
             if (!couldDelete) {
@@ -67,6 +69,20 @@ public class ShopController implements ShopControllerInterface {
             return ApiResult.success("delete success");
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @PostMapping("/changeCommodityInfo")
+    public ApiResult<CommodityObject> changeCommodityInfo(CommodityObject commodityObject) {
+        try {
+            checkIfShop(commodityObject.getPublisherId());
+            checkCommodity(commodityObject);
+            CommodityObject commodity = commodityServiceInterface.changeCommodityInfo(commodityObject);
+            commodity = itemServiceInterface.changeItemInfo(commodity);
+            return ApiResult.success(commodity);
+        } catch (Exception e) {
+            return ApiResult.error("unknown error!");
         }
     }
 
@@ -110,6 +126,13 @@ public class ShopController implements ShopControllerInterface {
     private void checkUser(Integer userId) {
         if (!userServiceInterface.ifUserExists(userId)) {
             throw new RuntimeException("User " + userId + " does not exist");
+        }
+    }
+
+
+    private void checkIfShop(Integer userId) {
+        if (!userServiceInterface.ifShop(userId)) {
+            throw new RuntimeException("User " + userId + " is not shop");
         }
     }
 }

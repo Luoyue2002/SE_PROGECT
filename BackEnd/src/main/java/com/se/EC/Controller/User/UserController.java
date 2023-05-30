@@ -70,6 +70,44 @@ public class UserController implements UserControllerInterface {
         }
     }
 
+
+    @RequestMapping("/resetPassword")
+    public ApiResult<Boolean> ResetPassword(@RequestParam(value = "userId")Integer userId,
+                                            @RequestParam(value = "oldPassword") String oldPassword,
+                                            @RequestParam(value = "newPassword") String newPassword) {
+
+        try {
+            boolean success = userServiceInterface.resetPassword(userId,oldPassword,newPassword);
+            if(success){
+                return ApiResult.success(true);
+            }
+        }catch (Exception e) {
+            return ApiResult.error(e.getMessage(), Boolean.FALSE);
+        }
+
+        return null;
+    }
+
+    @Override
+    public ApiResult<Boolean> ForgetPassword(Integer userId, String phone) {
+        try {
+            userServiceInterface.forgetPassword(userId,phone);
+        }catch (Exception e){
+            return ApiResult.error(e.getMessage(), Boolean.FALSE);
+        }
+        return null;
+    }
+
+    @Override
+    public ApiResult<Boolean> IfShop(Integer userId) {
+        try {
+            userServiceInterface.ifShop(userId);
+        }catch (Exception e){
+            return ApiResult.error(e.getMessage(), Boolean.FALSE);
+        }
+        return null;
+    }
+
     /**
      * 检查用户是否存在
      * @param userId 用户 id
@@ -79,4 +117,7 @@ public class UserController implements UserControllerInterface {
             throw new RuntimeException("User " + userId + " does not exist");
         }
     }
+
+
+
 }

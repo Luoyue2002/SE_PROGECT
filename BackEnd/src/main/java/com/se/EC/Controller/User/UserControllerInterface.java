@@ -57,4 +57,20 @@ public interface UserControllerInterface {
     ApiResult<Boolean> UserResetInfo(@RequestParam(value = "userId") Integer userid,
                                      @RequestParam(value = "attribute") String attribute,
                                      @RequestParam(value = "resetInformation") String resetInformation);
+
+
+    @RequestMapping("/resetPassword")
+    ApiResult<Boolean> ResetPassword(@RequestParam(value = "userId")Integer userId,
+                                     @RequestParam(value = "oldPassword") String oldPassword,
+                                     @RequestParam(value = "newPassword") String newPassword);
+
+
+    @RequestMapping("/forgetPassword")
+    ApiResult<Boolean> ForgetPassword(@RequestParam(value = "userId")Integer userId,
+                                     @RequestParam(value = "phone") String phone);
+
+
+
+    @RequestMapping("/ifShop")
+    ApiResult<Boolean> IfShop(@RequestParam(value = "userId")Integer userId);
 }

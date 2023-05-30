@@ -181,4 +181,55 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
         Long count = userMapper.selectCount(userQueryWrapper);
         return count > 0;
     }
+
+    @Override
+    public Boolean resetPassword(Integer userId, String oldPassword, String newPassword) {
+        boolean exist = ifUserExists(userId);
+        if(exist){
+            QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+            userQueryWrapper.eq("id", userId);
+            User user = userMapper.selectOne(userQueryWrapper);
+            if(user.getPassword()!=oldPassword){
+                throw new RuntimeException("password not match!");
+            }
+            user.setPassword(newPassword);
+            userMapper.updateById(user);
+            return  true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean forgetPassword(Integer userId, String phone) {
+        boolean exist = ifUserExists(userId);
+        if(exist){
+            QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+            userQueryWrapper.eq("phone", phone);
+            User user = userMapper.selectOne(userQueryWrapper);
+            if(user.getPhone()!=phone){
+                throw new RuntimeException("phone not match!");
+            }
+            return  true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean ifShop(Integer userId) {
+        boolean exist = ifUserExists(userId);
+        if(exist){
+            QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+            userQueryWrapper.eq("id", userId);
+            User user = userMapper.selectOne(userQueryWrapper);
+            if(user.getIfShop()==1){
+                return false;
+            }
+            else{
+                user.setIfShop(1);
+                userMapper.updateById(user);
+                return true;
+            }
+        }
+        return false;
+    }
 }

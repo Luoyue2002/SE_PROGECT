@@ -1,8 +1,10 @@
 package com.se.EC.Controller.Order;
 
+import com.se.EC.Entity.Item;
 import com.se.EC.Entity.Order;
 import com.se.EC.Pojo.OrderItemObject;
 import com.se.EC.Pojo.OrderObject;
+import com.se.EC.Service.Item.ItemServiceInterface;
 import com.se.EC.Service.Order.OrderServiceInterface;
 import com.se.EC.Service.OrderItem.OrderItemServiceInterface;
 import com.se.EC.Service.User.UserServiceInterface;
@@ -21,6 +23,9 @@ public class OrderController implements OrderControllerInterface {
     private OrderServiceInterface orderServiceInterface;
     @Resource
     OrderItemServiceInterface orderItemServiceInterface;
+
+    @Resource
+    ItemServiceInterface itemServiceInterface;
     @Resource
     UserServiceInterface userServiceInterface;
 
@@ -36,6 +41,9 @@ public class OrderController implements OrderControllerInterface {
             }
             OrderObject order = orderServiceInterface.createOrder(object);
             order = orderItemServiceInterface.createOrder(order);
+            for(OrderItemObject item : object.getItemObjectList()){
+                itemServiceInterface.changeNumber(item.getItemId(),-1*item.getNumber());
+            }
             return ApiResult.success(order);
         } catch (Exception e) {
             return ApiResult.error("unknown error!");

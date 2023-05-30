@@ -15,4 +15,6 @@ public interface OrderItemServiceInterface extends IMppService<OrderItem> {
     boolean orderPay(int orderId);
     boolean orderDelete(int orderId);
     boolean commodityInOrder(int commodityId);
+
+
 }

@@ -59,6 +59,16 @@ public class CommodityService extends MppServiceImpl<CommodityMapper, Commodity>
         return null;
     }
 
+    @Override
+    public CommodityObject changeCommodityInfo(CommodityObject commodityObject) {
+        Commodity changeCommodity = new Commodity(commodityObject.getCommodityId(), commodityObject.getPublisherId(), null,
+                commodityObject.getName(), commodityObject.getDescription(), commodityObject.getCategory()
+        );
+        commodityMapper.updateById(changeCommodity);
+        return commodityObject;
+
+    }
+
     private List<Commodity> getCommodityListById(Integer id) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);

@@ -3,6 +3,7 @@ package com.se.EC.Service.OrderItem;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
+import com.se.EC.Mapper.ItemMapper;
 import com.se.EC.Pojo.OrderItemObject;
 import com.se.EC.Pojo.OrderObject;
 import com.se.EC.Entity.Order;
@@ -19,6 +20,9 @@ public class OrderItemService extends MppServiceImpl<OrderItemMapper, OrderItem>
 
     @Resource
     private OrderItemMapper orderItemMapper;
+
+
+
     @Override
     public OrderObject createOrder( OrderObject orderCreateObject) {
 

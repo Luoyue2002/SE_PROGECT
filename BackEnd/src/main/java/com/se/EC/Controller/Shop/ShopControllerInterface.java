@@ -24,5 +24,10 @@ public interface ShopControllerInterface {
      * @return 成功/失败
      */
     @RequestMapping("/deleteCommodity")
-    ApiResult<String> deleteCommodity(@RequestParam(value = "CommodityId") Integer commodityId);
+    ApiResult<String> deleteCommodity(@RequestParam(value = "CommodityId") Integer commodityId , Integer userid);
+
+
+    @RequestMapping("/changeCommodityInfo")
+    ApiResult<CommodityObject> changeCommodityInfo(@RequestBody CommodityObject commodityObject);
+
 }

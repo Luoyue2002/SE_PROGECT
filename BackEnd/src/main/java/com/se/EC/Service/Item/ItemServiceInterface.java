@@ -13,4 +13,8 @@ public interface ItemServiceInterface extends IMppService<Item> {
     Item getItemById(Integer id);
     Boolean ifItemExists(Integer itemId);
     Integer getParentId(Integer id);
+
+    Item changeNumber (int itemId , int number);
+
+    CommodityObject  changeItemInfo(CommodityObject commodityObject);
 }
