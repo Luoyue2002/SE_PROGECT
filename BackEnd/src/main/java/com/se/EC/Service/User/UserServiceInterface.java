@@ -2,8 +2,6 @@ package com.se.EC.Service.User;
 
 import com.github.jeffreyning.mybatisplus.service.IMppService;
 import com.se.EC.Entity.User;
-import com.se.EC.Utils.ApiResult;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -40,10 +38,11 @@ public interface UserServiceInterface extends IMppService<User> {
 
     Boolean resetPassword(Integer userId, String oldPassword, String newPassword);
 
-    Boolean forgetPassword(Integer userId,String phone);
+    Boolean forgetPassword(Integer userId, String phone);
 
+    Boolean ifShop(Integer userId);
 
-    Boolean ifShop(Integer userId) ;
+    void deleteUser(Integer userId);
 }
 
 

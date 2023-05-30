@@ -14,7 +14,7 @@ public class UserController implements UserControllerInterface {
     private UserServiceInterface userServiceInterface;
 
     @PostMapping("/register")
-    public ApiResult<Boolean> UserRegister(@RequestBody User user) {
+    public ApiResult<Boolean> userRegister(@RequestBody User user) {
         try {
             userServiceInterface.userRegister(user);
             return ApiResult.success(Boolean.TRUE);
@@ -24,7 +24,7 @@ public class UserController implements UserControllerInterface {
     }
 
     @RequestMapping("/loginByName")
-    public ApiResult<User> UserLoginByName(@RequestParam(value = "userName") String username,
+    public ApiResult<User> userLoginByName(@RequestParam(value = "userName") String username,
                                            @RequestParam(value = "password") String password) {
         try {
             User user = userServiceInterface.userLoginByName(username, password);
@@ -35,7 +35,7 @@ public class UserController implements UserControllerInterface {
     }
 
     @RequestMapping("/loginById")
-    public ApiResult<User> UserLoginById(@RequestParam(value = "userId") String userid,
+    public ApiResult<User> userLoginById(@RequestParam(value = "userId") String userid,
                                          @RequestParam(value = "password") String password) {
         try {
             User user = userServiceInterface.userLoginById(userid, password);
@@ -46,7 +46,7 @@ public class UserController implements UserControllerInterface {
     }
 
     @RequestMapping("/loginByPhone")
-    public ApiResult<User> UserLoginByPhone(@RequestParam(value = "userPhone") String userPhone,
+    public ApiResult<User> userLoginByPhone(@RequestParam(value = "userPhone") String userPhone,
                                             @RequestParam(value = "password") String password) {
         try {
             User user = userServiceInterface.userLoginByPhone(userPhone, password);
@@ -58,7 +58,7 @@ public class UserController implements UserControllerInterface {
     }
 
     @RequestMapping("/resetInformation")
-    public ApiResult<Boolean> UserResetInfo(@RequestParam(value = "userId") Integer userid,
+    public ApiResult<Boolean> userResetInfo(@RequestParam(value = "userId") Integer userid,
                                             @RequestParam(value = "attribute") String attribute,
                                             @RequestParam(value = "resetInformation") String resetInformation) {
         try {
@@ -72,44 +72,59 @@ public class UserController implements UserControllerInterface {
 
 
     @RequestMapping("/resetPassword")
-    public ApiResult<Boolean> ResetPassword(@RequestParam(value = "userId")Integer userId,
+    public ApiResult<Boolean> resetPassword(@RequestParam(value = "userId") Integer userId,
                                             @RequestParam(value = "oldPassword") String oldPassword,
                                             @RequestParam(value = "newPassword") String newPassword) {
-
         try {
-            boolean success = userServiceInterface.resetPassword(userId,oldPassword,newPassword);
-            if(success){
+            boolean success = userServiceInterface.resetPassword(userId, oldPassword, newPassword);
+            if (success) {
                 return ApiResult.success(true);
             }
-        }catch (Exception e) {
+            else {
+                return ApiResult.error("false");
+            }
+        } catch (Exception e) {
             return ApiResult.error(e.getMessage(), Boolean.FALSE);
         }
-
-        return null;
     }
 
     @Override
-    public ApiResult<Boolean> ForgetPassword(Integer userId, String phone) {
+    @RequestMapping("/forgetPassword")
+    public ApiResult<Boolean> forgetPassword(@RequestParam(value = "userId") Integer userId,
+                                             @RequestParam(value = "phone") String phone) {
         try {
-            userServiceInterface.forgetPassword(userId,phone);
-        }catch (Exception e){
+            userServiceInterface.forgetPassword(userId, phone);
+            return ApiResult.success();
+        } catch (Exception e) {
             return ApiResult.error(e.getMessage(), Boolean.FALSE);
         }
-        return null;
     }
 
     @Override
-    public ApiResult<Boolean> IfShop(Integer userId) {
+    @RequestMapping("/ifShop")
+    public ApiResult<Boolean> ifShop(@RequestParam(value = "userId") Integer userId) {
         try {
             userServiceInterface.ifShop(userId);
-        }catch (Exception e){
+            return ApiResult.success();
+        } catch (Exception e) {
             return ApiResult.error(e.getMessage(), Boolean.FALSE);
         }
-        return null;
+    }
+
+    @Override
+    @RequestMapping("/deleteUser")
+    public ApiResult<Boolean> deleteUser(@RequestParam(value = "userId") Integer userId) {
+        try {
+            userServiceInterface.deleteUser(userId);
+            return ApiResult.success();
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage(), Boolean.FALSE);
+        }
     }
 
     /**
      * 检查用户是否存在
+     *
      * @param userId 用户 id
      */
     private void checkUser(Integer userId) {
@@ -117,7 +132,4 @@ public class UserController implements UserControllerInterface {
             throw new RuntimeException("User " + userId + " does not exist");
         }
     }
-
-
-
 }

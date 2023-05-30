@@ -14,7 +14,7 @@ public interface UserControllerInterface {
      * @return 成功/失败
      */
     @PostMapping("/register")
-    ApiResult<Boolean> UserRegister(@RequestBody User user);
+    ApiResult<Boolean> userRegister(@RequestBody User user);
 
     /**
      * 通过名字登录
@@ -23,7 +23,7 @@ public interface UserControllerInterface {
      * @return 用户具体信息
      */
     @RequestMapping("/loginByName")
-    ApiResult<User> UserLoginByName(@RequestParam(value = "userName") String username,
+    ApiResult<User> userLoginByName(@RequestParam(value = "userName") String username,
                                     @RequestParam(value = "password") String password);
 
     /**
@@ -33,7 +33,7 @@ public interface UserControllerInterface {
      * @return 用户具体信息
      */
     @RequestMapping("/loginById")
-    ApiResult<User> UserLoginById(@RequestParam(value = "userId") String userid,
+    ApiResult<User> userLoginById(@RequestParam(value = "userId") String userid,
                                   @RequestParam(value = "password") String password);
 
     /**
@@ -43,7 +43,7 @@ public interface UserControllerInterface {
      * @return 用户具体信息
      */
     @RequestMapping("/loginByPhone")
-    ApiResult<User> UserLoginByPhone(@RequestParam(value = "userPhone") String userPhone,
+    ApiResult<User> userLoginByPhone(@RequestParam(value = "userPhone") String userPhone,
                                      @RequestParam(value = "password") String password);
 
     /**
@@ -54,23 +54,22 @@ public interface UserControllerInterface {
      * @return 成功/失败
      */
     @RequestMapping("/resetInformation")
-    ApiResult<Boolean> UserResetInfo(@RequestParam(value = "userId") Integer userid,
+    ApiResult<Boolean> userResetInfo(@RequestParam(value = "userId") Integer userid,
                                      @RequestParam(value = "attribute") String attribute,
                                      @RequestParam(value = "resetInformation") String resetInformation);
 
-
     @RequestMapping("/resetPassword")
-    ApiResult<Boolean> ResetPassword(@RequestParam(value = "userId")Integer userId,
+    ApiResult<Boolean> resetPassword(@RequestParam(value = "userId")Integer userId,
                                      @RequestParam(value = "oldPassword") String oldPassword,
                                      @RequestParam(value = "newPassword") String newPassword);
 
-
     @RequestMapping("/forgetPassword")
-    ApiResult<Boolean> ForgetPassword(@RequestParam(value = "userId")Integer userId,
-                                     @RequestParam(value = "phone") String phone);
-
-
+    ApiResult<Boolean> forgetPassword(@RequestParam(value = "userId")Integer userId,
+                                      @RequestParam(value = "phone") String phone);
 
     @RequestMapping("/ifShop")
-    ApiResult<Boolean> IfShop(@RequestParam(value = "userId")Integer userId);
+    ApiResult<Boolean> ifShop(@RequestParam(value = "userId")Integer userId);
+
+    @RequestMapping("/deleteUser")
+    ApiResult<Boolean> deleteUser(@RequestParam(value = "userId")Integer userId);
 }
