@@ -43,5 +43,3 @@ public interface CartServiceInterface extends IMppService<Cart> {
      */
     void deleteOnItemId(Integer itemId);
 }
-
-
