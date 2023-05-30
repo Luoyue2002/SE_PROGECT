@@ -24,10 +24,16 @@ public interface ShopControllerInterface {
      * @return 成功/失败
      */
     @RequestMapping("/deleteCommodity")
-    ApiResult<String> deleteCommodity(@RequestParam(value = "CommodityId") Integer commodityId , Integer userid);
+    ApiResult<String> deleteCommodity(@RequestParam(value = "commodityId") Integer commodityId , Integer userid);
 
 
     @RequestMapping("/changeCommodityInfo")
     ApiResult<CommodityObject> changeCommodityInfo(@RequestBody CommodityObject commodityObject);
+
+
+    @RequestMapping("/sendOrder")
+    ApiResult<Boolean> sendOrder(@RequestParam(value = "orderId") Integer orderId , @RequestParam(value = "shopId") Integer shopId);
+    @RequestMapping("/receiveOrder")
+    ApiResult<Boolean> receiveOrder(@RequestParam(value = "orderId") Integer orderId , @RequestParam(value = "shopId") Integer shopId);
 
 }

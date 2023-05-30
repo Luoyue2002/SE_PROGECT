@@ -3,10 +3,12 @@ package com.se.EC.Controller.Shop;
 import com.se.EC.Entity.Item;
 import com.se.EC.Pojo.Category;
 import com.se.EC.Pojo.CommodityObject;
+import com.se.EC.Pojo.OrderState;
 import com.se.EC.Service.Cart.CartServiceInterface;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Service.Favorites.FavoritesServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
+import com.se.EC.Service.Order.OrderServiceInterface;
 import com.se.EC.Service.OrderItem.OrderItemServiceInterface;
 import com.se.EC.Service.User.UserServiceInterface;
 import com.se.EC.Utils.ApiResult;
@@ -23,6 +25,10 @@ public class ShopController implements ShopControllerInterface {
     private CommodityServiceInterface commodityServiceInterface;
     @Resource
     private OrderItemServiceInterface orderItemServiceInterface;
+
+
+    @Resource
+    private OrderServiceInterface orderServiceInterface;
     @Resource
     private ItemServiceInterface itemServiceInterface;
     @Resource
@@ -86,6 +92,28 @@ public class ShopController implements ShopControllerInterface {
         }
     }
 
+
+    @RequestMapping("/sendOrder")
+    public  ApiResult<Boolean> sendOrder(@RequestParam(value = "orderId") Integer orderId , @RequestParam(value = "shopId") Integer shopId){
+        try {
+            checkIfShop(shopId);
+            orderServiceInterface.changeOrderState(orderId, OrderState.Send);
+            return ApiResult.success(true);
+        } catch (Exception e) {
+            return ApiResult.error("unknown error!");
+        }
+    }
+
+    @RequestMapping("/receiveOrder")
+    public  ApiResult<Boolean> receiveOrder(@RequestParam(value = "orderId") Integer orderId , @RequestParam(value = "shopId") Integer shopId){
+        try {
+            checkIfShop(shopId);
+            orderServiceInterface.changeOrderState(orderId, OrderState.Recieved);
+            return ApiResult.success(true);
+        } catch (Exception e) {
+            return ApiResult.error("unknown error!");
+        }
+    }
     /**
      * 检测商品商家信息
      * @param commodityObject pojo
@@ -108,6 +136,8 @@ public class ShopController implements ShopControllerInterface {
             throw new RuntimeException("Unknown category");
         }
     }
+
+
 
     /**
      * 检查商品是否存在
