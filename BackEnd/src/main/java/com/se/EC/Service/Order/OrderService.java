@@ -5,6 +5,7 @@ import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Pojo.OrderObject;
 import com.se.EC.Entity.Order;
 import com.se.EC.Mapper.OrderMapper;
+import com.se.EC.Pojo.OrderState;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
     public OrderObject createOrder(OrderObject orderCreateObject) {
 
         Order createOrder = new Order(null, orderCreateObject.getBuyerId(), orderCreateObject.getPrice(),
-                orderCreateObject.getAddress(), 0, LocalDateTime.now()
+                orderCreateObject.getAddress(), OrderState.Unpay, LocalDateTime.now()
         );
 
         orderMapper.insert(createOrder);
@@ -69,6 +70,15 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
             return false;
         }
         orderMapper.delete(queryWrapper);
+        return true;
+    }
+
+    @Override
+    public boolean changeOrderState(int orderId, int state) {
+        Order order = new Order();
+        order.setId(orderId);
+        order.setState(state);
+        orderMapper.updateById(order);
         return true;
     }
 }
