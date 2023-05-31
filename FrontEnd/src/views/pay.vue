@@ -152,8 +152,8 @@ export default {
     };
   },
   created() {
-    // this.userid = this.$route.query.userid;
-    // this.product = this.$route.query.product
+    this.userid = this.$route.query.userid;
+    this.product = this.$route.query.product;
     this.load();
   },
   computed:{

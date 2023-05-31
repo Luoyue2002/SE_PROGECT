@@ -236,7 +236,16 @@ export default {
 
     };
   },
+  created(){
+    this.userid = this.$route.query.userid;
+    this.username=this.$route.query.username;
+    this.user=this.$route.query.user;
+    this.load();
+  },
   methods: {
+    load(){
+      //todo
+    },
     //用户名
     editUsername() {
       // this.editDialogData.username = this.user.username;

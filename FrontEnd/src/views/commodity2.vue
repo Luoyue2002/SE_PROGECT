@@ -116,6 +116,7 @@ export default {
 
       userid: 1,
       username: "haha",
+      commodityId: "1",
       currentImgIndex: 1,
       totalImgIndex: 8,
       commodity: {
@@ -145,11 +146,16 @@ export default {
   created() {
     this.userid = this.$route.query.userid;
     this.username = this.$route.query.username;
+    this.commodityId = this.$route.query.commodityId;
+    
     this.load();
   },
   methods: {
     load() {
-
+      axios.get('http://127.0.0.1:8080/commodity/click?userId=' + this.userid + '&commodityId=' + this.commodityId).then(res => {
+        console.log(res);
+        this.commodity=res.data.data;
+      });
     },
     //添加收藏
     showAddFavorateInfo() {
