@@ -102,6 +102,8 @@ export default {
   data() {
     return {
       logourl: require("../pic/logo.jpg"),
+      userid:1,
+      username:"haha",
       product: {
         name: "",
         price: "",
@@ -132,6 +134,10 @@ export default {
         }
       ));
     },
+  },
+  created(){
+    this.userid = this.$route.query.userid;
+    this.username=this.$route.query.username;
   },
   methods: {
     submitForm() {

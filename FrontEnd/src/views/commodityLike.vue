@@ -37,11 +37,14 @@
                       <div class="product-name">{{ product.name }}</div>
                     </el-row>
                     <el-row>
-                      <el-col :span="12">
+                      <el-col :span="8">
                         <div style="font-size: 30px;">￥{{ product.price }}</div>
                       </el-col>
-                      <el-col :span="12">
+                      <el-col :span="8">
                         <el-button type="danger" @click="removeFromFavorites(rowIndex, index)">取消收藏</el-button>
+                      </el-col>
+                      <el-col :span="8">
+                        <el-button type="danger" @click="goToCommodity(rowIndex, index)">商品详情</el-button>
                       </el-col>
                     </el-row>
                   </div>
@@ -73,6 +76,7 @@ export default {
       logourl: require("../pic/logo.jpg"),
 
       userid: 1,
+      username:"haa",
       pagination: {
         currentPage: 1,
         pageSize: 6,
@@ -126,7 +130,8 @@ export default {
     };
   },
   created() {
-    this.userid = this.$route.query.userid;
+    // this.userid = this.$route.query.userid;
+    // this.username=this.$route.query.username;
     this.load();
   },
   computed: {
@@ -165,7 +170,14 @@ export default {
       axios.get('http://127.0.0.1:8080/favorites/deleteFavorites?userId=' + this.userid+'&itemId='+this.productList[productIndex].id).then(res => {
         console.log(res);
       });
-    }
+    },
+    goToCommodity(rowIndex, index){
+      var productIndex=this.pagination.pageSize*rowIndex+index;
+      axios.get('http://127.0.0.1:8080//commodity/clickItem?userId=' + this.userid+'&item='+this.productList[productIndex].id).then(res => {
+        console.log(res);
+        this.$router.push({ name: 'commodity', query: { userid: this.userid, username: this.username, commodity:res.data.data.commodityId} });
+      });
+    },
   },
 
 }
