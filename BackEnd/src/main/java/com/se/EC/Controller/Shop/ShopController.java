@@ -6,6 +6,7 @@ import com.se.EC.Pojo.CommodityObject;
 import com.se.EC.Pojo.OrderState;
 import com.se.EC.Service.Cart.CartServiceInterface;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
+import com.se.EC.Service.Detail.DetailServiceInterface;
 import com.se.EC.Service.Favorites.FavoritesServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
 import com.se.EC.Service.Order.OrderServiceInterface;
@@ -35,7 +36,8 @@ public class ShopController implements ShopControllerInterface {
     private CartServiceInterface cartServiceInterface;
     @Resource
     private FavoritesServiceInterface favoritesServiceInterface;
-
+    @Resource
+    private DetailServiceInterface detailServiceInterface;
     @PostMapping("/addCommodity")
     public ApiResult<CommodityObject> addCommodity(@RequestBody CommodityObject commodityObject) {
         try {
@@ -43,6 +45,10 @@ public class ShopController implements ShopControllerInterface {
             checkCommodity(commodityObject);
             CommodityObject commodity = commodityServiceInterface.addCommodity(commodityObject);
             commodity = itemServiceInterface.addCommodityItem(commodity);
+            List<String> urlList = commodityObject.getPictureList();
+            for(String url : urlList){
+                detailServiceInterface.addDetails(commodity.getCommodityId(),url);
+            }
             return ApiResult.success(commodity);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());

@@ -20,4 +20,12 @@ public class DetailService extends MppServiceImpl<DetailMapper, Detail> implemen
         queryWrapper.eq("commodityId", parentId);
         return detailMapper.selectList(queryWrapper);
     }
+
+    @Override
+    public Detail addDetails(Integer parentId, String url) {
+        QueryWrapper<Detail> queryWrapper = new QueryWrapper<>();
+        Detail newDetail = new Detail(parentId,url);
+        detailMapper.insert(newDetail);
+        return  newDetail;
+    }
 }

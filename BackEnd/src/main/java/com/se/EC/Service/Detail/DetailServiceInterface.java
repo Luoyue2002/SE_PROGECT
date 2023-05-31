@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface DetailServiceInterface extends IMppService<Detail> {
     List<Detail> getDetailsByParentId(Integer parentId);
+
+    Detail addDetails(Integer parentId , String url);
 }
