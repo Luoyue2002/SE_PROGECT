@@ -33,7 +33,9 @@ public interface ShopControllerInterface {
 
     @RequestMapping("/sendOrder")
     ApiResult<Boolean> sendOrder(@RequestParam(value = "orderId") Integer orderId , @RequestParam(value = "shopId") Integer shopId);
+
     @RequestMapping("/receiveOrder")
     ApiResult<Boolean> receiveOrder(@RequestParam(value = "orderId") Integer orderId , @RequestParam(value = "shopId") Integer shopId);
+
 
 }

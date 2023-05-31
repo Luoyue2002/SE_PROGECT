@@ -104,9 +104,9 @@ public class ShopController implements ShopControllerInterface {
 
     @RequestMapping("/receiveOrder")
     public ApiResult<Boolean> receiveOrder(@RequestParam(value = "orderId") Integer orderId,
-                                           @RequestParam(value = "shopId") Integer shopId) {
+                                           @RequestParam(value = "userId") Integer userId) {
         try {
-            checkIfShop(shopId);
+            checkUser(userId);
             orderServiceInterface.changeOrderState(orderId, OrderState.Received.value());
             return ApiResult.success(true);
         } catch (Exception e) {

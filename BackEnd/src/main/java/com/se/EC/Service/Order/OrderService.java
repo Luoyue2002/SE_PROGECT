@@ -56,7 +56,7 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
     public boolean orderPay(int orderId) {
         Order order = new Order();
         order.setId(orderId);
-        order.setState(2);
+        order.setState(1);
         orderMapper.updateById(order);
         return true;
     }
