@@ -12,12 +12,12 @@ public interface CommodityServiceInterface extends IMppService<Commodity> {
     Commodity getCommodityDetailById(Integer id);
     CommodityObject  addCommodity(CommodityObject commodityObject);
     CommodityObject  deleteCommodity(int commodityId);
-
     CommodityObject  changeCommodityInfo(CommodityObject commodityObject);
     List<Commodity> getCommoditiesByCategory(String category);
     List<Commodity> getCommoditiesByPublisher(Integer id);
     List<Commodity> getCommoditiesByFuzzyContent(String content);
     Boolean ifCommodityExists(Integer id);
+    void addSales(Integer commodityId, Integer number);
 }
 
 

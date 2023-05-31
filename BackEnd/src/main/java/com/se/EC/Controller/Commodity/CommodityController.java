@@ -50,17 +50,21 @@ public class CommodityController implements CommodityControllerInterface {
             List<Integer> idList = cutAndMend(historyMatrix.recommend(id));
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
             for (var item : idList) {
-                Commodity commodity = commodityServiceInterface.getCommodityDetailById(item);
-                String name = commodity.getName();
-                Integer sales = commodity.getSales();
-                Float price = getPrice(item);
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(item, name, null, price, sales);
-                commodityPreviewObjectList.add(commodityPreviewObject);
+                commodityPreviewObjectList.add(packPreview(item));
             }
             return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
+    }
+
+    private CommodityPreviewObject packPreview(Integer id) {
+        Commodity commodity = commodityServiceInterface.getCommodityDetailById(id);
+        String name = commodity.getName();
+        Integer sales = commodity.getSales();
+        Float price = commodity.getPrice();
+        String picture = commodity.getImage();
+        return new CommodityPreviewObject(id, name, picture, price, sales);
     }
 
     /**
@@ -86,25 +90,6 @@ public class CommodityController implements CommodityControllerInterface {
     }
 
     /**
-     * 根据商品获取价格
-     * @param id 商品id
-     * @return 细分类最低价格
-     */
-    private Float getPrice(Integer id) {
-        List<Item> itemList = itemServiceInterface.getItemsByParentId(id);
-        itemList.sort((o1, o2) -> {
-            if (o1.getPrice() > o2.getPrice()) {
-                return 1;
-            } else if (o1.getPrice().equals(o2.getPrice())) {
-                return 0;
-            } else {
-                return -1;
-            }
-        });
-        return itemList.get(0).getPrice();
-    }
-
-    /**
      * 将所有商品按照销量排序
      * @return 排序结果
      */
@@ -126,11 +111,7 @@ public class CommodityController implements CommodityControllerInterface {
         List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
         for (var item : commodityList) {
             Integer commodityId = item.getId();
-            String name = item.getName();
-            Float price = getPrice(commodityId);
-            Integer sales = item.getSales();
-            CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, null, price, sales);
-            commodityPreviewObjectList.add(commodityPreviewObject);
+            commodityPreviewObjectList.add(packPreview(commodityId));
         }
         return commodityPreviewObjectList;
     }
@@ -178,12 +159,7 @@ public class CommodityController implements CommodityControllerInterface {
             });
             for (var item : sortList) {
                 Integer commodityId = item.getKey();
-                Commodity commodity = commodityServiceInterface.getCommodityDetailById(commodityId);
-                String name = commodity.getName();
-                Integer sales = commodity.getSales();
-                Float price = getPrice(commodityId);
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, null, price, sales);
-                commodityPreviewObjectList.add(commodityPreviewObject);
+                commodityPreviewObjectList.add(packPreview(commodityId));
             }
             return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
@@ -213,22 +189,8 @@ public class CommodityController implements CommodityControllerInterface {
             List<Commodity> commodityList = commodityServiceInterface.getCommoditiesByPublisher(publisherId);
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
             for (var item : commodityList) {
-                String name = item.getName();
-                Integer sales = item.getSales();
                 Integer commodityId = item.getId();
-                List<Item> itemList = itemServiceInterface.getItemsByParentId(commodityId);
-                itemList.sort((o1, o2) -> {
-                    if (o1.getPrice() > o2.getPrice()) {
-                        return 1;
-                    } else if (o1.getPrice().equals(o2.getPrice())) {
-                        return 0;
-                    } else {
-                        return -1;
-                    }
-                });
-                Float price = itemList.get(0).getPrice();
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, null, price, sales);
-                commodityPreviewObjectList.add(commodityPreviewObject);
+                commodityPreviewObjectList.add(packPreview(commodityId));
             }
             return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
@@ -250,22 +212,8 @@ public class CommodityController implements CommodityControllerInterface {
             }
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
             for (var item : commodityList) {
-                String name = item.getName();
-                Integer sales = item.getSales();
                 Integer commodityId = item.getId();
-                List<Item> itemList = itemServiceInterface.getItemsByParentId(commodityId);
-                itemList.sort((o1, o2) -> {
-                    if (o1.getPrice() > o2.getPrice()) {
-                        return 1;
-                    } else if (o1.getPrice().equals(o2.getPrice())) {
-                        return 0;
-                    } else {
-                        return -1;
-                    }
-                });
-                Float price = itemList.get(0).getPrice();
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, null, price, sales);
-                commodityPreviewObjectList.add(commodityPreviewObject);
+                commodityPreviewObjectList.add(packPreview(commodityId));
             }
             return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
@@ -287,15 +235,16 @@ public class CommodityController implements CommodityControllerInterface {
             List<Item> itemList = itemServiceInterface.getItemsByParentId(commodityId);
             List<ItemObject> itemObjectList = new ArrayList<>();
             List<String> pictureList = new ArrayList<>();
-            for (var item : detailList) {
-                pictureList.add(item.getImage());
-            }
             for (var item : itemList) {
                 ItemObject itemObject = new ItemObject(item.getId(), item.getName(), item.getNumber(), item.getPrice());
                 itemObjectList.add(itemObject);
             }
+            for (var item : detailList) {
+                pictureList.add(item.getImage());
+            }
             CommodityObject commodityObject = new CommodityObject(commodityId, commodity.getPublisher(), commodity.getName(),
-                    commodity.getDescription(), commodity.getCategory(), itemObjectList, pictureList);
+                    commodity.getDescription(), commodity.getCategory(), itemObjectList, pictureList, commodity.getImage(),
+                    commodity.getSales(), commodity.getPrice());
             return ApiResult.success(commodityObject);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());

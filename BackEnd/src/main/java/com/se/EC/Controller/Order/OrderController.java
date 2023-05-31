@@ -1,9 +1,11 @@
 package com.se.EC.Controller.Order;
 
+import com.se.EC.Entity.Commodity;
 import com.se.EC.Entity.Item;
 import com.se.EC.Entity.Order;
 import com.se.EC.Pojo.OrderItemObject;
 import com.se.EC.Pojo.OrderObject;
+import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
 import com.se.EC.Service.Order.OrderServiceInterface;
 import com.se.EC.Service.OrderItem.OrderItemServiceInterface;
@@ -22,12 +24,13 @@ public class OrderController implements OrderControllerInterface {
     @Resource
     private OrderServiceInterface orderServiceInterface;
     @Resource
-    OrderItemServiceInterface orderItemServiceInterface;
-
+    private OrderItemServiceInterface orderItemServiceInterface;
     @Resource
-    ItemServiceInterface itemServiceInterface;
+    private CommodityServiceInterface commodityServiceInterface;
     @Resource
-    UserServiceInterface userServiceInterface;
+    private ItemServiceInterface itemServiceInterface;
+    @Resource
+    private UserServiceInterface userServiceInterface;
 
     @Override
     @PostMapping("/createOrder")
@@ -42,7 +45,10 @@ public class OrderController implements OrderControllerInterface {
             OrderObject order = orderServiceInterface.createOrder(object);
             order = orderItemServiceInterface.createOrder(order);
             for(OrderItemObject item : object.getItemObjectList()){
-                itemServiceInterface.changeNumber(item.getItemId(),-1*item.getNumber());
+                itemServiceInterface.changeNumber(item.getItemId(),-1 * item.getNumber());
+                Integer itemId = item.getItemId();
+                Integer commodityId = itemServiceInterface.getParentId(itemId);
+                commodityServiceInterface.addSales(commodityId, item.getNumber());
             }
             return ApiResult.success(order);
         } catch (Exception e) {

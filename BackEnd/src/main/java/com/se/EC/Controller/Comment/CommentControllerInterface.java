@@ -1,6 +1,7 @@
 package com.se.EC.Controller.Comment;
 
 import com.se.EC.Entity.Comment;
+import com.se.EC.Pojo.CommentObject;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ public interface CommentControllerInterface {
      * @return 成功/失败
      */
     @PostMapping("/addComment")
-    ApiResult<Boolean> addComment(@RequestBody Comment comment);
+    ApiResult<Boolean> addComment(@RequestBody CommentObject comment);
 
     /**
      * 删除评论
@@ -32,7 +33,7 @@ public interface CommentControllerInterface {
      * @return Comment组成的链表
      */
     @RequestMapping("/getCommentByItem")
-    ApiResult<List<Comment>> getCommentByItem(@RequestParam(value = "itemId") Integer itemId);
+    ApiResult<List<CommentObject>> getCommentByItem(@RequestParam(value = "itemId") Integer itemId);
 
     /**
      * 根据商品获取评论
@@ -40,7 +41,7 @@ public interface CommentControllerInterface {
      * @return Comment组成的链表
      */
     @RequestMapping("/getCommentByCommodity")
-    ApiResult<List<Comment>> getCommentByCommodity(Integer commodityId);
+    ApiResult<List<CommentObject>> getCommentByCommodity(Integer commodityId);
 
     /**
      * 根据用户获取评论
@@ -48,5 +49,5 @@ public interface CommentControllerInterface {
      * @return Comment组成的链表
      */
     @RequestMapping("/getCommentByUser")
-    ApiResult<List<Comment>> getCommentByUser(@RequestParam(value = "userId") Integer userId);
+    ApiResult<List<CommentObject>> getCommentByUser(@RequestParam(value = "userId") Integer userId);
 }

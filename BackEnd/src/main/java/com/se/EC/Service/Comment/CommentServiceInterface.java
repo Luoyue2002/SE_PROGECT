@@ -2,6 +2,7 @@ package com.se.EC.Service.Comment;
 
 import com.github.jeffreyning.mybatisplus.service.IMppService;
 import com.se.EC.Entity.Comment;
+import com.se.EC.Pojo.CommentObject;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface CommentServiceInterface extends IMppService<Comment> {
      * 添加评论
      * @param comment 见Entity.Comment类
      */
-    void addComment(Comment comment);
+    void addComment(CommentObject comment);
 
     /**
      * 删除评论
@@ -31,4 +32,6 @@ public interface CommentServiceInterface extends IMppService<Comment> {
      * @return Comment组成的链表
      */
     List<Comment> getCommentByUser(Integer userId);
+
+    Integer getCommentIdByUserItem(Integer userId, Integer itemId);
 }

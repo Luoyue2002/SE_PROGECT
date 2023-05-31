@@ -5,7 +5,6 @@ import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Entity.Commodity;
 import com.se.EC.Mapper.CommodityMapper;
 import com.se.EC.Pojo.CommodityObject;
-import com.se.EC.Service.Cart.CartServiceInterface;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +34,9 @@ public class CommodityService extends MppServiceImpl<CommodityMapper, Commodity>
 
     @Override
     public CommodityObject addCommodity(CommodityObject commodityObject) {
-        Commodity newCommodity = new Commodity(null, commodityObject.getPublisherId(), 0,
-                commodityObject.getName(), commodityObject.getDescription(), commodityObject.getCategory()
-        );
+        Commodity newCommodity = new Commodity(commodityObject.getCommodityId(), commodityObject.getPublisherId(), 0,
+                commodityObject.getName(), commodityObject.getDescription(), commodityObject.getCategory(),
+                commodityObject.getPreviewPicture(), commodityObject.getPrice());
         commodityMapper.insert(newCommodity);
         // 获取主键
         commodityObject.setCommodityId(newCommodity.getId());
@@ -61,12 +60,11 @@ public class CommodityService extends MppServiceImpl<CommodityMapper, Commodity>
 
     @Override
     public CommodityObject changeCommodityInfo(CommodityObject commodityObject) {
-        Commodity changeCommodity = new Commodity(commodityObject.getCommodityId(), commodityObject.getPublisherId(), null,
-                commodityObject.getName(), commodityObject.getDescription(), commodityObject.getCategory()
-        );
+        Commodity changeCommodity = new Commodity(commodityObject.getCommodityId(), commodityObject.getPublisherId(),
+                commodityObject.getSales(), commodityObject.getName(), commodityObject.getDescription(), commodityObject.getCategory(),
+                commodityObject.getPreviewPicture(), commodityObject.getPrice());
         commodityMapper.updateById(changeCommodity);
         return commodityObject;
-
     }
 
     private List<Commodity> getCommodityListById(Integer id) {
@@ -108,5 +106,14 @@ public class CommodityService extends MppServiceImpl<CommodityMapper, Commodity>
         queryWrapper.eq("id", id);
         Long count = commodityMapper.selectCount(queryWrapper);
         return count != 0;
+    }
+
+    @Override
+    public void addSales(Integer commodityId, Integer number) {
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", commodityId);
+        Commodity commodity = commodityMapper.selectOne(queryWrapper);
+        commodity.setSales(commodity.getSales() + number);
+        commodityMapper.update(commodity, queryWrapper);
     }
 }

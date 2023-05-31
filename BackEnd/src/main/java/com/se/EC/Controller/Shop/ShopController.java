@@ -25,8 +25,6 @@ public class ShopController implements ShopControllerInterface {
     private CommodityServiceInterface commodityServiceInterface;
     @Resource
     private OrderItemServiceInterface orderItemServiceInterface;
-
-
     @Resource
     private OrderServiceInterface orderServiceInterface;
     @Resource
@@ -52,7 +50,7 @@ public class ShopController implements ShopControllerInterface {
     }
 
     @RequestMapping("/deleteCommodity")
-    public ApiResult<String> deleteCommodity(@RequestParam(value = "CommodityId") Integer commodityId,@RequestParam(value = "userId") Integer userId) {
+    public ApiResult<String> deleteCommodity(@RequestParam(value = "CommodityId") Integer commodityId, @RequestParam(value = "userId") Integer userId) {
         try {
             checkIfShop(userId);
             checkCommodity(commodityId);
@@ -92,12 +90,12 @@ public class ShopController implements ShopControllerInterface {
         }
     }
 
-
     @RequestMapping("/sendOrder")
-    public  ApiResult<Boolean> sendOrder(@RequestParam(value = "orderId") Integer orderId , @RequestParam(value = "shopId") Integer shopId){
+    public ApiResult<Boolean> sendOrder(@RequestParam(value = "orderId") Integer orderId,
+                                        @RequestParam(value = "shopId") Integer shopId) {
         try {
             checkIfShop(shopId);
-            orderServiceInterface.changeOrderState(orderId, OrderState.Send);
+            orderServiceInterface.changeOrderState(orderId, OrderState.Send.value());
             return ApiResult.success(true);
         } catch (Exception e) {
             return ApiResult.error("unknown error!");
@@ -105,17 +103,20 @@ public class ShopController implements ShopControllerInterface {
     }
 
     @RequestMapping("/receiveOrder")
-    public  ApiResult<Boolean> receiveOrder(@RequestParam(value = "orderId") Integer orderId , @RequestParam(value = "shopId") Integer shopId){
+    public ApiResult<Boolean> receiveOrder(@RequestParam(value = "orderId") Integer orderId,
+                                           @RequestParam(value = "shopId") Integer shopId) {
         try {
             checkIfShop(shopId);
-            orderServiceInterface.changeOrderState(orderId, OrderState.Recieved);
+            orderServiceInterface.changeOrderState(orderId, OrderState.Received.value());
             return ApiResult.success(true);
         } catch (Exception e) {
             return ApiResult.error("unknown error!");
         }
     }
+
     /**
      * 检测商品商家信息
+     *
      * @param commodityObject pojo
      */
     private void checkCommodity(CommodityObject commodityObject) {
@@ -137,10 +138,9 @@ public class ShopController implements ShopControllerInterface {
         }
     }
 
-
-
     /**
      * 检查商品是否存在
+     *
      * @param id 商品id
      */
     private void checkCommodity(Integer id) {
@@ -151,6 +151,7 @@ public class ShopController implements ShopControllerInterface {
 
     /**
      * 检查用户是否存在
+     *
      * @param userId 用户 id
      */
     private void checkUser(Integer userId) {
@@ -158,7 +159,6 @@ public class ShopController implements ShopControllerInterface {
             throw new RuntimeException("User " + userId + " does not exist");
         }
     }
-
 
     private void checkIfShop(Integer userId) {
         if (!userServiceInterface.ifShop(userId)) {

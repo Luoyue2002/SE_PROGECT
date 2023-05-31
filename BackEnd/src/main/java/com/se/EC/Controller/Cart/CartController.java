@@ -1,9 +1,11 @@
 package com.se.EC.Controller.Cart;
 
 import com.se.EC.Entity.Cart;
+import com.se.EC.Entity.Commodity;
 import com.se.EC.Entity.Item;
 import com.se.EC.Pojo.CommodityPreviewObject;
 import com.se.EC.Service.Cart.CartServiceInterface;
+import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
 import com.se.EC.Service.User.UserServiceInterface;
 import com.se.EC.Utils.ApiResult;
@@ -26,6 +28,8 @@ public class CartController implements CartControllerInterface {
     private ItemServiceInterface itemServiceInterface;
     @Resource
     private UserServiceInterface userServiceInterface;
+    @Resource
+    private CommodityServiceInterface commodityServiceInterface;
 
     @Override
     @RequestMapping("/addCart")
@@ -87,7 +91,10 @@ public class CartController implements CartControllerInterface {
                 String name = item.getName();
                 Float price = item.getPrice();
                 Integer count = cart.getNumber();
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(id, name, null, price, count);
+                Integer commodityId = itemServiceInterface.getParentId(id);
+                Commodity commodity = commodityServiceInterface.getCommodityDetailById(commodityId);
+                String url = commodity.getImage();
+                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(id, name, url, price, count);
                 commodityPreviewObjectList.add(commodityPreviewObject);
             }
             return ApiResult.success(commodityPreviewObjectList);

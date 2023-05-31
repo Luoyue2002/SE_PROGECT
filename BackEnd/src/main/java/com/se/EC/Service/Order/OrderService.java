@@ -28,7 +28,7 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
     public OrderObject createOrder(OrderObject orderCreateObject) {
 
         Order createOrder = new Order(null, orderCreateObject.getBuyerId(), orderCreateObject.getPrice(),
-                orderCreateObject.getAddress(), OrderState.Unpay, LocalDateTime.now()
+                orderCreateObject.getAddress(), OrderState.Unpaid.value(), LocalDateTime.now()
         );
 
         orderMapper.insert(createOrder);

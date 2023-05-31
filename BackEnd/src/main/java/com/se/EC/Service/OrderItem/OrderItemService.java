@@ -1,14 +1,12 @@
 package com.se.EC.Service.OrderItem;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
-import com.se.EC.Mapper.ItemMapper;
-import com.se.EC.Pojo.OrderItemObject;
-import com.se.EC.Pojo.OrderObject;
 import com.se.EC.Entity.Order;
 import com.se.EC.Entity.OrderItem;
 import com.se.EC.Mapper.OrderItemMapper;
+import com.se.EC.Pojo.OrderItemObject;
+import com.se.EC.Pojo.OrderObject;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class OrderItemService extends MppServiceImpl<OrderItemMapper, OrderItem> implements OrderItemServiceInterface{
-
+public class OrderItemService extends MppServiceImpl<OrderItemMapper, OrderItem> implements OrderItemServiceInterface {
     @Resource
     private OrderItemMapper orderItemMapper;
 
-
-
     @Override
-    public OrderObject createOrder( OrderObject orderCreateObject) {
-
-
+    public OrderObject createOrder(OrderObject orderCreateObject) {
         List<OrderItemObject> itemList = orderCreateObject.getItemObjectList();
-        int buyer = orderCreateObject.getBuyerId();
         int orderId = orderCreateObject.getOrderId();
         for (OrderItemObject orderItem : itemList) {
-            OrderItem item = new OrderItem(orderId,orderItem.getCommodityId() ,orderItem.getItemId(), orderItem.getPublisherId(), orderItem.getName(), orderItem.getNumber(), orderItem.getPrice());
+            OrderItem item = new OrderItem(orderId, orderItem.getCommodityId(), orderItem.getItemId(), orderItem.getPublisherId(), orderItem.getName(), orderItem.getNumber(), orderItem.getPrice());
             orderItemMapper.insert(item);
         }
 
@@ -81,13 +73,6 @@ public class OrderItemService extends MppServiceImpl<OrderItemMapper, OrderItem>
     @Override
     public boolean commodityInOrder(int commodityId) {
         List<OrderItem> orderItemList = orderItemMapper.haveCommodityInOrder(commodityId);
-        if(orderItemList.size()==0){
-            return true;
-        }else {
-            return  false;
-        }
+        return orderItemList.size() == 0;
     }
-
-
-
 }

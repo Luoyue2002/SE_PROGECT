@@ -2,7 +2,9 @@ package com.se.EC.Controller.Comment;
 
 import com.se.EC.Entity.Comment;
 import com.se.EC.Entity.Item;
+import com.se.EC.Pojo.CommentObject;
 import com.se.EC.Service.Comment.CommentServiceInterface;
+import com.se.EC.Service.CommentPicture.CommentPictureServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
 import com.se.EC.Service.User.UserServiceInterface;
 import com.se.EC.Utils.ApiResult;
@@ -22,26 +24,33 @@ public class CommentController implements CommentControllerInterface {
     private UserServiceInterface userServiceInterface;
     @Resource
     private ItemServiceInterface itemServiceInterface;
+    @Resource
+    private CommentPictureServiceInterface commentPictureServiceInterface;
 
+    @Override
     @PostMapping("/addComment")
-    public ApiResult<Boolean> addComment(@RequestBody Comment comment) {
+    public ApiResult<Boolean> addComment(@RequestBody CommentObject commentObject) {
         try {
-            Integer userId = comment.getUserId();
-            Integer itemId = comment.getItemId();
-            String content = comment.getContent();
-            Integer review = comment.getReview();
+            Integer userId = commentObject.getUserId();
+            Integer itemId = commentObject.getItemId();
+            String content = commentObject.getContent();
+            Integer review = commentObject.getReview();
             checkUser(userId);
             checkItem(itemId);
             checkContent(content);
             checkReview(review);
-
-            commentServiceInterface.addComment(comment);
+            commentServiceInterface.addComment(commentObject);
+            Integer commentId = commentServiceInterface.getCommentIdByUserItem(userId, itemId);
+            for (var picture : commentObject.getPictureUrl()) {
+                commentPictureServiceInterface.addPicture(commentId, picture);
+            }
             return ApiResult.success();
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
     }
 
+    @Override
     @RequestMapping("/deleteComment")
     public ApiResult<Boolean> deleteComment(@RequestParam(value = "id") Integer id) {
         try {
@@ -52,26 +61,28 @@ public class CommentController implements CommentControllerInterface {
         }
     }
 
+    @Override
     @RequestMapping("/getCommentByItem")
-    public ApiResult<List<Comment>> getCommentByItem(@RequestParam(value = "itemId") Integer itemId) {
+    public ApiResult<List<CommentObject>> getCommentByItem(@RequestParam(value = "itemId") Integer itemId) {
         try {
             checkItem(itemId);
             List<Comment> commentList = commentServiceInterface.getCommentByItem(itemId);
-            return ApiResult.success(sortComment(commentList));
+            return ApiResult.success(sortComment(packComment(commentList)));
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
     }
 
+    @Override
     @RequestMapping("/getCommentByCommodity")
-    public ApiResult<List<Comment>> getCommentByCommodity(Integer commodityId) {
+    public ApiResult<List<CommentObject>> getCommentByCommodity(Integer commodityId) {
         try {
             List<Item> itemList = itemServiceInterface.getItemsByParentId(commodityId);
-            List<Comment> commentList = new ArrayList<>();
+            List<CommentObject> commentList = new ArrayList<>();
             for (var item : itemList) {
                 Integer itemId = item.getId();
                 checkItem(itemId);
-                commentList.addAll(commentServiceInterface.getCommentByItem(itemId));
+                commentList.addAll(packComment(commentServiceInterface.getCommentByItem(itemId)));
             }
             return ApiResult.success(sortComment(commentList));
         } catch (Exception e) {
@@ -79,15 +90,27 @@ public class CommentController implements CommentControllerInterface {
         }
     }
 
+    @Override
     @RequestMapping("/getCommentByUser")
-    public ApiResult<List<Comment>> getCommentByUser(@RequestParam(value = "userId") Integer userId) {
+    public ApiResult<List<CommentObject>> getCommentByUser(@RequestParam(value = "userId") Integer userId) {
         try {
             checkUser(userId);
             List<Comment> commentList = commentServiceInterface.getCommentByUser(userId);
-            return ApiResult.success(commentList);
+            return ApiResult.success(packComment(commentList));
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
+    }
+
+    private List<CommentObject> packComment(List<Comment> commentList) {
+        List<CommentObject> commentObjects = new ArrayList<>();
+        for (var comment : commentList) {
+            List<String> picturesUrl = commentPictureServiceInterface.getPictureById(comment.getItemId());
+            CommentObject commentObject = new CommentObject(comment.getUserId(), comment.getItemId(),
+                    comment.getContent(), comment.getTime(), comment.getReview(), picturesUrl);
+            commentObjects.add(commentObject);
+        }
+        return commentObjects;
     }
 
     /**
@@ -95,7 +118,7 @@ public class CommentController implements CommentControllerInterface {
      * @param commentList 消息队列
      * @return 排序号的消息队列，最近的在最前面
      */
-    private List<Comment> sortComment(List<Comment> commentList) {
+    private List<CommentObject> sortComment(List<CommentObject> commentList) {
         commentList.sort((o1, o2) -> {
             if (o1.getTime().isAfter(o2.getTime())) {
                 return -1;

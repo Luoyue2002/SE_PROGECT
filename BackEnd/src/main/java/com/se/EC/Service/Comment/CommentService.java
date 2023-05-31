@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 import com.se.EC.Entity.Comment;
 import com.se.EC.Mapper.CommentMapper;
+import com.se.EC.Pojo.CommentObject;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class CommentService extends MppServiceImpl<CommentMapper, Comment> imple
     CommentMapper commentMapper;
 
     @Override
-    public void addComment(Comment comment) {
+    public void addComment(CommentObject comment) {
         // 查看评论是否已经存在
         Integer userId = comment.getUserId();
         Integer itemId = comment.getItemId();
@@ -26,8 +27,8 @@ public class CommentService extends MppServiceImpl<CommentMapper, Comment> imple
         if (count != 0) {
             throw new RuntimeException("You have already add a comment to the commodity");
         }
-
-        commentMapper.insert(comment);
+        Comment comment1 = new Comment(null, userId, itemId, comment.getContent(), comment.getTime(), comment.getReview());
+        commentMapper.insert(comment1);
     }
 
     @Override
@@ -55,5 +56,20 @@ public class CommentService extends MppServiceImpl<CommentMapper, Comment> imple
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userId", userId);
         return commentMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public Integer getCommentIdByUserItem(Integer userId, Integer itemId) {
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("itemId", itemId);
+        queryWrapper.eq("userId", userId);
+        List<Comment> commentList = commentMapper.selectList(queryWrapper);
+        if (commentList.size() == 0) {
+            throw new RuntimeException("No such comment");
+        }
+        if (commentList.size() > 1) {
+            throw new RuntimeException("Duplicate comment");
+        }
+        return commentList.get(0).getId();
     }
 }

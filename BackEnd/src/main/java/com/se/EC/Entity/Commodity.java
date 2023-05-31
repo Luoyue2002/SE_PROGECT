@@ -33,4 +33,8 @@ public class Commodity implements Serializable {
     private String description;
     @TableField("category")
     private String category;
+    @TableField("image")
+    private String image;
+    @TableField("price")
+    private Float price;
 }

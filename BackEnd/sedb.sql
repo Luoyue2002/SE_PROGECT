@@ -102,6 +102,8 @@ CREATE TABLE IF NOT EXISTS `sedb`.`commodity` (
   `name` VARCHAR(128) NOT NULL,
   `description` VARCHAR(512) NOT NULL,
   `category` VARCHAR(32) NOT NULL,
+  `image` VARCHAR(128) NULL,
+  `price` FLOAT NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `publisher`
     FOREIGN KEY (`publisher`)
@@ -185,22 +187,6 @@ CREATE TABLE IF NOT EXISTS `sedb`.`detail` (
   `commodityId` INT NOT NULL,
   `image` VARCHAR(128) NOT NULL,
   CONSTRAINT `commodity`
-    FOREIGN KEY (`commodityId`)
-    REFERENCES `sedb`.`commodity` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `sedb`.`preview`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `sedb`.`preview` ;
-
-CREATE TABLE IF NOT EXISTS `sedb`.`preview` (
-  `commodityId` INT NOT NULL,
-  `image` VARCHAR(128) NULL,
-  CONSTRAINT `father`
     FOREIGN KEY (`commodityId`)
     REFERENCES `sedb`.`commodity` (`id`)
     ON DELETE NO ACTION
