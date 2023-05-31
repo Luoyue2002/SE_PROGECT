@@ -25,12 +25,37 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "order",
   data(){
     return{
-      logourl: require('../pic/logo.jpg'),
+      logourl: require('../pic/logo.png'),
       activeName: '待收货'
+    }
+  },
+  created() {
+    this.userid = this.$route.query.userid
+    this.load();
+  },
+  methods:{
+    load(){
+      axios.post('http://localhost:8080/')
+    },
+    gotohome(){
+      this.$router.push({name:'homepage',query:{userid : this.form.userid,username: this.form.username}});
+    },
+    gotostar() {
+      this.$router.push({name:'cart',query:{userid : this.form.userid,username: this.form.username}});
+    },
+    gotoinfo() {
+      this.$router.push({name:'userinfo',query:{userid : this.form.userid,username: this.form.username}});
+    },
+    gotochat(){
+      this.$router.push({name:'chat',query:{userid : this.form.userid,username: this.form.username}});
+    },
+    gotoshoppingcart() {
+      this.$router.push({name:'cart',query:{userid : this.form.userid,username: this.form.username}});
     }
   }
 }
@@ -61,7 +86,7 @@ export default {
 
 </style>
 <style scoped>
-.shopstyle{
+.orderstyle{
   width: 100%;
   height: 100%;
   margin-top: 0px;

@@ -311,7 +311,6 @@ public class CommodityController implements CommodityControllerInterface {
     @Component
     class HistoryMatrix {
         private final Integer[][] activeUserCommodityMatrix;    // 动态的用户-商品矩阵
-        private Integer[][] staticMatrix;                       // 静态的用户-商品矩阵，每次协同过滤将动态赋值给静态
         private final double[][] similarityMatrix;              // 用户-用户相似度矩阵
         private final Integer userNumber;                       // 用户数量
         private final Integer commodityNumber;                  // 商品数量
@@ -415,7 +414,7 @@ public class CommodityController implements CommodityControllerInterface {
             int neighborNumber = Math.max((int) (userNumber * neighborRatio), 2);
             Map<Integer, Integer> commodityClickCount = new TreeMap<>();
             for (int i = 0; i < neighborNumber; i++) {
-                Integer[] userCommodityList = staticMatrix[similarityInformationList.get(i).getIndex()];
+                Integer[] userCommodityList = activeUserCommodityMatrix[similarityInformationList.get(i).getIndex()];
                 for (int j = 0; j < commodityNumber; j++) {
                     if (userCommodityList[j] != 0) {
                         if (commodityClickCount.containsKey(j)) {
@@ -449,12 +448,10 @@ public class CommodityController implements CommodityControllerInterface {
         /**
          * 协同过滤算法，定时计算
          */
-        @Scheduled(cron = "0/20 * * * * ?")
-        public void collaborativeFiltering() {
-            staticMatrix = activeUserCommodityMatrix.clone();
-            for (int i = 0; i < userNumber; i++) {
+        @Scheduled(cron = "0/4 * * * * ?")
+        public void collaborativeFiltering() {for (int i = 0; i < userNumber; i++) {
                 for (int j = i + 1; j < userNumber; j++) {
-                    double distance = calculateSimilarity(staticMatrix[i], staticMatrix[j]);
+                    double distance = calculateSimilarity(activeUserCommodityMatrix[i], activeUserCommodityMatrix[j]);
                     similarityMatrix[i][j] = distance;
                     similarityMatrix[j][i] = distance;
                 }

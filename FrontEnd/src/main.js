@@ -10,6 +10,8 @@ import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 
 Vue.use(VueCodemirror)
+import Chat from 'jwchat';
+Vue.use(Chat)
 
 
 Vue.use(ElementUI);

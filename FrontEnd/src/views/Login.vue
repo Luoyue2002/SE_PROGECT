@@ -1,21 +1,11 @@
 <template>
+  <div class="loginstyle">
     <el-container>
-      <el-header>
-        <span>
-          <img :src="logourl"></img>
-        </span>
-
-        <el-button style="margin-left: 1000px">
-          1
-        </el-button>
-
-        <el-button>
-
-        </el-button>
-
-        <el-button>
-
-        </el-button>
+      <el-header direction="vertical" style="position: absolute;overflow-x: hidden;overflow-y: hidden">
+        <el-row>
+          <el-col :span="1" class="lightgreen-box"><img :src="logourl" alt="qiushi" style="display: block;height: 8vh;margin-left: 0px"></img></el-col>
+<!--          <el-col :span="18" class="orange-box"><h5 style="display: block;font-size: x-large;margin-top: 3vh;margin-left: 10vh;color: black">qiushi</h5></el-col>-->
+        </el-row>
       </el-header>
 
       <el-main>
@@ -63,7 +53,7 @@
           <div style="font-family: 华文行楷;font-size: xxx-large">登录</div>
           <el-form label-width="80px" label-position="left">
             <el-form-item :label="loginoption">
-              <el-input v-model="form.phone" autocomplete="off" ></el-input>
+              <el-input v-model="form.userphone" autocomplete="off" ></el-input>
             </el-form-item>
             <el-form-item label="Password" style="margin-left: 0px">
               <el-input v-model="form.pw" show-password autocomplete="off"></el-input>
@@ -81,7 +71,7 @@
 
       </el-main>
     </el-container>
-
+  </div>
 </template>
 
 <script>
@@ -95,6 +85,7 @@ export default {
     return {
       userid: "",
       username: "",
+      userphone: "",
       pw: "",
       pn: "",
       loginoption: "userid",
@@ -109,14 +100,12 @@ export default {
       button: "",
       uid: "",
       tableData: [],
-      logourl: require("../pic/logo.jpg")
+      logourl: require("../pic/logo.png")
     }
   },
   methods: {
     handlogin() {
       this.login()
-      // this.loginvisible = true
-      // this.form = {}
     },
     handregist(){
       this.$router.push({name:'regist'});
@@ -141,11 +130,13 @@ export default {
     },
     login() {
       if(this.loginoption == "username")
-      axios.post('http://127.0.0.1:8080/user/loginbyname?username='+this.username+'&password='+this.password).then(res => {
+      axios.post('http://10.162.59.81:8080/user/loginByName?userName='+this.form.username+'&password='+this.form.pw).then(res => {
         console.log(res == null)
-        if (res.userid != null) {
+        if (res.data.success == true) {
           this.$message.success("success!")
-          this.$router.push({name:'userinfo',query:{userid : this.form.userid, username: this.form.username}});
+          // console.log("user:"+res.userid)
+          // this.$router.push({name:'userinfo',query:{userid : res.userid,username: res.username}});
+          this.$router.push({name:'userinfo',query:{userid : res.data.data.id,username: this.form.username}});
         }
         else{
           this.$message({
@@ -157,13 +148,13 @@ export default {
         this.showMessage(error.response);
       })
       else if(this.loginoption == "userid"){
-        axios.get('http://127.0.0.1:8080/user/loginById?userId='+this.form.userid+'&password='+this.form.pw).then(res => {
-          console.log(res.data.success)
+        axios.get('http://10.162.59.81:8080/user/loginById?userId='+this.form.userid+'&password='+this.form.pw).then(res => {
+          // console.log(res.data.success)
           if (res.data.success == true) {
             this.$message.success("success!")
             // console.log("user:"+res.userid)
             // this.$router.push({name:'userinfo',query:{userid : res.userid,username: res.username}});
-            this.$router.push({name:'chat',query:{userid : this.form.userid,username: this.form.username}});
+            this.$router.push({name:'userinfo',query:{userid : this.form.userid,username: res.data.data.name}});
           }
           else{
             this.$message({
@@ -179,13 +170,14 @@ export default {
         })
       }
       else if(this.loginoption == "phone"){
-        axios.post('http://127.0.0.1:8080/user/loginbyphone?userphone='+this.username+'&password='+this.password).then(res => {
-          console.log("111")
-          console.log(res == null)
-          if (res.userid != null) {
+        axios.post('http://10.162.59.81:8080/user/loginByPhone?userPhone='+this.form.userphone+'&password='+this.form.pw).then(res => {
+          // console.log("111")
+          // console.log(res == null)
+          if (res.data.success == true) {
             this.$message.success("success!")
-            console.log("user:"+res.userid)
-            this.$router.push({name:'userinfo',query:{userid : res.userid,username: res.username}});
+            // console.log("user:"+res.userid)
+            // this.$router.push({name:'userinfo',query:{userid : res.userid,username: res.username}});
+            this.$router.push({name:'userinfo',query:{userid : res.data.data.id,username: res.data.data.name}});
           }
           else{
             this.$message({
@@ -194,10 +186,28 @@ export default {
             });
           }
         }).catch((error) => {
-          this.showMessage(error.response);
+          this.$message({
+            message: error,
+            type: 'warning'
+          });
         })
       }
     },
+    gotohome(){
+      this.$router.push({name:'homepage',query:{userid : this.form.userid,username: this.form.username}});
+    },
+    gotostar() {
+      this.$router.push({name:'cart',query:{userid : this.form.userid,username: this.form.username}});
+    },
+    gotoinfo() {
+      this.$router.push({name:'userinfo',query:{userid : this.form.userid,username: this.form.username}});
+    },
+    gotochat(){
+      this.$router.push({name:'chat',query:{userid : this.form.userid,username: this.form.username}});
+    },
+    gotoshoppingcart() {
+      this.$router.push({name:'cart',query:{userid : this.form.userid,username: this.form.username}});
+    }
   },
 }
 </script>
@@ -221,9 +231,20 @@ export default {
 /*}*/
 .el-main{
   text-align: center;
+  margin-top: 20vh;
 }
 .el-card{
   text-align: center;
   margin-left: 30%;
 }
+</style>
+
+</style>
+<style scoped>
+.loginstyle{
+  width: 100%;
+  height: 100%;
+  margin-top: 0px;
+  overflow-x: hidden;
+};
 </style>

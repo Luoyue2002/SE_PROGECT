@@ -72,9 +72,11 @@
 
           <el-form-item label="预览图">
             <!-- action:上传地址 -->
-            <el-upload list-type="picture-card" multiple action="https:127.0.0.1" :on-success="handleSuccess"
-              :on-remove="handleRemove" :file-list="product.fileList">
-              <el-button size="small" type="primary">点击上传</el-button>
+            <el-upload list-type="picture-card" multiple action="http://localhost:8080/utils/imageUpload" :on-success="handleSuccess" :ref="upload"
+              :on-remove="handleRemove" :file-list="product.fileList"
+              :headers="{}"
+               :show-file-list="true">
+              <!-- <el-button size="small" type="primary">点击上传</el-button> -->
               <div slot="tip" class="el-upload__tip">支持多文件上传</div>
             </el-upload>
           </el-form-item>
@@ -102,8 +104,8 @@ export default {
   data() {
     return {
       logourl: require("../pic/logo.jpg"),
-      userid:1,
-      username:"haha",
+      userid: 1,
+      username: "haha",
       product: {
         name: "",
         price: "",
@@ -117,27 +119,37 @@ export default {
         ],
       },
       categories: [
-        { value: 'apparel', label: '服装' },
-        { value: 'toys', label: '玩具' },
-        { value: 'books', label: '图书' },
+        { value: 'Others', label: '服装' },
+        { value: 'Others', label: '玩具' },
+        { value: 'Others', label: '图书' },
       ],
     };
   },
-  computed:{
+  computed: {
     ItemObjectList() {
       return this.product.subCategories.map(item => (
         {
-          itemId: 0, 
+          itemId: 0,
           name: item.name,
-          number: item.number,
+          number: item.quantity,
           price: item.price,
         }
       ));
     },
+    leastPrice() {
+      var i = 0;
+      var leastPrice = this.product.subCategories[0].price;
+      for (i = 1; i < this.product.subCategories.length; i++) {
+        if (this.product.subCategories[i].price < leastPrice) {
+          leastPrice = this.product.subCategories[i].price;
+        }
+      }
+      return leastPrice;
+    }
   },
-  created(){
+  created() {
     this.userid = this.$route.query.userid;
-    this.username=this.$route.query.username;
+    this.username = this.$route.query.username;
   },
   methods: {
     submitForm() {
@@ -148,6 +160,9 @@ export default {
         description: this.product.description,
         category: this.product.itemCategory,
         itemObjectList: this.ItemObjectList,
+        PreviewPicture: '',
+        sales: 0,
+        price:this.leastPrice,
       }
       axios.post('http://127.0.0.1:8080/shop/addCommodity', CommodityObject).then(res => {
         console.log("发布商品：", CommodityObject);
@@ -155,6 +170,7 @@ export default {
       });
     },
     handleSuccess(response, file, fileList) {
+      console.log(response);
       console.log('上传成功:', response, file, fileList);
       this.form.itemImages = fileList.map(f => f.response.data.url); // 将文件的URL保存到表单数据中，此处根据实际返回的数据结构进行修改
     },

@@ -60,11 +60,13 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "shop",
   data(){
     return{
-      logourl: require('../pic/logo.jpg'),
+      logourl: require('../pic/logo.png'),
       fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
       url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       items:[
@@ -73,44 +75,27 @@ export default {
           title: '1',
           desc: '这就是商品1！',
           src: require('../pic/logo.jpg')
-        },
-        {
-          id: '1',
-          title: '1',
-          desc: '这就是商品2！',
-          src: require('../pic/logo.jpg')
-        },
-        {
-          id: '1',
-          title: '1',
-          desc: '这就是商品3！',
-          src: require('../pic/logo.jpg')
-        },
-        {
-          id: '1',
-          title: '1',
-          desc: '这就是商品4！',
-          src: require('../pic/logo.jpg')
-        },
-        {
-          id: '1',
-          title: '1',
-          desc: '这就是商品5！',
-          src: require('../pic/logo.jpg')
-        },
-        {
-          id: '1',
-          title: '1',
-          desc: '这就是商品6！',
-          src: require('../pic/logo.jpg')
-        },
+        }
       ],
       currentPage: 1, // 当前页码
       total: 20, // 总条数
-      pageSize: 8
+      pageSize: 8,
+      userid: "",
+      shopid: "",
     }
   },
+  created() {
+    this.userid = this.$route.query.userid
+    this.shopid = this.$route.query.shopid
+    // this.username = this.$route.query.username
+    this.load();
+  },
   methods:{
+    load(){
+      axios.post('http://10.162.59.81:8080/id='+this.userid+'&publisherId='+this.userid).then(res=>{
+
+      })
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 件`);
       this.currentPage = 1;
@@ -120,6 +105,21 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
+    },
+    gotohome(){
+      this.$router.push({name:'homepage',query:{userid : this.userid,username: this.username}});
+    },
+    gotostar() {
+      this.$router.push({name:'commoityLike',query:{userid : this.userid,username: this.username}});
+    },
+    gotoinfo() {
+      this.$router.push({name:'userinfo',query:{userid : this.userid,username: this.username}});
+    },
+    gotochat(){
+      this.$router.push({name:'chat',query:{userid : this.userid,username: this.username}});
+    },
+    gotoshoppingcart() {
+      this.$router.push({name:'cart',query:{userid : this.userid,username: this.username}});
     }
   }
 

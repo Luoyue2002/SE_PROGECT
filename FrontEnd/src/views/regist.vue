@@ -160,7 +160,7 @@ export default {
         this.captcha = '',
         this.picofidentifier = '',
         this.picofstudent = ''
-    }
+    },
   }
 }
 </script>

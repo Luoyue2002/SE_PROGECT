@@ -14,36 +14,21 @@
    </el-header>
    <el-main>
      <el-row>
-       <el-col :span="10">
+       <!-- <el-col :span="10"> -->
          <el-carousel style="height: 40vh">
            <el-carousel-item v-for="item in 4" :key="item">
              <h3 class="small">{{ item }}</h3>
            </el-carousel-item>
-         </el-carousel></el-col>
-       <el-col :span="6" style="height: 40vh">
-         <el-row><el-image :src="logourl" style="width: 20%;margin-left: 25vh;margin-top: 5vh"></el-image></el-row>
-         <el-row><el-image :src="logourl" style="width: 20%;margin-left: 25vh;margin-top: 10vh"></el-image></el-row>
-       </el-col>
-       <el-col :span="6" style="height: 40vh">
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 5vh;margin-left: 25vh"></el-image></el-row>
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 10vh;margin-left: 25vh"></el-image></el-row>
-       </el-col>
-       <el-col :span="6" style="height: 40vh">
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 5vh;margin-left: 10vh"></el-image></el-row>
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 10vh;margin-left: 10vh"></el-image></el-row>
-       </el-col>
-       <el-col :span="6" style="height: 40vh">
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 5vh;margin-left: 10vh"></el-image></el-row>
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 10vh;margin-left: 10vh"></el-image></el-row>
-       </el-col>
-       <el-col :span="6" style="height: 40vh">
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 5vh;margin-left: 10vh"></el-image></el-row>
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 10vh;margin-left: 10vh"></el-image></el-row>
-       </el-col>
-       <el-col :span="6" style="height: 40vh">
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 5vh;margin-left: 10vh"></el-image></el-row>
-         <el-row><el-image :src="logourl" style="width: 20%;margin-top: 10vh;margin-left: 10vh"></el-image></el-row>
-       </el-col>
+         </el-carousel>
+        <!-- </el-col> -->
+       <el-row :gutter="24">
+         <div class="card" v-for="message in items" :key="message.id" v-bind:title="message.title" v-bind:price="message.price">
+           <el-col :span="6">
+             <el-card id="app" style="width: 40vh;height: 20vh;margin-top: 5vh">
+               <el-image class="img" :src="message.src" fit="fill"><br>{{message.price}} </el-image>
+               <el-image class="img" :src="message.src" fit="fill"><br>{{message.sales}} </el-image>
+             </el-card></el-col>
+         </div></el-row>
      </el-row>
    </el-main>
    <el-footer>
@@ -114,27 +99,110 @@
 
 <script>
 import {request} from "axios";
-
+import axios from 'axios';
 export default {
   name: "userinfo",
   data(){
     return{
-      logourl: require("../pic/logo.jpg")
+      logourl: require("../pic/logo.png"),
+      items:[
+        {
+          id: '0',
+          title: '1',
+          price: '这就是商品1！',
+          src: require('../pic/logo.jpg'),
+          sales: '0'
+        },
+        // {
+        //   id: '1',
+        //   title: '1',
+        //   price: '这就是商品1！',
+        //   src: require('../pic/logo.jpg'),
+        //   sales: '0'
+        //
+        // },
+        // {
+        //   id: '2',
+        //   title: '1',
+        //   price: '这就是商品1！',
+        //   src: require('../pic/logo.jpg'),
+        //   sales: '0'
+        //
+        // },
+        // {
+        //   id: '3',
+        //   title: '1',
+        //   price: '这就是商品1！',
+        //   src: require('../pic/logo.jpg'),
+        //   sales: '0'
+        //
+        // },        {
+        //   id: '4',
+        //   title: '1',
+        //   price: '这就是商品1！',
+        //   src: require('../pic/logo.jpg'),
+        //   sales: '0'
+        //
+        // },
+        // {
+        //   id: '5',
+        //   title: '1',
+        //   price: '这就是商品1！',
+        //   src: require('../pic/logo.jpg'),
+        //   sales: '0'
+        //
+        // },
+        // {
+        //   id: '6',
+        //   title: '1',
+        //   price: '这就是商品1！',
+        //   src: require('../pic/logo.jpg'),
+        //   sales: '0'
+        // },
+        // {
+        //   id: '7',
+        //   title: '1',
+        //   price: '这就是商品1！',
+        //   src: require('../pic/logo.jpg'),
+        //   sales: '0'
+        // }
+      ],
     }
   },
+  created(){
+    this.userid = this.$route.query.userid
+    this.username = this.$route.query.username
+    this.load();
+  },
   methods:{
+    load(){
+      axios.post('http://127.0.0.1/commodity/recommond?id='+this.userid).then(res=>{
+        for(let i = 0;i < res.data.data.length;i++){
+           const commodity = {
+             id : res.data.data[i].id,
+             title: res.data.data[i].name,
+             price: res.data.data[i].price,
+             src: res.data.data[i].url,
+             sales: res.data.data[i].sales
+           }
+           this.items.push(commodity);
+        }
+      })
+    },
     gotohome(){
-      console.log("111")
-      this.$router.push({name:'homepage'});
+      this.$router.push({name:'homepage',query:{userid : this.userid,username: this.username}});
     },
-    gotostar(){
-      this.$router.push({name:'star'});
+    gotostar() {
+      this.$router.push({name:'commoityLike',query:{userid : this.userid,username: this.username}});
     },
-    gotoshoppingcart(){
-      this.$router.push({name:'shoppingcart'});
+    gotoinfo() {
+      this.$router.push({name:'userinfo',query:{userid : this.userid,username: this.username}});
     },
-    gotoinfo(){
-      this.$router.push({name:'userinfo'});
+    gotochat(){
+      this.$router.push({name:'chat',query:{userid : this.userid,username: this.username}});
+    },
+    gotoshoppingcart() {
+      this.$router.push({name:'cart',query:{userid : this.userid,username: this.username}});
     }
   }
 }

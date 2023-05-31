@@ -26,7 +26,7 @@ const routes = [
   },
   {
     path: '/shop',
-    name: 'demo',
+    name: 'shop',
     component: () => import('../views/shop.vue')
 
   },
@@ -46,29 +46,29 @@ const routes = [
     component: () => import('../views/pay.vue')
   },
   {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('../views/chat.vue')
+  },
+  // {
+  //   path: '/test',
+  //   name: 'test',
+  //   component: () => import('../views/chat.vue')
+  // },
+  {
     path: '/homepage',
-    name:'homepage',
+    name: 'homepage',
     component: () => import('../views/homepage.vue')
   },
   {
+    path: '/cart',
+    name: 'cart',
+    component: () => import('../views/cart.vue')
+  },
+  {
     path: '/order',
-    name:'order',
+    name: 'order',
     component: () => import('../views/order.vue')
-  },
-  {
-    path: '/shop',
-    name:'shop',
-    component: () => import('../views/shop.vue')
-  },
-  {
-    path:'/chat',
-    name:'chat',
-    component: () => import('../views/chat.vue')
-  },
-  {
-    path:'/commodityLike',
-    name:'commodityLike',
-    component: () => import('../views/commodityLike.vue')
   }
 
 ]
