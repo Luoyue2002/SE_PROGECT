@@ -1,5 +1,6 @@
 package com.se.EC.Controller.Chat;
 
+import com.se.EC.Entity.User;
 import com.se.EC.Pojo.ChatInformation;
 import com.se.EC.Pojo.SessionInformation;
 import com.se.EC.Utils.ApiResult;
@@ -77,11 +78,57 @@ public interface ChatControllerInterface {
     /**
      * 未读消息数量
      *
-     * @param senderId 发送者id
+     * @param senderId   发送者id
      * @param receiverId 接收者id，即发送请求的那个id
      * @return 未读消息数量
      */
     @RequestMapping("/unreadMessageCount")
     ApiResult<Integer> unreadMessageCount(@RequestParam(value = "senderId") Integer senderId,
                                           @RequestParam(value = "receiverId") Integer receiverId);
+
+    /**
+     * 查找朋友
+     *
+     * @param userName 用户名
+     * @return 用户信息
+     */
+    @RequestMapping("searchPeopleByName")
+    ApiResult<User> searchPeopleByName(@RequestParam(value = "userName") String userName);
+
+    @RequestMapping("searchPeopleById")
+    ApiResult<User> searchPeopleById(@RequestParam(value = "userId") Integer userId);
+
+    @RequestMapping("searchPeopleByPhone")
+    ApiResult<User> searchPeopleByPhone(@RequestParam(value = "phone") String phone);
+
+    /**
+     * 请求添加朋友
+     *
+     * @param adderId  请求发起者
+     * @param friendId 请求接收者
+     * @return 成功/失败
+     */
+    @RequestMapping("requestAddFriend")
+    ApiResult<Boolean> requestAddFriend(@RequestParam(value = "adderId") Integer adderId,
+                                        @RequestParam(value = "friendId") Integer friendId);
+
+    /**
+     * 获取朋友请求列表
+     *
+     * @param userId 用户id
+     * @return 朋友请求列表
+     */
+    @RequestMapping("getFriendRequestList")
+    ApiResult<List<User>> getFriendRequestList(@RequestParam(value = "userId") Integer userId);
+
+    /**
+     * 确认朋友
+     *
+     * @param launcherId 请求发起者
+     * @param answererId 请求接收者
+     * @return 成功/失败
+     */
+    @RequestMapping("commitFriend")
+    ApiResult<Boolean> commitFriend(@RequestParam(value = "launcher") Integer launcherId,
+                                    @RequestParam(value = "answerer") Integer answererId);
 }

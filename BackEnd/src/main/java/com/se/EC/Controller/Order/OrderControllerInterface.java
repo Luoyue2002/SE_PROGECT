@@ -5,6 +5,7 @@ import com.se.EC.Pojo.OrderObject;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,7 +26,8 @@ public interface OrderControllerInterface {
      * @return 获取订单列表
      */
     @RequestMapping("/getOrderList")
-    ApiResult<List<Order>> getOrderList(int userId);
+    ApiResult<List<Order>> getOrderList(@RequestParam(value = "userId") Integer userId,
+                                        @RequestParam(value = "state") Integer state);
 
 
     /**

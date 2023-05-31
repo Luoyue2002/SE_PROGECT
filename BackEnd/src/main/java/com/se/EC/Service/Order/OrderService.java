@@ -39,9 +39,10 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
     }
 
     @Override
-    public List<Order> getOrderList(int userId) {
+    public List<Order> getOrderList(int userId, int state) {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("buyer", userId);
+        queryWrapper.eq("state", state);
         return orderMapper.selectList(queryWrapper);
     }
 
@@ -56,7 +57,7 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
     public boolean orderPay(int orderId) {
         Order order = new Order();
         order.setId(orderId);
-        order.setState(1);
+        order.setState(OrderState.Payed.value());
         orderMapper.updateById(order);
         return true;
     }
@@ -66,7 +67,7 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", orderId);
         Order orderNow = orderMapper.selectOne(queryWrapper);
-        if(orderNow.getState() != 3){
+        if(orderNow.getState() != OrderState.Received.value()){
             return false;
         }
         orderMapper.delete(queryWrapper);

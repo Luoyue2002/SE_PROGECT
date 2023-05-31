@@ -45,7 +45,7 @@ public class ShopController implements ShopControllerInterface {
             commodity = itemServiceInterface.addCommodityItem(commodity);
             return ApiResult.success(commodity);
         } catch (Exception e) {
-            return ApiResult.error("unknown error!");
+            return ApiResult.error(e.getMessage());
         }
     }
 
@@ -98,7 +98,7 @@ public class ShopController implements ShopControllerInterface {
             orderServiceInterface.changeOrderState(orderId, OrderState.Send.value());
             return ApiResult.success(true);
         } catch (Exception e) {
-            return ApiResult.error("unknown error!");
+            return ApiResult.error(e.getMessage());
         }
     }
 
@@ -110,7 +110,7 @@ public class ShopController implements ShopControllerInterface {
             orderServiceInterface.changeOrderState(orderId, OrderState.Received.value());
             return ApiResult.success(true);
         } catch (Exception e) {
-            return ApiResult.error("unknown error!");
+            return ApiResult.error(e.getMessage());
         }
     }
 
@@ -134,7 +134,7 @@ public class ShopController implements ShopControllerInterface {
         try {
             Category.valueOf(category);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Unknown category");
+            throw new RuntimeException(e.getMessage());
         }
     }
 

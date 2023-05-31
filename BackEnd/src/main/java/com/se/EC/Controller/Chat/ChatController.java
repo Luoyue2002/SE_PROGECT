@@ -1,8 +1,11 @@
 package com.se.EC.Controller.Chat;
 
+import com.se.EC.Entity.Friend;
+import com.se.EC.Entity.User;
 import com.se.EC.Pojo.ChatInformation;
 import com.se.EC.Pojo.SessionInformation;
 import com.se.EC.Service.Chat.ChatServiceInterface;
+import com.se.EC.Service.Friend.FriendServiceInterface;
 import com.se.EC.Service.Session.SessionServiceInterface;
 import com.se.EC.Service.User.UserServiceInterface;
 import com.se.EC.Utils.ApiResult;
@@ -26,6 +29,8 @@ public class ChatController implements ChatControllerInterface {
     private SessionServiceInterface sessionServiceInterface;
     @Resource
     private UserServiceInterface userServiceInterface;
+    @Resource
+    private FriendServiceInterface friendServiceInterface;
 
     @Override
     @RequestMapping("/createSession")
@@ -62,7 +67,7 @@ public class ChatController implements ChatControllerInterface {
 
         List<Integer> idList = sessionServiceInterface.getSession(id);
         List<SessionInformation> sessionInformationList = new ArrayList<>();
-        for (var item: idList) {
+        for (var item : idList) {
             LocalDateTime updateTime = sessionServiceInterface.getUpdateTime(item, id);
             Integer unreadCount = chatServiceInterface.updateMessageCount(item, id, updateTime);
             String name = userServiceInterface.getNameById(item);
@@ -146,8 +151,78 @@ public class ChatController implements ChatControllerInterface {
         }
     }
 
+    @Override
+    @RequestMapping("searchPeopleByName")
+    public ApiResult<User> searchPeopleByName(@RequestParam(value = "userName") String userName) {
+        try {
+            User user = userServiceInterface.searchByName(userName);
+            return ApiResult.success(user);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("searchPeopleById")
+    public ApiResult<User> searchPeopleById(@RequestParam(value = "userId") Integer userId) {
+        try {
+            User user = userServiceInterface.searchById(userId);
+            return ApiResult.success(user);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("searchPeopleByPhone")
+    public ApiResult<User> searchPeopleByPhone(@RequestParam(value = "phone") String phone) {
+        try {
+            User user = userServiceInterface.searchByPhone(phone);
+            return ApiResult.success(user);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("requestAddFriend")
+    public ApiResult<Boolean> requestAddFriend(@RequestParam(value = "adderId") Integer adderId,
+                                               @RequestParam(value = "friendId") Integer friendId) {
+        try {
+            friendServiceInterface.requestAddFriend(adderId, friendId);
+            return ApiResult.success(Boolean.TRUE);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping("getFriendRequestList")
+    public ApiResult<List<User>> getFriendRequestList(@RequestParam(value = "userId") Integer userId) {
+        try {
+            List<Friend> friendList = friendServiceInterface.getFriendRequestList(userId);
+            for (var friend : friendList) {
+                Integer id = friend.getUser1();
+                // ================================================================================================================
+            }
+            return null;
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping("commitFriend")
+    public ApiResult<Boolean> commitFriend(@RequestParam(value = "launcher") Integer launcherId,
+                                    @RequestParam(value = "answerer") Integer answererId) {
+        try {
+            return null;
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
     /**
      * 归并排序，按照时间从近到远
+     *
      * @param chatInformationList1 第一个消息列表
      * @param chatInformationList2 第二个消息列表
      * @return 排好序的消息列表
@@ -168,6 +243,7 @@ public class ChatController implements ChatControllerInterface {
 
     /**
      * 检查用户是否存在
+     *
      * @param userId 用户 id
      */
     private void checkUser(Integer userId) {
@@ -178,6 +254,7 @@ public class ChatController implements ChatControllerInterface {
 
     /**
      * 检查消息长度是否合法
+     *
      * @param content 消息内容
      */
     private void checkContent(String content) {
@@ -188,7 +265,8 @@ public class ChatController implements ChatControllerInterface {
 
     /**
      * 检查两者会话是否存在
-     * @param senderId 发送者id
+     *
+     * @param senderId   发送者id
      * @param receiverId 接收者id
      */
     private void checkSession(Integer senderId, Integer receiverId) {

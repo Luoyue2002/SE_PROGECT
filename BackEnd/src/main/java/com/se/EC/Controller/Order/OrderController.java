@@ -56,10 +56,11 @@ public class OrderController implements OrderControllerInterface {
 
     @Override
     @RequestMapping("/getOrderList")
-    public ApiResult<List<Order>> getOrderList(@RequestParam(value = "userId") int userId) {
+    public ApiResult<List<Order>> getOrderList(@RequestParam(value = "userId") Integer userId,
+                                               @RequestParam(value = "state") Integer state) {
         try {
             checkUser(userId);
-            return ApiResult.success(orderServiceInterface.getOrderList(userId));
+            return ApiResult.success(orderServiceInterface.getOrderList(userId, state));
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }

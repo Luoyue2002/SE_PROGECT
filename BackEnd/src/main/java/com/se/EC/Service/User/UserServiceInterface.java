@@ -16,6 +16,12 @@ public interface UserServiceInterface extends IMppService<User> {
 
     User userLoginByPhone(String userPhone, String password);
 
+    User searchById(Integer id);
+
+    User searchByName(String name);
+
+    User searchByPhone(String phone);
+
     String userLogout();
 
     String userChangePassword();

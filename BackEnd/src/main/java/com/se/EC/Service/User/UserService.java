@@ -222,11 +222,11 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
             userQueryWrapper.eq("id", userId);
             User user = userMapper.selectOne(userQueryWrapper);
             if (user.getIfShop() == 1) {
-                return false;
+                return true;
             } else {
                 user.setIfShop(1);
                 userMapper.updateById(user);
-                return true;
+                return false;
             }
         }
         return false;
@@ -241,5 +241,26 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
         } else {
             throw new RuntimeException("User does not exist");
         }
+    }
+
+    @Override
+    public User searchById(Integer id) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        return userMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public User searchByName(String name) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name", name);
+        return userMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public User searchByPhone(String phone) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("phone", phone);
+        return userMapper.selectOne(queryWrapper);
     }
 }
