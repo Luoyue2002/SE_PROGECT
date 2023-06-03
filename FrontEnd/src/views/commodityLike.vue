@@ -76,7 +76,7 @@ export default {
       logourl: require("../pic/logo.jpg"),
 
       userid: 1,
-      username:"haa",
+      username: "haa",
       pagination: {
         currentPage: 1,
         pageSize: 6,
@@ -130,8 +130,8 @@ export default {
     };
   },
   created() {
-    // this.userid = this.$route.query.userid;
-    // this.username=this.$route.query.username;
+    this.userid = this.$route.query.userid;
+    this.username = this.$route.query.username;
     this.load();
   },
   computed: {
@@ -162,22 +162,42 @@ export default {
     load() {
       axios.get('http://127.0.0.1:8080/favorites/getFavorites?userId=' + this.userid).then(res => {
         console.log(res);
-        this.productList=res.data.data;
+        this.productList = res.data.data;
       });
     },
-    removeFromFavorites(rowIndex, index){
-      var productIndex=this.pagination.pageSize*rowIndex+index;
-      axios.get('http://127.0.0.1:8080/favorites/deleteFavorites?userId=' + this.userid+'&itemId='+this.productList[productIndex].id).then(res => {
+    removeFromFavorites(rowIndex, index) {
+      var productIndex = this.pagination.pageSize * rowIndex + index;
+      axios.get('http://127.0.0.1:8080/favorites/deleteFavorites?userId=' + this.userid + '&itemId=' + this.productList[productIndex].id).then(res => {
         console.log(res);
       });
+      
+      setTimeout(() => {
+        this.load();
+      }, 500);
     },
-    goToCommodity(rowIndex, index){
-      var productIndex=this.pagination.pageSize*rowIndex+index;
-      axios.get('http://127.0.0.1:8080//commodity/clickItem?userId=' + this.userid+'&item='+this.productList[productIndex].id).then(res => {
+    goToCommodity(rowIndex, index) {
+      var productIndex = this.pagination.pageSize * rowIndex + index;
+      axios.get('http://127.0.0.1:8080//commodity/clickItem?userId=' + this.userid + '&item=' + this.productList[productIndex].id).then(res => {
         console.log(res);
-        this.$router.push({ name: 'commodity', query: { userid: this.userid, username: this.username, commodity:res.data.data.commodityId} });
+        this.$router.push({ name: 'commodity2', query: { userid: this.userid, username: this.username, commodityId: res.data.data.commodityId } });
       });
     },
+
+    gotohome() {
+      this.$router.push({ name: 'homepage', query: { userid: this.userid, username: this.username } });
+    },
+    gotostar() {
+      this.$router.push({ name: 'commodityLike', query: { userid: this.userid, username: this.username } });
+    },
+    gotoinfo() {
+      this.$router.push({ name: 'userinfo', query: { userid: this.userid, username: this.username } });
+    },
+    gotochat() {
+      this.$router.push({ name: 'chat', query: { userid: this.userid, username: this.username } });
+    },
+    gotoshoppingcart() {
+      this.$router.push({ name: 'cart', query: { userid: this.userid, username: this.username } });
+    }
   },
 
 }

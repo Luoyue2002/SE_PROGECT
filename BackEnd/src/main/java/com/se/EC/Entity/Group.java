@@ -21,6 +21,8 @@ import java.io.Serializable;
 public class Group implements Serializable {
     @TableId("groupId")
     private Integer groupId;
+    @TableField("managerId")
+    private Integer managerId;
     @TableField("groupName")
     private String groupName;
 }

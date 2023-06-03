@@ -104,19 +104,32 @@
 
               <!-- 显示商铺 -->
               <el-form-item label="我的商铺">
-                <el-button @click="editAddress1">进入商铺</el-button>
+                <el-button @click="gotoMyShop">进入商铺</el-button>
               </el-form-item>
 
               <el-form-item label="我的订单">
                 <div>
                   <el-row>
-                    <el-button>我收到的订单</el-button>
-                    <el-button>购买记录</el-button>
+                    <el-button @click="gotoOrderToMe">我收到的订单</el-button>
+                    <el-button @click="gotoMyBuying">购买记录</el-button>
                   </el-row>
                 </div>
 
               </el-form-item>
 
+              <el-form-item label="我的身份">
+                <div>
+                  <el-row>
+                    <el-input v-model="user.ifShop" readonly>
+                      <template #append>
+                        <el-button @click="ifShop2True">变成商家</el-button>
+                      </template>
+                    </el-input>
+
+                  </el-row>
+                </div>
+
+              </el-form-item>
 
             </el-form>
           </el-main>
@@ -182,7 +195,7 @@
         <el-button @click="editDialogVisible.address3 = false">取消</el-button>
         <el-button type="primary" @click="saveEditedAddress3">保存</el-button>
       </span>
-    </el-dialog> 
+    </el-dialog>
 
   </div>
 </template>
@@ -194,7 +207,8 @@ export default {
   data() {
     return {
       logourl: require("../pic/logo.jpg"),
-      userid:1,
+      userid: 1,
+      username: "",
       user_profile: require("../assets/logo.png"),
       user: {
         id: 1,
@@ -236,15 +250,19 @@ export default {
 
     };
   },
-  created(){
+  created() {
     this.userid = this.$route.query.userid;
-    this.username=this.$route.query.username;
-    this.user=this.$route.query.user;
+    this.username = this.$route.query.username;
+    // this.user=this.$route.query.user;
     this.load();
   },
   methods: {
-    load(){
-      //todo
+    load() {
+      //todo:获取用户信息
+      axios.get('http://127.0.0.1:8080/user/getUserById?id=' + this.userid).then(res => {
+        console.log(res);
+        this.user = res.data.data;
+      });
     },
     //用户名
     editUsername() {
@@ -253,7 +271,7 @@ export default {
     },
     saveEditedUsername() {
       // http
-      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "name"+'&resetInformation='+this.editDialogData.username).then(res => {
+      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "name" + '&resetInformation=' + this.editDialogData.username).then(res => {
         console.log(res);
         console.log(this.editDialogData.username);
       });
@@ -267,7 +285,7 @@ export default {
     },
     saveEditedPassword() {
       // http
-      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "password"+'&resetInformation='+this.editDialogData.password).then(res => {
+      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "password" + '&resetInformation=' + this.editDialogData.password).then(res => {
         console.log(res);
         console.log(this.userid);
       });
@@ -281,11 +299,11 @@ export default {
     },
     saveEditedSchool() {
       // http
-      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "school"+'&resetInformation='+this.editDialogData.school).then(res => {
+      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "school" + '&resetInformation=' + this.editDialogData.school).then(res => {
         console.log(res);
       });
       this.user.school = this.editDialogData.school;
-      this.editDialogVisible.schoodl = false; 
+      this.editDialogVisible.school = false;
     },
     //学号
     editSchoolId() {
@@ -294,7 +312,7 @@ export default {
     },
     saveEditedSchoolId() {
       // http
-      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "schoolId"+'&resetInformation='+this.editDialogData.schoolId).then(res => {
+      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "schoolId" + '&resetInformation=' + this.editDialogData.schoolId).then(res => {
         console.log(res);
       });
       this.user.schoolId = this.editDialogData.schoolId;
@@ -307,7 +325,7 @@ export default {
     },
     saveEditedAddress1() {
       // http
-      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "address1"+'&resetInformation='+this.editDialogData.address1).then(res => {
+      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "address1" + '&resetInformation=' + this.editDialogData.address1).then(res => {
         console.log(res);
       });
       this.user.address1 = this.editDialogData.address1;
@@ -320,7 +338,7 @@ export default {
     },
     saveEditedAddress2() {
       // http
-      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "address2"+'&resetInformation='+this.editDialogData.address2).then(res => {
+      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "address2" + '&resetInformation=' + this.editDialogData.address2).then(res => {
         console.log(res);
       });
       this.user.address2 = this.editDialogData.address2;
@@ -333,16 +351,50 @@ export default {
     },
     saveEditedAddress3() {
       // http
-      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "address3"+'&resetInformation='+this.editDialogData.address3).then(res => {
+      axios.get('http://127.0.0.1:8080/user/resetInformation?userId=' + this.userid + '&attribute=' + "address3" + '&resetInformation=' + this.editDialogData.address3).then(res => {
         console.log(res);
       });
       this.user.address3 = this.editDialogData.address3;
       this.editDialogVisible.address3 = false;
     },
 
+    gotohome() {
+      this.$router.push({ name: 'homepage', query: { userid: this.userid, username: this.username } });
+    },
+    gotostar() {
+      this.$router.push({ name: 'commodityLike', query: { userid: this.userid, username: this.username } });
+    },
+    gotoinfo() {
+      this.$router.push({ name: 'userinfo', query: { userid: this.userid, username: this.username } });
+    },
+    gotochat() {
+      this.$router.push({ name: 'chat', query: { userid: this.userid, username: this.username } });
+    },
+    gotoshoppingcart() {
+      this.$router.push({ name: 'cart', query: { userid: this.userid, username: this.username } });
+    },
 
+    gotoMyShop() {
+      //get shop id 
+      if (this.user.ifShop == 1) {
 
+        this.$router.push({ name: 'shop', query: { userid: this.userid, username: this.username } });
+      }
+    },
 
+    gotoMyBuying() {
+      this.$router.push({ name: 'order', query: { userid: this.userid } });
+    },
+
+    gotoOrderToMe() {
+      // this.$router.push({name:'order',query:{userid : this.userid}});
+    },
+    ifShop2True() {
+      axios.get('http://127.0.0.1:8080/user/ifShop?userId=' + this.userid).then(res => {
+        console.log(res);
+      });
+      this.user.ifShop = 1;
+    },
   },
 
 }

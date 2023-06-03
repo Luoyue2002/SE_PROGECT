@@ -1,6 +1,6 @@
 <template>
   <div class="homestyle">
- <el-container direction="vertical" style="position: absolute;overflow-x: hidden;overflow-y: hidden">
+ <el-container direction="vertical" style="position: absolute;overflow: visible">
    <el-header>
      <el-row>
        <el-col :span="1" class="lightgreen-box"><img :src="logourl" alt="qiushi" style="display: block;height: 8vh;margin-left: 0px"></img></el-col>
@@ -14,84 +14,106 @@
    </el-header>
    <el-main>
      <el-row>
-       <!-- <el-col :span="10"> -->
          <el-carousel style="height: 40vh">
            <el-carousel-item v-for="item in 4" :key="item">
              <h3 class="small">{{ item }}</h3>
            </el-carousel-item>
          </el-carousel>
+     </el-row>
+
+     <el-row>
+       <el-tabs v-model="activeName" stretch @tab-click="handlechange">
+         <el-tab-pane label="推荐" name="recommend"></el-tab-pane>
+         <el-tab-pane label="手机" name="MobilePhone"></el-tab-pane>
+         <el-tab-pane label="电脑" name="Computer"></el-tab-pane>
+         <el-tab-pane label="衣物" name="Clothing"></el-tab-pane>
+         <el-tab-pane label="食物" name="Food"></el-tab-pane>
+         <el-tab-pane label="电子用品" name="Electronics"></el-tab-pane>
+         <el-tab-pane label="家具" name="Furniture"></el-tab-pane>
+         <el-tab-pane label="读品" name="Books"></el-tab-pane>
+         <el-tab-pane label="玩具" name="Toys"></el-tab-pane>
+         <el-tab-pane label="运动" name="SportsEquipment"></el-tab-pane>
+         <el-tab-pane label="珠宝" name="Jewelry"></el-tab-pane>
+         <el-tab-pane label="家庭用品" name="HomeAppliances"></el-tab-pane>
+         <el-tab-pane label="办公用品" name="OfficeSupplies"></el-tab-pane>
+         <el-tab-pane label="乐器" name="MusicalInstruments"></el-tab-pane>
+         <el-tab-pane label="宠物" name="PetSupplies"></el-tab-pane>
+         <el-tab-pane label="健康" name="HealthProducts"></el-tab-pane>
+         <el-tab-pane label="其他" name="Others"></el-tab-pane>
+       </el-tabs>
+     </el-row>
+     <el-row>
         <!-- </el-col> -->
        <el-row :gutter="24">
          <div class="card" v-for="message in items" :key="message.id" v-bind:title="message.title" v-bind:price="message.price">
            <el-col :span="6">
              <el-card id="app" style="width: 40vh;height: 20vh;margin-top: 5vh">
-               <el-image class="img" :src="message.src" fit="fill"><br>{{message.price}} </el-image>
-               <el-image class="img" :src="message.src" fit="fill"><br>{{message.sales}} </el-image>
+               <el-image class="img" :src="message.src" fit="fill"><br> </el-image>
+               <span>{{message.price}}</span>
+               <span>{{message.sales}}</span>
+<!--               <el-image class="img" :src="message.src" fit="fill"><br>{{message.sales}} </el-image>-->
              </el-card></el-col>
          </div></el-row>
      </el-row>
    </el-main>
    <el-footer>
-
      <el-row :gutter="24">
        <el-col :span="6">
-         <div class="lightgreen-box"><el-link>购物指南</el-link></div>
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>购物指南</el-link></div>
        </el-col>
        <el-col :span="6">
-         <div class="orange-box"><el-link>支付方式</el-link></div>
+         <div class="orange-box" style="margin-left: 10vh"><el-link>支付方式</el-link></div>
        </el-col>
        <el-col :span="6">
-         <div class="lightgreen-box"><el-link>售后服务</el-link></div>
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>售后服务</el-link></div>
        </el-col>
        <el-col :span="6">
-         <div class="lightgreen-box"><el-link>配送方式</el-link><div class="lightgreen-box"></div></div>
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>配送方式</el-link><div class="lightgreen-box"></div></div>
        </el-col>
      </el-row>
      <el-row :gutter="24">
        <el-col :span="6">
-         <div class="lightgreen-box"><el-link>购物流程</el-link></div>
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>购物流程</el-link></div>
        </el-col>
        <el-col :span="6">
-         <div class="orange-box"><el-link>货到付款</el-link></div>
+         <div class="orange-box" style="margin-left: 10vh"><el-link>货到付款</el-link></div>
        </el-col>
        <el-col :span="6">
-         <div class="lightgreen-box"><el-link>售后政策</el-link></div>
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>售后政策</el-link></div>
        </el-col>
        <el-col :span="6">
-         <div class="lightgreen-box"><el-link>上门自提</el-link><div class="lightgreen-box"></div></div>
-       </el-col>
-     </el-row>
-     <el-row :gutter="24">
-       <el-col :span="6">
-         <div class="lightgreen-box"><el-link>会员介绍</el-link></div>
-       </el-col>
-       <el-col :span="6">
-         <div class="orange-box"><el-link>在线支付</el-link></div>
-       </el-col>
-       <el-col :span="6">
-         <div class="lightgreen-box"><el-link>价格保护</el-link></div>
-       </el-col>
-       <el-col :span="6">
-         <div class="lightgreen-box"><el-link>配送查询</el-link><div class="lightgreen-box"></div></div>
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>上门自提</el-link><div class="lightgreen-box"></div></div>
        </el-col>
      </el-row>
      <el-row :gutter="24">
        <el-col :span="6">
-         <div class="lightgreen-box"><el-link>常见问题</el-link></div>
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>会员介绍</el-link></div>
        </el-col>
        <el-col :span="6">
-         <div class="orange-box"><el-link>分期支付</el-link></div>
+         <div class="orange-box" style="margin-left: 10vh"><el-link>在线支付</el-link></div>
        </el-col>
        <el-col :span="6">
-         <div class="lightgreen-box"><el-link>退款说明</el-link></div>
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>价格保护</el-link></div>
        </el-col>
        <el-col :span="6">
-         <div class="lightgreen-box"><el-link>收费标准</el-link><div class="lightgreen-box"></div></div>
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>配送查询</el-link><div class="lightgreen-box"></div></div>
+       </el-col>
+     </el-row>
+     <el-row :gutter="24">
+       <el-col :span="6">
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>常见问题</el-link></div>
+       </el-col>
+       <el-col :span="6">
+         <div class="orange-box" style="margin-left: 10vh"><el-link>分期支付</el-link></div>
+       </el-col>
+       <el-col :span="6">
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>退款说明</el-link></div>
+       </el-col>
+       <el-col :span="6">
+         <div class="lightgreen-box" style="margin-left: 10vh"><el-link>收费标准</el-link><div class="lightgreen-box"></div></div>
        </el-col>
      </el-row>
      <el-divider></el-divider>
-
-
    </el-footer>
  </el-container>
   </div>
@@ -105,67 +127,9 @@ export default {
   data(){
     return{
       logourl: require("../pic/logo.png"),
+      activeName: "recommend",
       items:[
-        {
-          id: '0',
-          title: '1',
-          price: '这就是商品1！',
-          src: require('../pic/logo.jpg'),
-          sales: '0'
-        },
-        // {
-        //   id: '1',
-        //   title: '1',
-        //   price: '这就是商品1！',
-        //   src: require('../pic/logo.jpg'),
-        //   sales: '0'
-        //
-        // },
-        // {
-        //   id: '2',
-        //   title: '1',
-        //   price: '这就是商品1！',
-        //   src: require('../pic/logo.jpg'),
-        //   sales: '0'
-        //
-        // },
-        // {
-        //   id: '3',
-        //   title: '1',
-        //   price: '这就是商品1！',
-        //   src: require('../pic/logo.jpg'),
-        //   sales: '0'
-        //
-        // },        {
-        //   id: '4',
-        //   title: '1',
-        //   price: '这就是商品1！',
-        //   src: require('../pic/logo.jpg'),
-        //   sales: '0'
-        //
-        // },
-        // {
-        //   id: '5',
-        //   title: '1',
-        //   price: '这就是商品1！',
-        //   src: require('../pic/logo.jpg'),
-        //   sales: '0'
-        //
-        // },
-        // {
-        //   id: '6',
-        //   title: '1',
-        //   price: '这就是商品1！',
-        //   src: require('../pic/logo.jpg'),
-        //   sales: '0'
-        // },
-        // {
-        //   id: '7',
-        //   title: '1',
-        //   price: '这就是商品1！',
-        //   src: require('../pic/logo.jpg'),
-        //   sales: '0'
-        // }
+
       ],
     }
   },
@@ -176,7 +140,7 @@ export default {
   },
   methods:{
     load(){
-      axios.post('http://127.0.0.1/commodity/recommond?id='+this.userid).then(res=>{
+      axios.post('http://127.0.0.1:8080/commodity/recommend?id='+this.userid).then(res=>{
         for(let i = 0;i < res.data.data.length;i++){
            const commodity = {
              id : res.data.data[i].id,
@@ -186,23 +150,61 @@ export default {
              sales: res.data.data[i].sales
            }
            this.items.push(commodity);
+          console.log("size:"+this.items.length)
         }
+        this.items.length = this.items.length > 8 ? 8 : this.items.length
       })
     },
-    gotohome(){
-      this.$router.push({name:'homepage',query:{userid : this.userid,username: this.username}});
+    handlechange(tab,event) {
+      console.log(this.activeName)
+      this.items.length = 0
+      if(this.activeName != "recommend")
+      axios.post('http://127.0.0.1:8080/commodity/searchByCategory?id='+this.userid+'&category='+this.activeName).then(res=>{
+        this.items.length = 0;
+        for(let i = 0;i < res.data.data.length;i++){
+          const commodity = {
+            id : res.data.data[i].id,
+            title: res.data.data[i].name,
+            price: res.data.data[i].price,
+            src: res.data.data[i].url,
+            sales: res.data.data[i].sales
+          }
+          this.items.push(commodity);
+          console.log("size:"+this.items.length)
+        }
+        this.items.length = this.items.length > 8 ? 8 : this.items.length
+      })
+      else
+        axios.post('http://127.0.0.1:8080/commodity/recommend?id='+this.userid).then(res=>{
+          this.items.length = 0
+          for(let i = 0;i < res.data.data.length;i++){
+            const commodity = {
+              id : res.data.data[i].id,
+              title: res.data.data[i].name,
+              price: res.data.data[i].price,
+              src: res.data.data[i].url,
+              sales: res.data.data[i].sales
+            }
+            this.items.push(commodity);
+            console.log("size:"+this.items.length)
+          }
+          this.items.length = this.items.length > 8 ? 8 : this.items.length
+        })
+    },
+    gotohome() {
+      this.$router.push({ name: 'homepage', query: { userid: this.userid, username: this.username } });
     },
     gotostar() {
-      this.$router.push({name:'commoityLike',query:{userid : this.userid,username: this.username}});
+      this.$router.push({ name: 'commodityLike', query: { userid: this.userid, username: this.username } });
     },
     gotoinfo() {
-      this.$router.push({name:'userinfo',query:{userid : this.userid,username: this.username}});
+      this.$router.push({ name: 'userinfo', query: { userid: this.userid, username: this.username } });
     },
-    gotochat(){
-      this.$router.push({name:'chat',query:{userid : this.userid,username: this.username}});
+    gotochat() {
+      this.$router.push({ name: 'chat', query: { userid: this.userid, username: this.username } });
     },
     gotoshoppingcart() {
-      this.$router.push({name:'cart',query:{userid : this.userid,username: this.username}});
+      this.$router.push({ name: 'cart', query: { userid: this.userid, username: this.username } });
     }
   }
 }
@@ -232,10 +234,6 @@ body{
 }
 .el-carousel__item h3 {
   color: #475669;
-  /*width: 60%;*/
-  /*font-size: 14px;*/
-  /*opacity: 0.75;*/
-  /*line-height: 200px;*/
   margin: 0;
 }
 
@@ -247,6 +245,10 @@ body{
   background-color: #d3dce6;
 }
 
+/*.el-main{*/
+/*  padding: 0px;*/
+/*  margin: 0px;*/
+/*}*/
 </style>
 <style scoped>
 .homestyle{

@@ -8,4 +8,6 @@ import java.util.List;
 public interface FriendServiceInterface extends IMppService<Friend> {
     void requestAddFriend(Integer adderId, Integer friendId);
     List<Friend> getFriendRequestList(Integer userId);
+    void commitFriend(Integer launcherId, Integer answererId);
+    List<Friend> getFriendList(Integer userId);
 }

@@ -347,8 +347,14 @@ DROP TABLE IF EXISTS `sedb`.`group`;
 CREATE TABLE IF NOT EXISTS `sedb`.`group`
 (
     `groupId`   INT          NOT NULL AUTO_INCREMENT,
+    `managerId` INT          NOT NULL,
     `groupName` VARCHAR(128) NOT NULL,
-    PRIMARY KEY (`groupId`)
+    PRIMARY KEY (`groupId`),
+    CONSTRAINT `group_manager`
+        FOREIGN KEY (`managerId`)
+            REFERENCES `sedb`.`user` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB;
 

@@ -17,7 +17,7 @@ public class CommodityObject {
     private String category;  // 商品类别
     private List<ItemObject> itemObjectList;  // 商品子分类
     private List<String> pictureList;  // 图片路径
-    private String PreviewPicture;
+    private String previewPicture;
     private Integer sales;
     private Float price;
 }

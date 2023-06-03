@@ -191,7 +191,7 @@ export default {
       axios.post('http://127.0.0.1:8080/order/createOrder', orderObject).then(res => {
         console.log(res);
       });
-
+      this.$router.push({name:'homepage',query:{userid : this.userid,username: this.username}});
     },
     handleSuccess(response, file, fileList) {
       console.log('上传成功:', response, file, fileList);
@@ -201,6 +201,22 @@ export default {
       console.log('移除文件:', file, fileList);
       this.form.itemImages = fileList.map(f => f.response.data.url); // 将文件的URL保存到表单数据中，此处根据实际返回的数据结构进行修改
     },
+    
+    gotohome() {
+      this.$router.push({ name: 'homepage', query: { userid: this.userid, username: this.username } });
+    },
+    gotostar() {
+      this.$router.push({ name: 'commodityLike', query: { userid: this.userid, username: this.username } });
+    },
+    gotoinfo() {
+      this.$router.push({ name: 'userinfo', query: { userid: this.userid, username: this.username } });
+    },
+    gotochat() {
+      this.$router.push({ name: 'chat', query: { userid: this.userid, username: this.username } });
+    },
+    gotoshoppingcart() {
+      this.$router.push({ name: 'cart', query: { userid: this.userid, username: this.username } });
+    }
   },
 
 }
