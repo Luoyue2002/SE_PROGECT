@@ -1,7 +1,12 @@
 package com.se.EC.Utils;
 
 
-    public interface StatusCodeConstant {
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Map;
+
+public interface StatusCodeConstant {
         /**
          * 正常状态
          */
