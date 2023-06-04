@@ -179,20 +179,20 @@ export default {
          }
        }
     },
-    gotohome(){
-      this.$router.push({name:'homepage',query:{userid : this.userid,username: this.username}});
+    gotohome() {
+      this.$router.push({ name: 'homepage', query: { userid: this.userid, username: this.username } });
     },
     gotostar() {
-      this.$router.push({name:'commoityLike',query:{userid : this.userid,username: this.username}});
+      this.$router.push({ name: 'commodityLike', query: { userid: this.userid, username: this.username } });
     },
     gotoinfo() {
-      this.$router.push({name:'userinfo',query:{userid : this.userid,username: this.username}});
+      this.$router.push({ name: 'userinfo', query: { userid: this.userid, username: this.username } });
     },
-    gotochat(){
-      this.$router.push({name:'chat',query:{userid : this.userid,username: this.username}});
+    gotochat() {
+      this.$router.push({ name: 'chat', query: { userid: this.userid, username: this.username } });
     },
     gotoshoppingcart() {
-      this.$router.push({name:'cart',query:{userid : this.userid,username: this.username}});
+      this.$router.push({ name: 'cart', query: { userid: this.userid, username: this.username } });
     }
   },
 

@@ -13,6 +13,16 @@ public class UserController implements UserControllerInterface {
     @Resource
     private UserServiceInterface userServiceInterface;
 
+    @RequestMapping("/getUserById")
+    public ApiResult<User> getUserById(@RequestParam(value = "id") Integer id) {
+        try {
+            User user = userServiceInterface.getById(id);
+            return ApiResult.success(user);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
     @PostMapping("/register")
     public ApiResult<Boolean> userRegister(@RequestBody User user) {
         try {

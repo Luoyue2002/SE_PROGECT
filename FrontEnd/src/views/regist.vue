@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     handleregister() {
-      axios.post('http://10.162.59.81:8080/user/register',
+      axios.post('http://127.0.0.1:8080/user/register',
         {
           name: this.username,
           id: '',

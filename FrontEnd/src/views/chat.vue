@@ -207,7 +207,7 @@ export default {
       //     this.winBarConfig.list.push(user);
       //   }
       // });
-      axios.get('http://10.162.59.81:8080/chat/getSession?id=' + this.userid).then(res => {
+      axios.get('http://127.0.0.1:8080/chat/getSession?id=' + this.userid).then(res => {
         for (let i = 0; i < res.data.data.length; i++) {
           let readnum = 0;
           const user = {
@@ -217,7 +217,7 @@ export default {
             dept: "个人求按摩",
           };
           this.winBarConfig.list.push(user);
-          axios.get('http://10.162.59.81:8080/chat/unreadMessageCount?senderId='+user.id+'&receiverId='+this.userid).then(res => {
+          axios.get('http://127.0.0.1:8080/chat/unreadMessageCount?senderId='+user.id+'&receiverId='+this.userid).then(res => {
             console.log(i)
             console.log("id:"+user.id+"   count:"+res.data.data)
             console.log("size"+this.winBarConfig.list.length)
@@ -232,7 +232,7 @@ export default {
     },
     everySecondFunction() {
       const selectedUser = this.selectedUser;
-      axios.get('http://10.162.59.81:8080/chat/updateMessage?senderId=' + selectedUser + '&receiverId=' + this.userid)
+      axios.get('http://127.0.0.1:8080/chat/updateMessage?senderId=' + selectedUser + '&receiverId=' + this.userid)
           .then(res => {
             if (res.data.result && res.data.result.length > 0) {
               const msg = {
@@ -281,7 +281,7 @@ export default {
           this.taleList = this.getListArr();
         }
         else {
-          axios.get('http://10.162.59.81:8080/chat/retrieveAllMessage?senderId=' + id + '&receiverId=' + this.userid)
+          axios.get('http://127.0.0.1:8080/chat/retrieveAllMessage?senderId=' + id + '&receiverId=' + this.userid)
               .then(res => {
                 for (let i = res.data.data.length - 1; i >= 0; i--) {
                   let tempname = '';
@@ -336,7 +336,7 @@ export default {
         name: this.username,
         img: require('../pic/logo.jpg'),
       };
-      axios.post('http://10.162.59.81:8080/chat/sendMessage?senderId='+this.userid+'&receiverId='+id+'&content='+msg).then(res=>{
+      axios.post('http://127.0.0.1:8080/chat/sendMessage?senderId='+this.userid+'&receiverId='+id+'&content='+msg).then(res=>{
         this.taleList.push(msgObj)
       })
       this.newMessage = '';
@@ -394,20 +394,20 @@ export default {
     rightClick(type) {
       console.log("rigth", type);
     },
-    gotohome(){
-      this.$router.push({name:'homepage',query:{userid : this.userid,username: this.username}});
+    gotohome() {
+      this.$router.push({ name: 'homepage', query: { userid: this.userid, username: this.username } });
     },
     gotostar() {
-      this.$router.push({name:'commoityLike',query:{userid : this.userid,username: this.username}});
+      this.$router.push({ name: 'commodityLike', query: { userid: this.userid, username: this.username } });
     },
     gotoinfo() {
-      this.$router.push({name:'userinfo',query:{userid : this.userid,username: this.username}});
+      this.$router.push({ name: 'userinfo', query: { userid: this.userid, username: this.username } });
     },
-    gotochat(){
-      this.$router.push({name:'chat',query:{userid : this.userid,username: this.username}});
+    gotochat() {
+      this.$router.push({ name: 'chat', query: { userid: this.userid, username: this.username } });
     },
     gotoshoppingcart() {
-      this.$router.push({name:'cart',query:{userid : this.userid,username: this.username}});
+      this.$router.push({ name: 'cart', query: { userid: this.userid, username: this.username } });
     }
   },
   // mounted() {

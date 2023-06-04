@@ -70,14 +70,29 @@
             </el-row>
           </div>
 
-          <el-form-item label="预览图">
+          <el-form-item label="详情图">
             <!-- action:上传地址 -->
-            <el-upload list-type="picture-card" multiple action="http://localhost:8080/utils/imageUpload" :on-success="handleSuccess" :ref="upload"
-              :on-remove="handleRemove" :file-list="product.fileList"
-              :headers="{}"
-               :show-file-list="true">
+            <el-upload 
+            list-type="picture-card" multiple
+            action="http://127.0.0.1:8080/utils/imageUpload" :on-success="handleSuccess" 
+            :on-remove="handleRemove" 
+            :file-list="product.fileList"
+            :show-file-list="true">
               <!-- <el-button size="small" type="primary">点击上传</el-button> -->
               <div slot="tip" class="el-upload__tip">支持多文件上传</div>
+            </el-upload>
+          </el-form-item>
+
+          <el-form-item label="预览图">
+            <!-- action:上传地址 -->
+            <el-upload 
+            list-type="picture-card" 
+            action="http://127.0.0.1:8080/utils/imageUpload" :on-success="handleSuccessPreview" 
+            :on-remove="handleRemovePreview" 
+            :file-list="product.fileListPreview"
+            :show-file-list="true">
+              <!-- <el-button size="small" type="primary">点击上传</el-button> -->
+              <div slot="tip" class="el-upload__tip">上传1张图片</div>
             </el-upload>
           </el-form-item>
 
@@ -106,6 +121,8 @@ export default {
       logourl: require("../pic/logo.jpg"),
       userid: 1,
       username: "haha",
+      userid: 1,
+      username: "haha",
       product: {
         name: "",
         price: "",
@@ -117,12 +134,18 @@ export default {
         subCategories: [
           { name: "", quantity: 1, price: 0.01, }
         ],
+        fileListPreview: [],
       },
       categories: [
         { value: 'Others', label: '服装' },
         { value: 'Others', label: '玩具' },
         { value: 'Others', label: '图书' },
+        { value: 'Others', label: '服装' },
+        { value: 'Others', label: '玩具' },
+        { value: 'Others', label: '图书' },
       ],
+      pictureList:[],
+      picturePreview:"",
     };
   },
   computed: {
@@ -130,7 +153,9 @@ export default {
       return this.product.subCategories.map(item => (
         {
           itemId: 0,
+          itemId: 0,
           name: item.name,
+          number: item.quantity,
           number: item.quantity,
           price: item.price,
         }
@@ -150,6 +175,7 @@ export default {
   created() {
     this.userid = this.$route.query.userid;
     this.username = this.$route.query.username;
+    this.username = this.$route.query.username;
   },
   methods: {
     submitForm() {
@@ -163,16 +189,23 @@ export default {
         PreviewPicture: '',
         sales: 0,
         price:this.leastPrice,
+        pictureList:this.pictureList,
+        previewPicture:this.picturePreview,
       }
       axios.post('http://127.0.0.1:8080/shop/addCommodity', CommodityObject).then(res => {
         console.log("发布商品：", CommodityObject);
         console.log(res);
+        this.$router.push({name:'homepage',query:{userid : this.userid,username: this.username}});
       });
     },
     handleSuccess(response, file, fileList) {
       console.log(response);
-      console.log('上传成功:', response, file, fileList);
-      this.form.itemImages = fileList.map(f => f.response.data.url); // 将文件的URL保存到表单数据中，此处根据实际返回的数据结构进行修改
+      this.pictureList.push(response.message);
+      
+      // this.form.itemImages = fileList.map(f => f.response.data.url); // 将文件的URL保存到表单数据中，此处根据实际返回的数据结构进行修改
+    },
+    handleSuccessPreview(response, file, fileList){
+      this.picturePreview=response.message;
     },
     handleRemove(file, fileList) {
       console.log('移除文件:', file, fileList);
@@ -185,6 +218,22 @@ export default {
         price: 0.01,
       });
     },
+
+    gotohome(){
+      this.$router.push({name:'homepage',query:{userid : this.userid,username: this.username}});
+    },
+    gotostar() {
+      this.$router.push({name:'commodityLike',query:{userid : this.userid,username: this.username}});
+    },
+    gotoinfo() {
+      this.$router.push({name:'userinfo',query:{userid : this.userid,username: this.username}});
+    },
+    gotochat(){
+      this.$router.push({name:'chat',query:{userid : this.userid,username: this.username}});
+    },
+    gotoshoppingcart() {
+      this.$router.push({name:'cart',query:{userid : this.userid,username: this.username}});
+    }
   },
 
 }

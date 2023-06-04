@@ -38,6 +38,7 @@ public class ShopController implements ShopControllerInterface {
     private FavoritesServiceInterface favoritesServiceInterface;
     @Resource
     private DetailServiceInterface detailServiceInterface;
+
     @PostMapping("/addCommodity")
     public ApiResult<CommodityObject> addCommodity(@RequestBody CommodityObject commodityObject) {
         try {
@@ -46,8 +47,8 @@ public class ShopController implements ShopControllerInterface {
             CommodityObject commodity = commodityServiceInterface.addCommodity(commodityObject);
             commodity = itemServiceInterface.addCommodityItem(commodity);
             List<String> urlList = commodityObject.getPictureList();
-            for(String url : urlList){
-                detailServiceInterface.addDetails(commodity.getCommodityId(),url);
+            for (String url : urlList) {
+                detailServiceInterface.addDetails(commodity.getCommodityId(), url);
             }
             return ApiResult.success(commodity);
         } catch (Exception e) {

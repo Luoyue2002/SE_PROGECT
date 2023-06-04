@@ -9,6 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public interface UserControllerInterface {
     /**
+     * 根据id获取用户信息
+     * @param id 用户id
+     * @return 用户信息
+     */
+    @RequestMapping("/getUserById")
+    ApiResult<User> getUserById(@RequestParam(value = "id") Integer id);
+
+    /**
      * 用户注册
      * @param user 用户
      * @return 成功/失败

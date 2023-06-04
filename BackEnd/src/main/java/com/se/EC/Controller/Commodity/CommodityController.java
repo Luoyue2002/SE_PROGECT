@@ -368,7 +368,9 @@ public class CommodityController implements CommodityControllerInterface {
         }
 
         public void click(Integer userId, Integer commodityId) {
-            activeUserCommodityMatrix[userToIdx.get(userId)][commodityToIdx.get(commodityId)] += 1;
+            if (commodityToIdx.containsKey(commodityId)) {
+                activeUserCommodityMatrix[userToIdx.get(userId)][commodityToIdx.get(commodityId)] += 1;
+            }
         }
 
         /**
@@ -457,6 +459,14 @@ public class CommodityController implements CommodityControllerInterface {
                 }
                 similarityMatrix[i][i] = 1.0;
             }
+        }
+
+        /**
+         * 定时从数据库同步历史矩阵
+         */
+        @Scheduled(cron = "* 1/1 * * * ?")
+        public void loadDataBase() {
+            loadHistory();
         }
 
         /**

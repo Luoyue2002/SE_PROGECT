@@ -130,7 +130,7 @@ export default {
     },
     login() {
       if(this.loginoption == "username")
-      axios.post('http://10.162.59.81:8080/user/loginByName?userName='+this.form.username+'&password='+this.form.pw).then(res => {
+      axios.post('http://127.0.0.1:8080/user/loginByName?userName='+this.form.username+'&password='+this.form.pw).then(res => {
         console.log(res == null)
         if (res.data.success == true) {
           this.$message.success("success!")
@@ -148,7 +148,7 @@ export default {
         this.showMessage(error.response);
       })
       else if(this.loginoption == "userid"){
-        axios.get('http://10.162.59.81:8080/user/loginById?userId='+this.form.userid+'&password='+this.form.pw).then(res => {
+        axios.get('http://127.0.0.1:8080/user/loginById?userId='+this.form.userid+'&password='+this.form.pw).then(res => {
           // console.log(res.data.success)
           if (res.data.success == true) {
             this.$message.success("success!")
@@ -170,7 +170,7 @@ export default {
         })
       }
       else if(this.loginoption == "phone"){
-        axios.post('http://10.162.59.81:8080/user/loginByPhone?userPhone='+this.form.userphone+'&password='+this.form.pw).then(res => {
+        axios.post('http://127.0.0.1:8080/user/loginByPhone?userPhone='+this.form.userphone+'&password='+this.form.pw).then(res => {
           // console.log("111")
           // console.log(res == null)
           if (res.data.success == true) {
@@ -193,20 +193,20 @@ export default {
         })
       }
     },
-    gotohome(){
-      this.$router.push({name:'homepage',query:{userid : this.form.userid,username: this.form.username}});
+    gotohome() {
+      this.$router.push({ name: 'homepage', query: { userid: this.userid, username: this.username } });
     },
     gotostar() {
-      this.$router.push({name:'cart',query:{userid : this.form.userid,username: this.form.username}});
+      this.$router.push({ name: 'commodityLike', query: { userid: this.userid, username: this.username } });
     },
     gotoinfo() {
-      this.$router.push({name:'userinfo',query:{userid : this.form.userid,username: this.form.username}});
+      this.$router.push({ name: 'userinfo', query: { userid: this.userid, username: this.username } });
     },
-    gotochat(){
-      this.$router.push({name:'chat',query:{userid : this.form.userid,username: this.form.username}});
+    gotochat() {
+      this.$router.push({ name: 'chat', query: { userid: this.userid, username: this.username } });
     },
     gotoshoppingcart() {
-      this.$router.push({name:'cart',query:{userid : this.form.userid,username: this.form.username}});
+      this.$router.push({ name: 'cart', query: { userid: this.userid, username: this.username } });
     }
   },
 }

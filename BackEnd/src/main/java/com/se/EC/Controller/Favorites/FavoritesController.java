@@ -75,7 +75,8 @@ public class FavoritesController implements FavoritesControllerInterface {
                 });
                 Float price = itemList.get(0).getPrice();
                 Integer sales = commodity.getSales();
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(item, name, null, price, sales);
+                String url = commodity.getImage();
+                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(item, name, url, price, sales);
                 commodityPreviewObjectList.add(commodityPreviewObject);
             }
             return ApiResult.success(commodityPreviewObjectList);

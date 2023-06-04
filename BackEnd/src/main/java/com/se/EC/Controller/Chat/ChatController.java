@@ -1,11 +1,18 @@
 package com.se.EC.Controller.Chat;
 
 import com.se.EC.Entity.Friend;
+import com.se.EC.Entity.Group;
+import com.se.EC.Entity.GroupMember;
 import com.se.EC.Entity.User;
 import com.se.EC.Pojo.ChatInformation;
+import com.se.EC.Pojo.GroupChatInformation;
+import com.se.EC.Pojo.GroupInformation;
 import com.se.EC.Pojo.SessionInformation;
 import com.se.EC.Service.Chat.ChatServiceInterface;
 import com.se.EC.Service.Friend.FriendServiceInterface;
+import com.se.EC.Service.Group.GroupServiceInterface;
+import com.se.EC.Service.GroupInformation.GroupInformationServiceInterface;
+import com.se.EC.Service.GroupMember.GroupMemberServiceInterface;
 import com.se.EC.Service.Session.SessionServiceInterface;
 import com.se.EC.Service.User.UserServiceInterface;
 import com.se.EC.Utils.ApiResult;
@@ -31,6 +38,12 @@ public class ChatController implements ChatControllerInterface {
     private UserServiceInterface userServiceInterface;
     @Resource
     private FriendServiceInterface friendServiceInterface;
+    @Resource
+    private GroupServiceInterface groupServiceInterface;
+    @Resource
+    private GroupMemberServiceInterface groupMemberServiceInterface;
+    @Resource
+    private GroupInformationServiceInterface groupInformationServiceInterface;
 
     @Override
     @RequestMapping("/createSession")
@@ -63,18 +76,22 @@ public class ChatController implements ChatControllerInterface {
     @Override
     @RequestMapping("/getSession")
     public ApiResult<List<SessionInformation>> getSession(@RequestParam(value = "id") Integer id) {
-        checkUser(id);
+        try {
+            checkUser(id);
 
-        List<Integer> idList = sessionServiceInterface.getSession(id);
-        List<SessionInformation> sessionInformationList = new ArrayList<>();
-        for (var item : idList) {
-            LocalDateTime updateTime = sessionServiceInterface.getUpdateTime(item, id);
-            Integer unreadCount = chatServiceInterface.updateMessageCount(item, id, updateTime);
-            String name = userServiceInterface.getNameById(item);
-            SessionInformation sessionInformation = new SessionInformation(item, unreadCount, name);
-            sessionInformationList.add(sessionInformation);
+            List<Integer> idList = sessionServiceInterface.getSession(id);
+            List<SessionInformation> sessionInformationList = new ArrayList<>();
+            for (var item : idList) {
+                LocalDateTime updateTime = sessionServiceInterface.getUpdateTime(item, id);
+                Integer unreadCount = chatServiceInterface.updateMessageCount(item, id, updateTime);
+                String name = userServiceInterface.getNameById(item);
+                SessionInformation sessionInformation = new SessionInformation(item, unreadCount, name);
+                sessionInformationList.add(sessionInformation);
+            }
+            return ApiResult.success(sessionInformationList);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
         }
-        return ApiResult.success(sessionInformationList);
     }
 
     @Override
@@ -127,6 +144,9 @@ public class ChatController implements ChatControllerInterface {
 
             List<ChatInformation> chatInformationList1 = chatServiceInterface.retrieveAllMessage(senderId, receiverId);
             List<ChatInformation> chatInformationList2 = chatServiceInterface.retrieveAllMessage(receiverId, senderId);
+
+            LocalDateTime currentTime = LocalDateTime.now();
+            sessionServiceInterface.updateUpdateTime(senderId, receiverId, currentTime);
 
             return ApiResult.success(mergeSort(chatInformationList1, chatInformationList2));
         } catch (Exception e) {
@@ -196,28 +216,207 @@ public class ChatController implements ChatControllerInterface {
         }
     }
 
+    @Override
     @RequestMapping("getFriendRequestList")
     public ApiResult<List<User>> getFriendRequestList(@RequestParam(value = "userId") Integer userId) {
         try {
             List<Friend> friendList = friendServiceInterface.getFriendRequestList(userId);
+            List<User> userList = new ArrayList<>();
             for (var friend : friendList) {
                 Integer id = friend.getUser1();
-                // ================================================================================================================
+                User user = userServiceInterface.getById(id);
+                userList.add(user);
             }
-            return null;
+            return ApiResult.success(userList);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
     }
 
+    @Override
     @RequestMapping("commitFriend")
     public ApiResult<Boolean> commitFriend(@RequestParam(value = "launcher") Integer launcherId,
-                                    @RequestParam(value = "answerer") Integer answererId) {
+                                           @RequestParam(value = "answerer") Integer answererId) {
         try {
-            return null;
+            friendServiceInterface.commitFriend(launcherId, answererId);
+            return ApiResult.success();
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
+    }
+
+    @Override
+    @RequestMapping("/getFriend")
+    public ApiResult<List<User>> getFriendList(@RequestParam(value = "userId") Integer userId) {
+        try {
+            List<Friend> friendList = friendServiceInterface.getFriendList(userId);
+            List<User> userList = new ArrayList<>();
+            for (var friend : friendList) {
+                Integer id = friend.getUser2();
+                User user = userServiceInterface.getById(id);
+                userList.add(user);
+            }
+            return ApiResult.success(userList);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("addGroup")
+    public ApiResult<Boolean> addGroup(@RequestParam(value = "groupName") String groupName,
+                                       @RequestParam(value = "manager") Integer manager,
+                                       @RequestParam(value = "memberIdList") List<Integer> memberIdList) {
+        try {
+            Integer groupId = groupServiceInterface.addGroup(groupName, manager);
+            LocalDateTime time = LocalDateTime.now();
+            groupMemberServiceInterface.addGroup(groupId, manager, time);
+            for (var id : memberIdList) {
+                groupMemberServiceInterface.addGroup(groupId, id, time);
+            }
+            return ApiResult.success();
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("deleteGroup")
+    public ApiResult<Boolean> deleteGroup(@RequestParam(value = "groupId") Integer groupId,
+                                          @RequestParam(value = "managerId") Integer managerId) {
+        try {
+            groupServiceInterface.checkGroupManager(groupId, managerId);
+            groupMemberServiceInterface.deleteGroup(groupId);
+            groupInformationServiceInterface.deleteGroup(groupId);
+            groupServiceInterface.deleteGroup(groupId);
+            return ApiResult.success();
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("exitGroup")
+    public ApiResult<Boolean> exitGroup(@RequestParam(value = "groupId") Integer groupId,
+                                        @RequestParam(value = "userId") Integer userId) {
+        try {
+            groupMemberServiceInterface.exitGroup(groupId, userId);
+            Long count = groupMemberServiceInterface.groupMemberNumber(groupId);
+            if (count == 0) {
+                Group group = groupServiceInterface.getById(groupId);
+                deleteGroup(group.getGroupId(), group.getManagerId());
+            }
+            return ApiResult.success();
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("/sendGroupMessage")
+    public ApiResult<Boolean> sendGroupMessage(@RequestParam(value = "senderId") Integer senderId,
+                                               @RequestParam(value = "groupId") Integer groupId,
+                                               @RequestParam(value = "content") String content) {
+        try {
+            checkUser(senderId);
+            checkContent(content);
+            checkGroupMember(groupId, senderId);
+
+            return ApiResult.success();
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("/getGroup")
+    public ApiResult<List<GroupInformation>> getGroup(@RequestParam(value = "id") Integer id) {
+        try {
+            checkUser(id);
+
+            List<GroupMember> groupMemberList = groupMemberServiceInterface.getGroup(id);
+            List<GroupInformation> groupInformationList = new ArrayList<>();
+
+            for (var item : groupMemberList) {
+                Integer groupId = item.getGroupId();
+                LocalDateTime updateTime = groupMemberServiceInterface.getUpdateTime(groupId, id);
+                Integer unreadCount = groupInformationServiceInterface.updateMessageCount(groupId, updateTime);
+                String name = groupServiceInterface.getById(groupId).getGroupName();
+                GroupInformation groupInformation = new GroupInformation(groupId, unreadCount, name);
+                groupInformationList.add(groupInformation);
+            }
+            return ApiResult.success(groupInformationList);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("/updateGroupMessage")
+    public ApiResult<List<GroupChatInformation>> updateGroupMessage(@RequestParam(value = "groupId") Integer groupId,
+                                                                    @RequestParam(value = "receiverId") Integer receiverId) {
+        try {
+            checkUser(receiverId);
+            checkGroupMember(groupId, receiverId);
+
+            LocalDateTime updateTime = groupMemberServiceInterface.getUpdateTime(groupId, receiverId);
+            List<com.se.EC.Entity.GroupInformation> chatInformationList = groupInformationServiceInterface.updateMessage(groupId, updateTime);
+
+            LocalDateTime currentTime = LocalDateTime.now();
+            groupMemberServiceInterface.updateUpdateTime(groupId, receiverId, currentTime);
+
+            return ApiResult.success(sortAndPack(chatInformationList));
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
+    @RequestMapping("/retrieveGroupAllMessage")
+    public ApiResult<List<GroupChatInformation>> retrieveGroupAllMessage(@RequestParam(value = "groupId") Integer groupId,
+                                                                         @RequestParam(value = "receiverId") Integer receiverId) {
+        try {
+            checkUser(receiverId);
+            checkGroupMember(groupId, receiverId);
+
+            List<com.se.EC.Entity.GroupInformation> chatInformationList = groupInformationServiceInterface.retrieveAllMessage(groupId);
+
+            LocalDateTime currentTime = LocalDateTime.now();
+            groupMemberServiceInterface.updateUpdateTime(groupId, receiverId, currentTime);
+
+            return ApiResult.success(sortAndPack(chatInformationList));
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 排序并打包
+     * @param chatInformationList Entity的列表
+     * @return Pojo的列表
+     */
+    private List<GroupChatInformation> sortAndPack(List<com.se.EC.Entity.GroupInformation> chatInformationList) {
+        chatInformationList.sort((o1, o2) -> {
+            if (o1.getTime().isAfter(o2.getTime())) {
+                return -1;
+            } else if (o1.getTime().equals(o2.getTime())) {
+                return 0;
+            } else {
+                return 1;
+            }
+        });
+
+        List<GroupChatInformation> groupChatInformationList = new ArrayList<>();
+        for (var item : chatInformationList) {
+            Integer groupId = item.getGroupId();
+            Integer senderId = item.getSenderId();
+            LocalDateTime time = item.getTime();
+            String content = item.getContent();
+            GroupChatInformation groupChatInformation = new GroupChatInformation(groupId, senderId, time, content);
+            groupChatInformationList.add(groupChatInformation);
+        }
+
+        return groupChatInformationList;
     }
 
     /**
@@ -272,6 +471,18 @@ public class ChatController implements ChatControllerInterface {
     private void checkSession(Integer senderId, Integer receiverId) {
         if (sessionServiceInterface.sessionCount(senderId, receiverId) <= 0) {
             throw new RuntimeException("There are no session created between " + senderId + " and " + receiverId);
+        }
+    }
+
+    /**
+     * 检查用户是否在这个群聊中
+     *
+     * @param groupId 群聊id
+     * @param userId  用户id
+     */
+    private void checkGroupMember(Integer groupId, Integer userId) {
+        if (!groupMemberServiceInterface.isMember(groupId, userId)) {
+            throw new RuntimeException("User " + userId + " is not a member of group " + groupId);
         }
     }
 }

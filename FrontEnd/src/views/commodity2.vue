@@ -26,9 +26,16 @@
       <el-row class="product-Image-and-Details">
         <!-- Left side: Product Image -->
         <el-col :span="12">
-          <div class="product-image-section">
-            <el-image :src="commodityImg" fit="cover"></el-image>
-            <el-button type="primary" class="zoom-button">{{ currentImgIndex }}/{{ totalImgIndex }}</el-button>
+          <!-- <div class="product-image-section"> -->
+          <div>
+            <el-carousel >
+              <el-carousel-item v-for="(pic, index) in commodity.pictureList" :key=index>
+                <el-image :src="pic" fit="cover"></el-image>
+                <!-- <el-button type="primary" class="zoom-button">{{ currentImgIndex }}/{{ totalImgIndex }}</el-button> -->
+              </el-carousel-item>
+            </el-carousel>
+            <!-- <el-image :src="commodity.pictureList[currentImgIndex - 1]" fit="cover"></el-image>
+            <el-button type="primary" class="zoom-button">{{ currentImgIndex }}/{{ totalImgIndex }}</el-button> -->
           </div>
         </el-col>
 
@@ -51,15 +58,15 @@
       <!-- Part 2: Product Description -->
       <div class="product-description-section">
         <h3>商品详情</h3>
-        <p>{{ commodity.discription }}</p>
+        <p>{{ commodity.description }}</p>
       </div>
 
       <!-- Part 3: Reviews -->
       <div class="reviews-section">
         <div style="margin-left:20px">
           <h3>评价</h3>
-          <div class="review" v-for="(review, index) in commodity.reviews" :key="index">
-            <p>{{ review.user }}: {{ review.content }}</p>
+          <div class="review" v-for="(review, index) in reviews" :key="index">
+            <p>{{ review.userId }}: {{ review.content }}</p>
           </div>
         </div>
       </div>
@@ -116,45 +123,61 @@ export default {
 
       userid: 1,
       username: "haha",
-      commodityId: "1",
+      commodityId: 1,
       currentImgIndex: 1,
-      totalImgIndex: 8,
       commodity: {
         commodityId: 1,
         name: "book",
         price: "99",
         tag: "信用良好，使用痕迹",
-        discription: "商品详细描述",
+        description: "商品详细描述",
         publisherId: 1,
+        previewPicture: "",
+        pictureList: [require("../assets/logo.png")],
         reviews: [
-          { user: "123", content: "good" },
-          { user: "1234", content: "bad" },
+          { userId: 1, content: "good" },
+          { userId: 2, content: "bad" },
         ],
         itemObjectList: [
           { itemId: 1, name: "haha", number: 123, price: 13.2 },
           { itemId: 2, name: "haha2", number: 1234, price: 25.4 },
         ]
       },
-
       showItemInfo: false,
       selectedItems: [],
       //添加购物车
       showAddToCartInfo: false,
       inputNumber: 1,
+      reviews: [
+        { userId: 1, content: "good" },
+        { userId: 2, content: "bad" },
+      ],
     };
   },
   created() {
     this.userid = this.$route.query.userid;
     this.username = this.$route.query.username;
     this.commodityId = this.$route.query.commodityId;
-    
+
     this.load();
+  },
+  computed: {
+    totalImgIndex() {
+      return this.commodity.pictureList.length;
+    }
   },
   methods: {
     load() {
+
       axios.get('http://127.0.0.1:8080/commodity/click?userId=' + this.userid + '&commodityId=' + this.commodityId).then(res => {
-        console.log(res);
-        this.commodity=res.data.data;
+        console.log("get commodity:", res);
+        this.commodity = res.data.data;
+      });
+
+      axios.get('http://127.0.0.1:8080/comment//getCommentByCommodity?commodityId=' + this.commodityId).then(res => {
+        console.log("comment: ", res);
+        this.reviews = res.data.data;
+        console.log(this.commodity.reviews);
       });
     },
     //添加收藏
@@ -217,6 +240,22 @@ export default {
         this.$router.push({ name: 'chat', query: { userid: this.userid, username: this.username } });
       });
     },
+
+    gotohome(){
+      this.$router.push({name:'homepage',query:{userid : this.userid,username: this.username}});
+    },
+    gotostar() {
+      this.$router.push({name:'commodityLike',query:{userid : this.userid,username: this.username}});
+    },
+    gotoinfo() {
+      this.$router.push({name:'userinfo',query:{userid : this.userid,username: this.username}});
+    },
+    gotochat(){
+      this.$router.push({name:'chat',query:{userid : this.userid,username: this.username}});
+    },
+    gotoshoppingcart() {
+      this.$router.push({name:'cart',query:{userid : this.userid,username: this.username}});
+    }
   },
 
 }
