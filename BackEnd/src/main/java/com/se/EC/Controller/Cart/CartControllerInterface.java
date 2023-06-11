@@ -1,6 +1,7 @@
 package com.se.EC.Controller.Cart;
 
 import com.se.EC.Pojo.CommodityPreviewObject;
+import com.se.EC.Pojo.ItemObject;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,4 +51,8 @@ public interface CartControllerInterface {
      */
     @RequestMapping("/getCart")
     ApiResult<List<CommodityPreviewObject>> getCart(@RequestParam(value = "userId") Integer userId);
+
+
+    @RequestMapping("/getCartItem")
+    ApiResult<List<ItemObject>> getCartItem(@RequestParam(value = "userId") Integer userId);
 }

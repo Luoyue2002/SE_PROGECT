@@ -15,7 +15,7 @@ public class ResourceConfig extends WebMvcConfigurationSupport {
         // 静态资源访问路径和存放路径配置
                 //通过image访问本地的图片
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:D:\\SE_PROGECT\\BackEnd\\src\\main\\resources\\static\\image\\");
+                .addResourceLocations("file:"+ PathConfig.path);
     }
 
 }

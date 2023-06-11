@@ -89,8 +89,7 @@ public class UserController implements UserControllerInterface {
             boolean success = userServiceInterface.resetPassword(userId, oldPassword, newPassword);
             if (success) {
                 return ApiResult.success(true);
-            }
-            else {
+            } else {
                 return ApiResult.error("false");
             }
         } catch (Exception e) {
@@ -109,6 +108,19 @@ public class UserController implements UserControllerInterface {
             return ApiResult.error(e.getMessage(), Boolean.FALSE);
         }
     }
+
+    @Override
+    @RequestMapping("/uploadAvatar")
+    public ApiResult<User> uploadAvatar(@RequestParam(value = "userId") Integer userId,
+                                             @RequestParam(value = "url") String url) {
+        try {
+            User user = userServiceInterface.uploadAvatar(userId, url);
+            return ApiResult.success(user);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
 
     @Override
     @RequestMapping("/ifShop")
@@ -142,4 +154,30 @@ public class UserController implements UserControllerInterface {
             throw new RuntimeException("User " + userId + " does not exist");
         }
     }
+
+
+    @RequestMapping("/changeBalance")
+    public ApiResult<Double> changeBalance(@RequestParam(value = "userId") int userId,
+                                           @RequestParam(value = "totalAmount") Double totalAmount,
+                                           @RequestParam(value = "password") String password) {
+        try {
+            Double balance = userServiceInterface.changeBalance(userId, totalAmount, password);
+            return ApiResult.success(balance);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+
+    @RequestMapping("/getBalance")
+    public ApiResult<Double> getBalance(@RequestParam(value = "userId") int userId) {
+        try {
+            Double balance = userServiceInterface.getBalance(userId);
+            return ApiResult.success(balance);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+
 }

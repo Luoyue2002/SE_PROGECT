@@ -54,7 +54,7 @@ public class OrderService extends MppServiceImpl<OrderMapper, Order> implements 
     }
 
     @Override
-    public boolean orderPay(int orderId) {
+    public boolean orderPay(int orderId, Double totalamount , String password) {
         Order order = new Order();
         order.setId(orderId);
         order.setState(OrderState.Payed.value());

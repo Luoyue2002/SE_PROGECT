@@ -2,7 +2,10 @@ package com.se.EC.Controller.Commodity;
 
 import com.se.EC.Pojo.CommodityObject;
 import com.se.EC.Pojo.CommodityPreviewObject;
+import com.se.EC.Pojo.PictureSearch;
 import com.se.EC.Utils.ApiResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,6 +31,9 @@ public interface CommodityControllerInterface {
     @RequestMapping("/searchByContent")
     ApiResult<List<CommodityPreviewObject>> searchByContent(@RequestParam(value = "id") Integer id,
                                                             @RequestParam(value = "content") String content);
+
+    @PostMapping("/searchByPicture")
+    ApiResult<List<CommodityPreviewObject>> searchByPicture(@RequestBody PictureSearch pictureSearch);
 
     /**
      * 搜索商品，得到一系列商品预览

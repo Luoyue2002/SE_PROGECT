@@ -1,8 +1,10 @@
 package com.se.EC.Controller.Order;
 
+import com.se.EC.Entity.Item;
 import com.se.EC.Entity.Order;
 import com.se.EC.Pojo.OrderItemObject;
 import com.se.EC.Pojo.OrderObject;
+import com.se.EC.Service.Cart.CartServiceInterface;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
 import com.se.EC.Service.Order.OrderServiceInterface;
@@ -30,6 +32,8 @@ public class OrderController implements OrderControllerInterface {
     @Resource
     private UserServiceInterface userServiceInterface;
 
+    @Resource
+    private CartServiceInterface cartServiceInterface;
     @Override
     @PostMapping("/createOrder")
     public ApiResult<OrderObject> createOrder(@RequestBody OrderObject object) {
@@ -39,6 +43,12 @@ public class OrderController implements OrderControllerInterface {
             int itemNumber = object.getItemObjectList().size();
             if (itemNumber == 0) {
                 throw new RuntimeException("Item number can not be 0");
+            }
+            for(OrderItemObject item : object.getItemObjectList()){
+                Item itemNow = itemServiceInterface.getItemById(item.getItemId());
+                if(itemNow.getNumber()<item.getNumber()){
+                    return ApiResult.error("库存不足,订单创建失败");
+                }
             }
             OrderObject order = orderServiceInterface.createOrder(object);
             order = orderItemServiceInterface.createOrder(order);
@@ -50,7 +60,7 @@ public class OrderController implements OrderControllerInterface {
             }
             return ApiResult.success(order);
         } catch (Exception e) {
-            return ApiResult.error("unknown error!");
+            return ApiResult.error(e.getMessage());
         }
     }
 
@@ -82,15 +92,26 @@ public class OrderController implements OrderControllerInterface {
     }
 
     @RequestMapping("/orderPay")
-    public ApiResult<Boolean> orderPay(@RequestParam(value = "orderId") int orderId) {
+    public ApiResult<Boolean> orderPay(@RequestParam(value = "orderId") int orderId,
+                                       @RequestParam(value = "userId") int userId,
+    @RequestParam(value = "totalamount") Double totalamount,
+    @RequestParam(value = "password") String password
+    ) {
         try {
-            boolean success = orderServiceInterface.orderPay(orderId);
-            if (!success) {
-                return ApiResult.error("failed");
+            Order ordernow = orderServiceInterface.getOrderInfo(orderId);
+            int buyerId = ordernow.getBuyer();
+            if(buyerId!=userId){
+                return ApiResult.error("incorrect user of order");
             }
-            return ApiResult.error("success");
+            userServiceInterface.changeBalance(userId,totalamount*(-1),password);
+            orderServiceInterface.orderPay(orderId , totalamount,password);
+            List<OrderItemObject> itemObjectList = orderItemServiceInterface.getOrderInfo(orderId);
+            for(OrderItemObject temp : itemObjectList){
+                cartServiceInterface.deleteCart(userId,temp.getItemId());
+            }
+            return ApiResult.success();
         } catch (Exception e) {
-            return ApiResult.error("unknown error!");
+            return ApiResult.error(e.getMessage());
         }
     }
 

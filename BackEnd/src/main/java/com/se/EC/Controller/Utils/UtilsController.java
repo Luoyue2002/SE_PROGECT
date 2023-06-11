@@ -2,6 +2,7 @@ package com.se.EC.Controller.Utils;
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
+import com.se.EC.Config.PathConfig;
 import com.se.EC.Utils.ApiResult;
 import com.se.EC.Utils.CodeUtils;
 import com.se.EC.Utils.SmsUtils;
@@ -21,7 +22,7 @@ public class UtilsController implements UtilsControllerInterface {
     @PostMapping("/imageUpload")
     public ApiResult<String> imageUpload(MultipartFile file, HttpServletRequest request) {
         try {
-            String filePath = "E:\\WorkField\\BS\\ElectronicCommerce\\BackEnd\\src\\main\\resources\\static\\image\\";
+            String filePath = PathConfig.path;
             File folder = new File(filePath);
             String oldName = file.getOriginalFilename();
             assert oldName != null;
@@ -37,20 +38,27 @@ public class UtilsController implements UtilsControllerInterface {
     @Override
     @RequestMapping(value = "/smsXxs")
     @ResponseBody
-    public Map<String,Object> smsXxs(String phone, HttpServletRequest request) throws ClientException {
-        Map<String,Object> map = new HashMap<>();
-        // 验证码（指定长度的随机数）
-        String code = CodeUtils.generateVerifyCode(6);
-        String TemplateParam = "{\"code\":\""+code+"\"}";
-        // 短信模板id
-        String TemplateCode = "SMS_152440521";
-        SendSmsResponse response = SmsUtils.sendSms(phone,TemplateParam,TemplateCode);
-        map.put("verifyCode",code);
-        map.put("phone",phone);
-        request.getSession().setAttribute("CodePhone",map);
-        if( response.getCode().equals("OK")) {
-            map.put("isOk","OK");
+    public ApiResult<Map<String,Object>> smsXxs(String phone, HttpServletRequest request) throws ClientException {
+        try {
+            Map<String,Object> map = new HashMap<>();
+            // 验证码（指定长度的随机数）
+            String code = CodeUtils.generateVerifyCode(6);
+            String TemplateParam = "{\"code\":\""+code+"\"}";
+            // 短信模板id
+            String TemplateCode = "SMS_152440521";
+            SendSmsResponse response = SmsUtils.sendSms(phone,TemplateParam,TemplateCode);
+            map.put("verifyCode",code);
+            map.put("phone",phone);
+            request.getSession().setAttribute("CodePhone",map);
+            if( response.getCode().equals("OK")) {
+                map.put("isOk","OK");
+            }
+            return ApiResult.success(map);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
         }
-        return map;
     }
+
+
+
 }

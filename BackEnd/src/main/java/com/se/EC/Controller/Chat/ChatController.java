@@ -4,10 +4,7 @@ import com.se.EC.Entity.Friend;
 import com.se.EC.Entity.Group;
 import com.se.EC.Entity.GroupMember;
 import com.se.EC.Entity.User;
-import com.se.EC.Pojo.ChatInformation;
-import com.se.EC.Pojo.GroupChatInformation;
-import com.se.EC.Pojo.GroupInformation;
-import com.se.EC.Pojo.SessionInformation;
+import com.se.EC.Pojo.*;
 import com.se.EC.Service.Chat.ChatServiceInterface;
 import com.se.EC.Service.Friend.FriendServiceInterface;
 import com.se.EC.Service.Group.GroupServiceInterface;
@@ -50,6 +47,9 @@ public class ChatController implements ChatControllerInterface {
     public ApiResult<Boolean> createSession(@RequestParam(value = "senderId") Integer senderId,
                                             @RequestParam(value = "receiverId") Integer receiverId) {
         try {
+            if (senderId.equals(receiverId)) {
+                throw new RuntimeException("Can not send message to yourself");
+            }
             checkUser(senderId);
             checkUser(receiverId);
             sessionServiceInterface.createSession(senderId, receiverId);
@@ -124,8 +124,10 @@ public class ChatController implements ChatControllerInterface {
             List<ChatInformation> chatInformationList1 = chatServiceInterface.updateMessage(senderId, receiverId, updateTime);
             List<ChatInformation> chatInformationList2 = chatServiceInterface.updateMessage(receiverId, senderId, updateTime);
 
-            LocalDateTime currentTime = LocalDateTime.now();
-            sessionServiceInterface.updateUpdateTime(senderId, receiverId, currentTime);
+            if (chatInformationList1.size() != 0 || chatInformationList2.size() != 0) {
+                LocalDateTime currentTime = LocalDateTime.now();
+                sessionServiceInterface.updateUpdateTime(senderId, receiverId, currentTime);
+            }
 
             return ApiResult.success(mergeSort(chatInformationList1, chatInformationList2));
         } catch (Exception e) {
@@ -352,6 +354,25 @@ public class ChatController implements ChatControllerInterface {
     }
 
     @Override
+    @RequestMapping("/getGroupMember")
+    public ApiResult<List<GroupMemberInformation>> getGroupMember(@RequestParam(value = "userId") Integer userId,
+                                                            @RequestParam(value = "groupId") Integer groupId) {
+        try {
+            checkUser(userId);
+            List<Integer> idList = groupMemberServiceInterface.getGroupMemberById(groupId);
+            List<GroupMemberInformation> groupMemberInformationList = new ArrayList<>();
+            for (var item : idList) {
+                User user = userServiceInterface.getById(item);
+                GroupMemberInformation groupMemberInformation = new GroupMemberInformation(item, user.getName(), user.getImage());
+                groupMemberInformationList.add(groupMemberInformation);
+            }
+            return ApiResult.success(groupMemberInformationList);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    @Override
     @RequestMapping("/updateGroupMessage")
     public ApiResult<List<GroupChatInformation>> updateGroupMessage(@RequestParam(value = "groupId") Integer groupId,
                                                                     @RequestParam(value = "receiverId") Integer receiverId) {
@@ -362,8 +383,10 @@ public class ChatController implements ChatControllerInterface {
             LocalDateTime updateTime = groupMemberServiceInterface.getUpdateTime(groupId, receiverId);
             List<com.se.EC.Entity.GroupInformation> chatInformationList = groupInformationServiceInterface.updateMessage(groupId, updateTime);
 
-            LocalDateTime currentTime = LocalDateTime.now();
-            groupMemberServiceInterface.updateUpdateTime(groupId, receiverId, currentTime);
+            if (chatInformationList.size() != 0) {
+                LocalDateTime currentTime = LocalDateTime.now();
+                groupMemberServiceInterface.updateUpdateTime(groupId, receiverId, currentTime);
+            }
 
             return ApiResult.success(sortAndPack(chatInformationList));
         } catch (Exception e) {

@@ -15,4 +15,5 @@ public interface GroupMemberServiceInterface extends IMppService<GroupMember> {
     List<GroupMember> getGroup(Integer userId);
     LocalDateTime getUpdateTime(Integer groupId, Integer userId);
     void updateUpdateTime(Integer groupId, Integer receiverId, LocalDateTime currentTime);
+    List<Integer> getGroupMemberById(Integer groupId);
 }

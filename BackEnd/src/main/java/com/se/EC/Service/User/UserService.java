@@ -183,6 +183,32 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
+    public Double changeBalance(Integer userId ,Double amount , String password) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("id", userId);
+        User user = userMapper.selectOne(userQueryWrapper);
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("wrong password!");
+        }
+        if(user.getBalance()+amount<0){
+            throw new RuntimeException("insufficient balance");
+        }
+        double balance = user.getBalance();
+        user.setBalance(balance+amount);
+        userMapper.updateById(user);
+        return  balance+amount;
+    }
+
+    @Override
+    public Double getBalance(Integer userId){
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("id", userId);
+        User user = userMapper.selectOne(userQueryWrapper);
+        double balance = user.getBalance();
+        return  balance;
+    }
+
+    @Override
     public Boolean resetPassword(Integer userId, String oldPassword, String newPassword) {
         boolean exist = ifUserExists(userId);
         if (exist) {
@@ -238,6 +264,21 @@ public class UserService extends MppServiceImpl<UserMapper, User> implements Use
             QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
             userQueryWrapper.eq("id", userId);
             userMapper.delete(userQueryWrapper);
+        } else {
+            throw new RuntimeException("User does not exist");
+        }
+    }
+
+    @Override
+    public User uploadAvatar(Integer userId, String url) {
+        if (ifUserExists(userId)) {
+            QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+            userQueryWrapper.eq("id", userId);
+            User userNow = userMapper.selectOne(userQueryWrapper);
+            userNow.setImage(url);
+            userMapper.updateById(userNow);
+            return userNow;
+
         } else {
             throw new RuntimeException("User does not exist");
         }

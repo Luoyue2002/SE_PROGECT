@@ -28,6 +28,10 @@ public class User implements Serializable {
     private String realName;
     @TableField("identity")
     private String identity;
+
+    @TableField("balance")
+    private Double balance;
+
     @TableField("school")
     private String school;
     @TableField("schoolId")

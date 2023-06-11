@@ -4,6 +4,7 @@ import com.se.EC.Entity.Cart;
 import com.se.EC.Entity.Commodity;
 import com.se.EC.Entity.Item;
 import com.se.EC.Pojo.CommodityPreviewObject;
+import com.se.EC.Pojo.ItemObject;
 import com.se.EC.Service.Cart.CartServiceInterface;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
@@ -57,7 +58,12 @@ public class CartController implements CartControllerInterface {
             checkUser(userId);
             checkItem(itemId);
             checkItemNumber(itemNumber);
-            cartServiceInterface.modifyCart(userId, itemId, itemNumber);
+            if(itemNumber==0){
+                cartServiceInterface.deleteCart(userId,itemId);
+            }
+            else{
+                cartServiceInterface.modifyCart(userId, itemId, itemNumber);
+            }
             return ApiResult.success();
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
@@ -94,10 +100,40 @@ public class CartController implements CartControllerInterface {
                 Integer commodityId = itemServiceInterface.getParentId(id);
                 Commodity commodity = commodityServiceInterface.getCommodityDetailById(commodityId);
                 String url = commodity.getImage();
-                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(id, name, url, price, count);
+                CommodityPreviewObject commodityPreviewObject = new CommodityPreviewObject(commodityId, name, url, price, count);
                 commodityPreviewObjectList.add(commodityPreviewObject);
             }
             return ApiResult.success(commodityPreviewObjectList);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @RequestMapping("/getCartItem")
+    public ApiResult<List<ItemObject>> getCartItem(@RequestParam(value = "userId") Integer userId){
+        try {
+            checkUser(userId);
+            List<Cart> cartList = cartServiceInterface.getCart(userId);
+            List<ItemObject> itemObjectList = new ArrayList<>();
+            for (var cart : cartList) {
+                Integer id = cart.getItem();
+                Item item = itemServiceInterface.getById(id);
+                String name = item.getName();
+                Float price = item.getPrice();
+                Integer count = cart.getNumber();
+                Integer commodityId = itemServiceInterface.getParentId(id);
+                Commodity commodity = commodityServiceInterface.getCommodityDetailById(commodityId);
+                Integer publisherId = commodity.getPublisher();
+//                String url = commodity.getImage();
+                ItemObject itemObject = new ItemObject(id, name, count, price, publisherId);
+                itemObjectList.add(itemObject);
+
+//                private Integer itemId;  // 商品子分类id，前端传入不需要填
+//                private String name;  // 子分类名称
+//                private Integer number;  // 库存数量
+//                private Float price;  // 价格
+            }
+            return ApiResult.success(itemObjectList);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

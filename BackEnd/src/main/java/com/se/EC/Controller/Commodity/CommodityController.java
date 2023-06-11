@@ -1,16 +1,14 @@
 package com.se.EC.Controller.Commodity;
 
 import com.se.EC.Entity.*;
-import com.se.EC.Pojo.Category;
-import com.se.EC.Pojo.CommodityObject;
-import com.se.EC.Pojo.CommodityPreviewObject;
-import com.se.EC.Pojo.ItemObject;
+import com.se.EC.Pojo.*;
 import com.se.EC.Service.Commodity.CommodityServiceInterface;
 import com.se.EC.Service.Detail.DetailServiceInterface;
 import com.se.EC.Service.History.HistoryServiceInterface;
 import com.se.EC.Service.Item.ItemServiceInterface;
 import com.se.EC.Service.User.UserServiceInterface;
 import com.se.EC.Utils.ApiResult;
+import com.se.EC.Utils.Translate;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
@@ -19,10 +17,7 @@ import org.ansj.recognition.impl.StopRecognition;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -128,43 +123,66 @@ public class CommodityController implements CommodityControllerInterface {
     }
 
     @Override
-    @RequestMapping("/searchByContent")
-    public ApiResult<List<CommodityPreviewObject>> searchByContent(@RequestParam(value = "id") Integer id,
-                                                                   @RequestParam(value = "content") String content) {
+    @PostMapping("/searchByPicture")
+    public ApiResult<List<CommodityPreviewObject>> searchByPicture(@RequestBody PictureSearch pictureSearch) {
         try {
-            checkUser(id);
-            List<String> tokens = tokenizer(content);
-            Map<Integer, Integer> commodityMap = new HashMap<>();
+            Integer id = pictureSearch.getId();
+            List<String> content = pictureSearch.getContent();
             List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
-            for (var token : tokens) {
-                List<Commodity> commodityList = commodityServiceInterface.getCommoditiesByFuzzyContent(token);
-                for (var commodity : commodityList) {
-                    Integer commodityId = commodity.getId();
-                    if (commodityMap.containsKey(commodityId)) {
-                        commodityMap.put(commodityId, commodityMap.get(commodityId) + 1);
-                    } else {
-                        commodityMap.put(commodityId, 1);
-                    }
-                }
-            }
-            List<Map.Entry<Integer, Integer>> sortList = new ArrayList<>(commodityMap.entrySet());
-            sortList.sort((o1, o2) -> {
-                if (o1.getValue() > o2.getValue()) {
-                    return -1;
-                } else if (o1.getValue().equals(o2.getValue())) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            });
-            for (var item : sortList) {
-                Integer commodityId = item.getKey();
-                commodityPreviewObjectList.add(packPreview(commodityId));
+            for (var item : content) {
+                System.out.println(item);
+                String chinese = Translate.aliTranslate(item);
+                commodityPreviewObjectList.addAll(searchContent(id, chinese));
             }
             return ApiResult.success(commodityPreviewObjectList);
         } catch (Exception e) {
             return ApiResult.error(e.getMessage());
         }
+    }
+
+    @Override
+    @RequestMapping("/searchByContent")
+    public ApiResult<List<CommodityPreviewObject>> searchByContent(@RequestParam(value = "id") Integer id,
+                                                                   @RequestParam(value = "content") String content) {
+        try {
+            List<CommodityPreviewObject> commodityPreviewObjectList = searchContent(id, content);
+            return ApiResult.success(commodityPreviewObjectList);
+        } catch (Exception e) {
+            return ApiResult.error(e.getMessage());
+        }
+    }
+
+    private List<CommodityPreviewObject> searchContent(Integer id, String content) {
+        checkUser(id);
+        List<String> tokens = tokenizer(content);
+        Map<Integer, Integer> commodityMap = new HashMap<>();
+        List<CommodityPreviewObject> commodityPreviewObjectList = new ArrayList<>();
+        for (var token : tokens) {
+            List<Commodity> commodityList = commodityServiceInterface.getCommoditiesByFuzzyContent(token);
+            for (var commodity : commodityList) {
+                Integer commodityId = commodity.getId();
+                if (commodityMap.containsKey(commodityId)) {
+                    commodityMap.put(commodityId, commodityMap.get(commodityId) + 1);
+                } else {
+                    commodityMap.put(commodityId, 1);
+                }
+            }
+        }
+        List<Map.Entry<Integer, Integer>> sortList = new ArrayList<>(commodityMap.entrySet());
+        sortList.sort((o1, o2) -> {
+            if (o1.getValue() > o2.getValue()) {
+                return -1;
+            } else if (o1.getValue().equals(o2.getValue())) {
+                return 0;
+            } else {
+                return 1;
+            }
+        });
+        for (var item : sortList) {
+            Integer commodityId = item.getKey();
+            commodityPreviewObjectList.add(packPreview(commodityId));
+        }
+        return commodityPreviewObjectList;
     }
 
     /**
@@ -236,7 +254,8 @@ public class CommodityController implements CommodityControllerInterface {
             List<ItemObject> itemObjectList = new ArrayList<>();
             List<String> pictureList = new ArrayList<>();
             for (var item : itemList) {
-                ItemObject itemObject = new ItemObject(item.getId(), item.getName(), item.getNumber(), item.getPrice());
+                Commodity commodity1 = commodityServiceInterface.getCommodityDetailById(item.getParentId());
+                ItemObject itemObject = new ItemObject(item.getId(), item.getName(), item.getNumber(), item.getPrice(), commodity1.getPublisher());
                 itemObjectList.add(itemObject);
             }
             for (var item : detailList) {

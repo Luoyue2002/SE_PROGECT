@@ -8,6 +8,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -75,5 +76,17 @@ public class GroupMemberService extends MppServiceImpl<GroupMemberMapper, GroupM
         queryWrapper.eq("userId", receiverId);
         GroupMember groupMember = new GroupMember(groupId, receiverId, currentTime);
         groupMemberMapper.update(groupMember, queryWrapper);
+    }
+
+    @Override
+    public List<Integer> getGroupMemberById(Integer groupId) {
+        QueryWrapper<GroupMember> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("groupId", groupId);
+        List<GroupMember> groupMemberList = groupMemberMapper.selectList(queryWrapper);
+        List<Integer> idList = new ArrayList<>();
+        for (var item : groupMemberList) {
+            idList.add(item.getUserId());
+        }
+        return idList;
     }
 }

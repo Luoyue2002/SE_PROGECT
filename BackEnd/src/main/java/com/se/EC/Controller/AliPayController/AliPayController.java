@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@Controller
+@RestController
 @CrossOrigin
 @RequestMapping("/pay")
 public class AliPayController {
 
-    @Autowired
+    @Resource
     private AliPayService alipayService;
 
     @GetMapping("/topay")

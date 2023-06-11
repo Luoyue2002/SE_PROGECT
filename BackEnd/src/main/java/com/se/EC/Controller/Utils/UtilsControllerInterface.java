@@ -22,5 +22,5 @@ public interface UtilsControllerInterface {
      */
     @RequestMapping(value = "/smsXxs")
     @ResponseBody
-    Map<String,Object> smsXxs(String phone, HttpServletRequest request) throws ClientException;
+    ApiResult<Map<String,Object>> smsXxs(String phone, HttpServletRequest request) throws ClientException;
 }

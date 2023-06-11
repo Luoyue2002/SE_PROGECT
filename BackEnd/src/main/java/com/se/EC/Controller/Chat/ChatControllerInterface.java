@@ -1,10 +1,7 @@
 package com.se.EC.Controller.Chat;
 
 import com.se.EC.Entity.User;
-import com.se.EC.Pojo.ChatInformation;
-import com.se.EC.Pojo.GroupChatInformation;
-import com.se.EC.Pojo.GroupInformation;
-import com.se.EC.Pojo.SessionInformation;
+import com.se.EC.Pojo.*;
 import com.se.EC.Utils.ApiResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -166,6 +163,11 @@ public interface ChatControllerInterface {
     @RequestMapping("deleteGroup")
     ApiResult<Boolean> deleteGroup(@RequestParam(value = "groupId") Integer groupId,
                                    @RequestParam(value = "managerId") Integer managerId);
+
+    @RequestMapping("/getGroupMember")
+    ApiResult<List<GroupMemberInformation>> getGroupMember(@RequestParam(value = "userId") Integer userId,
+                                                     @RequestParam(value = "groupId") Integer groupId);
+
 
     /**
      * 退出群聊

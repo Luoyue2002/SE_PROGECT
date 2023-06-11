@@ -80,4 +80,21 @@ public interface UserControllerInterface {
 
     @RequestMapping("/deleteUser")
     ApiResult<Boolean> deleteUser(@RequestParam(value = "userId")Integer userId);
+
+    @RequestMapping("/uploadAvatar")
+    ApiResult<User> uploadAvatar(@RequestParam(value = "userId") Integer userId,
+                                        @RequestParam(value = "url") String url);
+
+
+    /**
+     *
+     * @param userId  用户id
+     * @param totalAmount  充值金额
+     * @param password 密码
+     * @return  余额
+     */
+    @RequestMapping("/changeBalance")
+    public ApiResult<Double> changeBalance(@RequestParam(value = "userId") int userId,
+                                            @RequestParam(value = "totalAmount") Double totalAmount,
+                                            @RequestParam(value = "password") String password  );
 }

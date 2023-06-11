@@ -13,4 +13,5 @@ class ItemObject {
     private String name;  // 子分类名称
     private Integer number;  // 库存数量
     private Float price;  // 价格
+    private Integer publisherId;
 }

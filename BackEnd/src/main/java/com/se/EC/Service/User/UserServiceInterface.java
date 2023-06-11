@@ -2,6 +2,7 @@ package com.se.EC.Service.User;
 
 import com.github.jeffreyning.mybatisplus.service.IMppService;
 import com.se.EC.Entity.User;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -42,6 +43,9 @@ public interface UserServiceInterface extends IMppService<User> {
 
     Boolean ifUserExists(Integer userId);
 
+    Double changeBalance(Integer userId ,Double amount , String password);
+
+    Double getBalance(Integer userId);
     Boolean resetPassword(Integer userId, String oldPassword, String newPassword);
 
     Boolean forgetPassword(Integer userId, String phone);
@@ -49,6 +53,8 @@ public interface UserServiceInterface extends IMppService<User> {
     Boolean ifShop(Integer userId);
 
     void deleteUser(Integer userId);
+
+    User uploadAvatar(Integer userId, String url);
 }
 
 

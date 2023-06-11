@@ -40,7 +40,11 @@ public interface OrderControllerInterface {
     ApiResult<OrderObject> getOrderInfo(int orderId);
 
     @RequestMapping("/orderPay")
-    ApiResult<Boolean> orderPay(int orderId);
+    public ApiResult<Boolean> orderPay(@RequestParam(value = "orderId") int orderId,
+                                       @RequestParam(value = "userId") int userId,
+                                       @RequestParam(value = "totalamount") Double totalamount,
+                                       @RequestParam(value = "password") String password
+    );
 
     /**
      * 删除订单
